@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  emailVerified DateTime?
+  image         String?
+  password      String?
+  role          String    @default("CUSTOMER")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  accounts      Account[]
+  sessions      Session[]
+  orders        Order[]
+  establishment Establishment?
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+model Establishment {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  address     String
+  latitude    Float
+  longitude   Float
+  phone       String?
+  email       String?
+  image       String?
+  category    String
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  userId String @unique
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  packs Pack[]
+}
+
+model Pack {
+  id               String    @id @default(cuid())
+  title            String
+  description      String
+  originalPrice    Float
+  discountedPrice  Float
+  quantity         Int
+  availableFrom    DateTime
+  availableUntil   DateTime
+  pickupTimeStart  String // "18:00"
+  pickupTimeEnd    String // "20:00"
+  isActive         Boolean   @default(true)
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  establishmentId String
+  establishment   Establishment @relation(fields: [establishmentId], references: [id], onDelete: Cascade)
+
+  orders Order[]
+}
+
+model Order {
+  id              String      @id @default(cuid())
+  quantity        Int
+  totalAmount     Float
+  status          String      @default("PENDING")
+  pickupDate      DateTime
+  stripePaymentId String?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  packId String
+  pack   Pack   @relation(fields: [packId], references: [id], onDelete: Cascade)
+}
+
+// Removed enums for SQLite compatibility
+// UserRole: CUSTOMER, ESTABLISHMENT, ADMIN
+// EstablishmentCategory: RESTAURANT, CAFE, BAKERY, SUPERMARKET, GROCERY, OTHER  
+// OrderStatus: PENDING, CONFIRMED, READY_FOR_PICKUP, COMPLETED, CANCELLED
