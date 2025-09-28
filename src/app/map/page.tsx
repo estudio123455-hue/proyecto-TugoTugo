@@ -37,12 +37,6 @@ interface Pack {
   availableUntil: string
   pickupTimeStart: string
   pickupTimeEnd: string
-  establishment: {
-    id: string
-    name: string
-    address: string
-    category: string
-  }
 }
 
 export default function MapPage() {
@@ -187,6 +181,8 @@ export default function MapPage() {
                                 name: selectedEstablishment.name,
                                 address: selectedEstablishment.address,
                                 category: selectedEstablishment.category,
+                                image: selectedEstablishment.image,
+                                isActive: true,
                               }
                             }}
                             onReserve={handleReservePack}
@@ -218,6 +214,8 @@ export default function MapPage() {
                           name: est.name,
                           address: est.address,
                           category: est.category,
+                          image: est.image,
+                          isActive: true,
                         }
                       }))
                   ).length > 0 ? (
@@ -235,6 +233,8 @@ export default function MapPage() {
                                   name: est.name,
                                   address: est.address,
                                   category: est.category,
+                                  image: est.image,
+                                  isActive: true,
                                 }
                               }}
                               onReserve={handleReservePack}

@@ -105,7 +105,7 @@ export async function POST() {
   } catch (error) {
     console.error('Error creating demo data:', error)
     return NextResponse.json(
-      { message: 'Error creating demo data', error: error.message },
+      { message: 'Error creating demo data', error: error instanceof Error ? error.message : 'Unknown error' },
       { status: 500 }
     )
   }
