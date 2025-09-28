@@ -69,7 +69,7 @@ export async function PUT(
           packTitle: order.pack.title,
           establishmentName: order.pack.establishment.name,
           establishmentAddress: order.pack.establishment.address,
-          establishmentPhone: order.pack.establishment.phone,
+          establishmentPhone: order.pack.establishment.phone || undefined,
           pickupDate: order.pickupDate.toISOString(),
           pickupTimeStart: order.pack.pickupTimeStart,
           pickupTimeEnd: order.pack.pickupTimeEnd,
