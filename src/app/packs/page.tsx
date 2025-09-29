@@ -72,35 +72,22 @@ export default function PacksExplorer() {
   const fetchPacks = async () => {
     console.log('🔄 Fetching packs from API...')
     try {
-      const response = await fetch('/api/establishments')
+      const response = await fetch('/api/packs/public')
       if (response.ok) {
-        const establishments = await response.json()
-        console.log('📊 Establishments received:', establishments.length)
-
-        const allPacks = establishments.flatMap((est: any) => {
-          console.log(`🏪 ${est.name}: ${est.packs.length} packs total`)
-          const activePacks = est.packs.filter((pack: any) => {
-            const isActive = pack.quantity > 0 && pack.isActive
-            console.log(
-              `📦 Pack ${pack.title}: quantity=${pack.quantity}, isActive=${pack.isActive}, showing=${isActive}`
-            )
-            return isActive
-          })
-
-          return activePacks.map((pack: any) => ({
-            ...pack,
-            establishment: {
-              id: est.id,
-              name: est.name,
-              address: est.address,
-              category: est.category,
-              image: est.image,
-            },
-          }))
+        const packs = await response.json()
+        console.log('📊 Public packs received:', packs.length)
+        
+        // Filter packs that have quantity > 0
+        const availablePacks = packs.filter((pack: any) => {
+          const isAvailable = pack.quantity > 0 && pack.isActive
+          console.log(
+            `📦 Pack ${pack.title}: quantity=${pack.quantity}, isActive=${pack.isActive}, available=${isAvailable}`
+          )
+          return isAvailable
         })
 
-        console.log('✅ Total active packs:', allPacks.length)
-        setPacks(allPacks)
+        console.log('✅ Total available packs:', availablePacks.length)
+        setPacks(availablePacks)
       } else {
         console.error('❌ API response not OK:', response.status)
       }
