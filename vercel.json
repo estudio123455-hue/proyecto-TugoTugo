@@ -6,7 +6,7 @@
   "devCommand": "npm run dev",
   "functions": {
     "src/app/api/**/*.ts": {
-      "runtime": "nodejs20.x"
+      "runtime": "nodejs18.x"
     }
   }
 }
