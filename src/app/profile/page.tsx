@@ -145,14 +145,16 @@ export default function Profile() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
-      
+
       <div className="max-w-6xl mx-auto pt-8 px-4">
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">
             Hello, {session?.user?.name}!
           </h1>
-          <p className="text-gray-600 mt-2">Manage your orders and track your impact</p>
+          <p className="text-gray-600 mt-2">
+            Manage your orders and track your impact
+          </p>
         </div>
 
         {/* Stats Cards */}
@@ -162,38 +164,54 @@ export default function Profile() {
               <div className="flex items-center">
                 <div className="text-2xl mr-3">📦</div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Total Orders</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.totalOrders}</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    Total Orders
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.totalOrders}
+                  </p>
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center">
                 <div className="text-2xl mr-3">💰</div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Money Saved</p>
-                  <p className="text-2xl font-bold text-green-600">${stats.totalSaved.toFixed(2)}</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    Money Saved
+                  </p>
+                  <p className="text-2xl font-bold text-green-600">
+                    ${stats.totalSaved.toFixed(2)}
+                  </p>
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center">
                 <div className="text-2xl mr-3">✅</div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Packs Collected</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.packsCollected}</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    Packs Collected
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.packsCollected}
+                  </p>
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center">
                 <div className="text-2xl mr-3">🌍</div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Food Saved</p>
-                  <p className="text-2xl font-bold text-green-600">{stats.foodSaved}kg</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    Food Saved
+                  </p>
+                  <p className="text-2xl font-bold text-green-600">
+                    {stats.foodSaved}kg
+                  </p>
                 </div>
               </div>
             </div>
@@ -203,7 +221,7 @@ export default function Profile() {
         {/* Tabs */}
         <div className="border-b border-gray-200 mb-8">
           <nav className="-mb-px flex space-x-8">
-            {tabs.map((tab) => (
+            {tabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
@@ -225,7 +243,9 @@ export default function Profile() {
           {activeTab === 'orders' && (
             <div className="space-y-6">
               <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold text-gray-900">📦 Mis Órdenes</h2>
+                <h2 className="text-xl font-semibold text-gray-900">
+                  📦 Mis Órdenes
+                </h2>
                 <Link
                   href="/packs"
                   className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm"
@@ -237,8 +257,12 @@ export default function Profile() {
               {orders.length === 0 ? (
                 <div className="text-center py-12 bg-white rounded-lg shadow">
                   <div className="text-6xl mb-4">🛒</div>
-                  <h3 className="text-lg font-medium text-gray-900 mb-2">No orders yet</h3>
-                  <p className="text-gray-500 mb-6">Start saving food and money by ordering your first pack!</p>
+                  <h3 className="text-lg font-medium text-gray-900 mb-2">
+                    No orders yet
+                  </h3>
+                  <p className="text-gray-500 mb-6">
+                    Start saving food and money by ordering your first pack!
+                  </p>
                   <Link
                     href="/packs"
                     className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg"
@@ -248,33 +272,48 @@ export default function Profile() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  {orders.map((order) => {
-                    const isActive = ['CONFIRMED', 'READY_FOR_PICKUP'].includes(order.status)
-                    const isPast = ['COMPLETED', 'CANCELLED'].includes(order.status)
-                    
+                  {orders.map(order => {
+                    const isActive = ['CONFIRMED', 'READY_FOR_PICKUP'].includes(
+                      order.status
+                    )
+                    const isPast = ['COMPLETED', 'CANCELLED'].includes(
+                      order.status
+                    )
+
                     return (
-                      <div key={order.id} className={`rounded-lg shadow-md p-6 border-l-4 ${
-                        isActive ? 'bg-green-50 border-green-500' : 
-                        isPast ? 'bg-gray-50 border-gray-300' : 'bg-white border-blue-500'
-                      }`}>
+                      <div
+                        key={order.id}
+                        className={`rounded-lg shadow-md p-6 border-l-4 ${
+                          isActive
+                            ? 'bg-green-50 border-green-500'
+                            : isPast
+                              ? 'bg-gray-50 border-gray-300'
+                              : 'bg-white border-blue-500'
+                        }`}
+                      >
                         <div className="flex justify-between items-start mb-4">
                           <div>
                             <div className="flex items-center space-x-2 mb-2">
                               <h3 className="text-lg font-semibold text-gray-900">
                                 🏪 {order.pack.establishment.name}
                               </h3>
-                              <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
+                              <span
+                                className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}
+                              >
                                 {getStatusText(order.status)}
                               </span>
                             </div>
-                            <p className="text-sm text-gray-600">{order.pack.establishment.address}</p>
+                            <p className="text-sm text-gray-600">
+                              {order.pack.establishment.address}
+                            </p>
                           </div>
                           <div className="text-right">
                             <div className="text-xl font-bold text-green-600 mb-1">
                               ${order.totalAmount.toFixed(2)}
                             </div>
                             <div className="text-sm text-gray-500">
-                              {order.quantity} pack{order.quantity !== 1 ? 's' : ''}
+                              {order.quantity} pack
+                              {order.quantity !== 1 ? 's' : ''}
                             </div>
                           </div>
                         </div>
@@ -288,7 +327,8 @@ export default function Profile() {
                                   ⏰ Horario de Recogida
                                 </h4>
                                 <p className="text-green-700 text-lg font-bold">
-                                  {formatTime(order.pack.pickupTimeStart)} - {formatTime(order.pack.pickupTimeEnd)}
+                                  {formatTime(order.pack.pickupTimeStart)} -{' '}
+                                  {formatTime(order.pack.pickupTimeEnd)}
                                 </p>
                                 <p className="text-green-600 text-sm">
                                   📅 {formatDate(order.pickupDate)}
@@ -296,7 +336,7 @@ export default function Profile() {
                               </div>
                               <div className="text-right">
                                 {order.pack.establishment.phone && (
-                                  <a 
+                                  <a
                                     href={`tel:${order.pack.establishment.phone}`}
                                     className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
                                   >
@@ -311,9 +351,13 @@ export default function Profile() {
                         {isPast && (
                           <div className="text-sm text-gray-500">
                             {order.status === 'COMPLETED' ? (
-                              <span className="text-green-600">✅ Recogido el {formatDate(order.pickupDate)}</span>
+                              <span className="text-green-600">
+                                ✅ Recogido el {formatDate(order.pickupDate)}
+                              </span>
                             ) : (
-                              <span className="text-red-600">❌ Expirado / Cancelado</span>
+                              <span className="text-red-600">
+                                ❌ Expirado / Cancelado
+                              </span>
                             )}
                           </div>
                         )}
@@ -331,8 +375,10 @@ export default function Profile() {
 
           {activeTab === 'impact' && (
             <div className="space-y-6">
-              <h2 className="text-xl font-semibold text-gray-900">Your Environmental Impact</h2>
-              
+              <h2 className="text-xl font-semibold text-gray-900">
+                Your Environmental Impact
+              </h2>
+
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="text-center mb-8">
                   <div className="text-6xl mb-4">🌱</div>
@@ -340,7 +386,8 @@ export default function Profile() {
                     Thank you for making a difference!
                   </h3>
                   <p className="text-gray-600">
-                    Every pack you rescue helps reduce food waste and supports local businesses.
+                    Every pack you rescue helps reduce food waste and supports
+                    local businesses.
                   </p>
                 </div>
 
@@ -355,12 +402,14 @@ export default function Profile() {
                         Equivalent to {Math.round(stats.foodSaved * 2.5)} meals
                       </div>
                     </div>
-                    
+
                     <div className="text-center">
                       <div className="text-4xl font-bold text-green-600 mb-2">
                         {Math.round(stats.foodSaved * 3.3)}kg
                       </div>
-                      <div className="text-gray-700">CO₂ Emissions Prevented</div>
+                      <div className="text-gray-700">
+                        CO₂ Emissions Prevented
+                      </div>
                       <div className="text-sm text-gray-500 mt-1">
                         By preventing food from going to landfill
                       </div>
@@ -369,11 +418,22 @@ export default function Profile() {
                 )}
 
                 <div className="mt-8 p-4 bg-green-50 rounded-lg">
-                  <h4 className="font-semibold text-green-800 mb-2">Keep up the great work!</h4>
+                  <h4 className="font-semibold text-green-800 mb-2">
+                    Keep up the great work!
+                  </h4>
                   <ul className="text-sm text-green-700 space-y-1">
-                    <li>• You've helped {stats?.packsCollected || 0} local businesses reduce waste</li>
-                    <li>• Your actions contribute to a more sustainable food system</li>
-                    <li>• You've saved ${stats?.totalSaved.toFixed(2) || '0.00'} while making a positive impact</li>
+                    <li>
+                      • You've helped {stats?.packsCollected || 0} local
+                      businesses reduce waste
+                    </li>
+                    <li>
+                      • Your actions contribute to a more sustainable food
+                      system
+                    </li>
+                    <li>
+                      • You've saved ${stats?.totalSaved.toFixed(2) || '0.00'}{' '}
+                      while making a positive impact
+                    </li>
                   </ul>
                 </div>
               </div>
@@ -382,12 +442,16 @@ export default function Profile() {
 
           {activeTab === 'settings' && (
             <div className="space-y-6">
-              <h2 className="text-xl font-semibold text-gray-900">Account Settings</h2>
-              
+              <h2 className="text-xl font-semibold text-gray-900">
+                Account Settings
+              </h2>
+
               <div className="bg-white rounded-lg shadow p-6">
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-4">Personal Information</h3>
+                    <h3 className="text-lg font-medium text-gray-900 mb-4">
+                      Personal Information
+                    </h3>
                     <div className="grid md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
@@ -415,19 +479,35 @@ export default function Profile() {
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-4">Notifications</h3>
+                    <h3 className="text-lg font-medium text-gray-900 mb-4">
+                      Notifications
+                    </h3>
                     <div className="space-y-3">
                       <label className="flex items-center">
-                        <input type="checkbox" className="mr-3" defaultChecked />
-                        <span className="text-sm text-gray-700">Email notifications for pickup reminders</span>
+                        <input
+                          type="checkbox"
+                          className="mr-3"
+                          defaultChecked
+                        />
+                        <span className="text-sm text-gray-700">
+                          Email notifications for pickup reminders
+                        </span>
                       </label>
                       <label className="flex items-center">
-                        <input type="checkbox" className="mr-3" defaultChecked />
-                        <span className="text-sm text-gray-700">New pack alerts in your area</span>
+                        <input
+                          type="checkbox"
+                          className="mr-3"
+                          defaultChecked
+                        />
+                        <span className="text-sm text-gray-700">
+                          New pack alerts in your area
+                        </span>
                       </label>
                       <label className="flex items-center">
                         <input type="checkbox" className="mr-3" />
-                        <span className="text-sm text-gray-700">Weekly impact summary</span>
+                        <span className="text-sm text-gray-700">
+                          Weekly impact summary
+                        </span>
                       </label>
                     </div>
                   </div>

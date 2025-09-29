@@ -53,7 +53,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email: string, password: string, userData: any) => {
     if (!supabase) throw new Error('Supabase client not available')
-    
+
     const { data, error } = await supabase.auth.signUp({
       email,
       password,
@@ -62,8 +62,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           name: userData.name,
           role: userData.role,
         },
-        emailRedirectTo: `${window.location.origin}/auth/callback`
-      }
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
     })
 
     if (error) throw error
@@ -72,7 +72,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signIn = async (email: string, password: string) => {
     if (!supabase) throw new Error('Supabase client not available')
-    
+
     const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
@@ -84,20 +84,20 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOut = async () => {
     if (!supabase) throw new Error('Supabase client not available')
-    
+
     const { error } = await supabase.auth.signOut()
     if (error) throw error
   }
 
   const resendConfirmation = async (email: string) => {
     if (!supabase) throw new Error('Supabase client not available')
-    
+
     const { data, error } = await supabase.auth.resend({
       type: 'signup',
       email,
       options: {
-        emailRedirectTo: `${window.location.origin}/auth/callback`
-      }
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
+      },
     })
 
     if (error) throw error
@@ -114,11 +114,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     resendConfirmation,
   }
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  )
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>
 }
 
 export function useAuth() {

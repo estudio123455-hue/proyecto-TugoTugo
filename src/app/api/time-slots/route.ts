@@ -6,19 +6,13 @@ import { prisma } from '@/lib/prisma'
 export async function GET() {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { message: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
     if (session.user.role !== 'ESTABLISHMENT') {
-      return NextResponse.json(
-        { message: 'Access denied' },
-        { status: 403 }
-      )
+      return NextResponse.json({ message: 'Access denied' }, { status: 403 })
     }
 
     // Get establishment
@@ -40,10 +34,7 @@ export async function GET() {
       where: {
         establishmentId: establishment.id,
       },
-      orderBy: [
-        { availableFrom: 'asc' },
-        { pickupTimeStart: 'asc' }
-      ],
+      orderBy: [{ availableFrom: 'asc' }, { pickupTimeStart: 'asc' }],
     })
 
     // Transform to time slot format
@@ -51,9 +42,9 @@ export async function GET() {
       const now = new Date()
       const availableFrom = new Date(pack.availableFrom)
       const availableUntil = new Date(pack.availableUntil)
-      
+
       let status: 'active' | 'sold_out' | 'upcoming' | 'expired' = 'upcoming'
-      
+
       if (availableUntil < now) {
         status = 'expired'
       } else if (availableFrom <= now && availableUntil >= now) {
@@ -88,19 +79,13 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { message: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
     if (session.user.role !== 'ESTABLISHMENT') {
-      return NextResponse.json(
-        { message: 'Access denied' },
-        { status: 403 }
-      )
+      return NextResponse.json({ message: 'Access denied' }, { status: 403 })
     }
 
     const data = await request.json()
@@ -140,10 +125,13 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    return NextResponse.json({ 
-      message: 'Time slot created successfully',
-      id: pack.id 
-    }, { status: 201 })
+    return NextResponse.json(
+      {
+        message: 'Time slot created successfully',
+        id: pack.id,
+      },
+      { status: 201 }
+    )
   } catch (error) {
     console.error('Error creating time slot:', error)
     return NextResponse.json(

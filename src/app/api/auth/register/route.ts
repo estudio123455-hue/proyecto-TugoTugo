@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
 
     // Check if user already exists
     const existingUser = await prisma.user.findUnique({
-      where: { email }
+      where: { email },
     })
 
     if (existingUser) {
@@ -43,16 +43,16 @@ export async function POST(request: NextRequest) {
         email,
         password: hashedPassword,
         role,
-      }
+      },
     })
 
     // Remove password from response
     const { password: _, ...userWithoutPassword } = user
 
     return NextResponse.json(
-      { 
+      {
         message: 'User created successfully',
-        user: userWithoutPassword
+        user: userWithoutPassword,
       },
       { status: 201 }
     )

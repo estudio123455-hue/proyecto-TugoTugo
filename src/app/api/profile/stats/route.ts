@@ -9,12 +9,9 @@ export const dynamic = 'force-dynamic'
 export async function GET() {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { message: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
     // Get user statistics
@@ -28,7 +25,7 @@ export async function GET() {
           pack: true,
         },
       }),
-      
+
       // Total amount spent
       prisma.order.aggregate({
         where: {
@@ -41,7 +38,7 @@ export async function GET() {
           totalAmount: true,
         },
       }),
-      
+
       // Completed orders count
       prisma.order.count({
         where: {
@@ -53,8 +50,12 @@ export async function GET() {
 
     // Calculate savings (difference between original and discounted prices)
     const totalSaved = orders.reduce((acc, order) => {
-      if (['CONFIRMED', 'READY_FOR_PICKUP', 'COMPLETED'].includes(order.status)) {
-        const savings = (order.pack.originalPrice - order.pack.discountedPrice) * order.quantity
+      if (
+        ['CONFIRMED', 'READY_FOR_PICKUP', 'COMPLETED'].includes(order.status)
+      ) {
+        const savings =
+          (order.pack.originalPrice - order.pack.discountedPrice) *
+          order.quantity
         return acc + savings
       }
       return acc

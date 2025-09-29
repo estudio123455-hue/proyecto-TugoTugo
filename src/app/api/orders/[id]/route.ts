@@ -9,12 +9,9 @@ export async function GET(
 ) {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { message: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
     const order = await prisma.order.findFirst({
@@ -32,10 +29,7 @@ export async function GET(
     })
 
     if (!order) {
-      return NextResponse.json(
-        { message: 'Order not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ message: 'Order not found' }, { status: 404 })
     }
 
     return NextResponse.json(order)

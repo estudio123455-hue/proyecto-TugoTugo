@@ -9,19 +9,13 @@ export async function PUT(
 ) {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { message: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
     if (session.user.role !== 'ESTABLISHMENT') {
-      return NextResponse.json(
-        { message: 'Access denied' },
-        { status: 403 }
-      )
+      return NextResponse.json({ message: 'Access denied' }, { status: 403 })
     }
 
     const data = await request.json()
@@ -49,23 +43,27 @@ export async function PUT(
     })
 
     if (!existingPack) {
-      return NextResponse.json(
-        { message: 'Pack not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ message: 'Pack not found' }, { status: 404 })
     }
 
     const updateData: any = {}
-    
+
     if (data.title !== undefined) updateData.title = data.title
-    if (data.description !== undefined) updateData.description = data.description
-    if (data.originalPrice !== undefined) updateData.originalPrice = data.originalPrice
-    if (data.discountedPrice !== undefined) updateData.discountedPrice = data.discountedPrice
+    if (data.description !== undefined)
+      updateData.description = data.description
+    if (data.originalPrice !== undefined)
+      updateData.originalPrice = data.originalPrice
+    if (data.discountedPrice !== undefined)
+      updateData.discountedPrice = data.discountedPrice
     if (data.quantity !== undefined) updateData.quantity = data.quantity
-    if (data.availableFrom !== undefined) updateData.availableFrom = new Date(data.availableFrom)
-    if (data.availableUntil !== undefined) updateData.availableUntil = new Date(data.availableUntil)
-    if (data.pickupTimeStart !== undefined) updateData.pickupTimeStart = data.pickupTimeStart
-    if (data.pickupTimeEnd !== undefined) updateData.pickupTimeEnd = data.pickupTimeEnd
+    if (data.availableFrom !== undefined)
+      updateData.availableFrom = new Date(data.availableFrom)
+    if (data.availableUntil !== undefined)
+      updateData.availableUntil = new Date(data.availableUntil)
+    if (data.pickupTimeStart !== undefined)
+      updateData.pickupTimeStart = data.pickupTimeStart
+    if (data.pickupTimeEnd !== undefined)
+      updateData.pickupTimeEnd = data.pickupTimeEnd
     if (data.isActive !== undefined) updateData.isActive = data.isActive
 
     const pack = await prisma.pack.update({
@@ -89,19 +87,13 @@ export async function DELETE(
 ) {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { message: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
     if (session.user.role !== 'ESTABLISHMENT') {
-      return NextResponse.json(
-        { message: 'Access denied' },
-        { status: 403 }
-      )
+      return NextResponse.json({ message: 'Access denied' }, { status: 403 })
     }
 
     // Get establishment
@@ -130,10 +122,7 @@ export async function DELETE(
     })
 
     if (!pack) {
-      return NextResponse.json(
-        { message: 'Pack not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ message: 'Pack not found' }, { status: 404 })
     }
 
     if (pack.orders.length > 0) {

@@ -9,19 +9,13 @@ export async function PUT(
 ) {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { message: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
     if (session.user.role !== 'ESTABLISHMENT') {
-      return NextResponse.json(
-        { message: 'Access denied' },
-        { status: 403 }
-      )
+      return NextResponse.json({ message: 'Access denied' }, { status: 403 })
     }
 
     const data = await request.json()
@@ -76,9 +70,9 @@ export async function PUT(
       },
     })
 
-    return NextResponse.json({ 
+    return NextResponse.json({
       message: 'Time slot updated successfully',
-      id: updatedPack.id 
+      id: updatedPack.id,
     })
   } catch (error) {
     console.error('Error updating time slot:', error)
@@ -95,19 +89,13 @@ export async function DELETE(
 ) {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { message: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
     if (session.user.role !== 'ESTABLISHMENT') {
-      return NextResponse.json(
-        { message: 'Access denied' },
-        { status: 403 }
-      )
+      return NextResponse.json({ message: 'Access denied' }, { status: 403 })
     }
 
     // Get establishment
@@ -145,8 +133,8 @@ export async function DELETE(
     // Always deactivate instead of deleting to maintain data integrity
     await prisma.pack.update({
       where: { id: params.id },
-      data: { 
-        isActive: false, 
+      data: {
+        isActive: false,
         quantity: 0,
         // Also update the title to show it's cancelled
         title: `[CANCELADO] ${pack.title}`,

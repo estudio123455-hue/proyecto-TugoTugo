@@ -35,7 +35,7 @@ const foodCategories = [
   { id: 'dessert', name: 'Postres', emoji: '🍰' },
   { id: 'coffee', name: 'Café', emoji: '☕' },
   { id: 'asian', name: 'Asiática', emoji: '🥢' },
-  { id: 'mexican', name: 'Mexicana', emoji: '🌮' }
+  { id: 'mexican', name: 'Mexicana', emoji: '🌮' },
 ]
 
 export default function PacksExplorer() {
@@ -58,10 +58,10 @@ export default function PacksExplorer() {
 
   useEffect(() => {
     fetchPacks()
-    
+
     // Auto-refresh every 30 seconds
     const interval = setInterval(fetchPacks, 30000)
-    
+
     return () => clearInterval(interval)
   }, [])
 
@@ -76,15 +76,17 @@ export default function PacksExplorer() {
       if (response.ok) {
         const establishments = await response.json()
         console.log('📊 Establishments received:', establishments.length)
-        
+
         const allPacks = establishments.flatMap((est: any) => {
           console.log(`🏪 ${est.name}: ${est.packs.length} packs total`)
           const activePacks = est.packs.filter((pack: any) => {
             const isActive = pack.quantity > 0 && pack.isActive
-            console.log(`📦 Pack ${pack.title}: quantity=${pack.quantity}, isActive=${pack.isActive}, showing=${isActive}`)
+            console.log(
+              `📦 Pack ${pack.title}: quantity=${pack.quantity}, isActive=${pack.isActive}, showing=${isActive}`
+            )
             return isActive
           })
-          
+
           return activePacks.map((pack: any) => ({
             ...pack,
             establishment: {
@@ -92,11 +94,11 @@ export default function PacksExplorer() {
               name: est.name,
               address: est.address,
               category: est.category,
-              image: est.image
-            }
+              image: est.image,
+            },
           }))
         })
-        
+
         console.log('✅ Total active packs:', allPacks.length)
         setPacks(allPacks)
       } else {
@@ -118,21 +120,42 @@ export default function PacksExplorer() {
         const category = pack.establishment.category.toLowerCase()
         switch (selectedCategory) {
           case 'pizza':
-            return category.includes('restaurant') || pack.title.toLowerCase().includes('pizza')
+            return (
+              category.includes('restaurant') ||
+              pack.title.toLowerCase().includes('pizza')
+            )
           case 'healthy':
-            return pack.title.toLowerCase().includes('healthy') || pack.title.toLowerCase().includes('salad')
+            return (
+              pack.title.toLowerCase().includes('healthy') ||
+              pack.title.toLowerCase().includes('salad')
+            )
           case 'sushi':
-            return pack.title.toLowerCase().includes('sushi') || category.includes('restaurant')
+            return (
+              pack.title.toLowerCase().includes('sushi') ||
+              category.includes('restaurant')
+            )
           case 'burger':
-            return pack.title.toLowerCase().includes('burger') || pack.title.toLowerCase().includes('hamburger')
+            return (
+              pack.title.toLowerCase().includes('burger') ||
+              pack.title.toLowerCase().includes('hamburger')
+            )
           case 'dessert':
-            return category.includes('bakery') || pack.title.toLowerCase().includes('dessert')
+            return (
+              category.includes('bakery') ||
+              pack.title.toLowerCase().includes('dessert')
+            )
           case 'coffee':
             return category.includes('cafe') || category.includes('bakery')
           case 'asian':
-            return pack.title.toLowerCase().includes('asian') || pack.title.toLowerCase().includes('chinese')
+            return (
+              pack.title.toLowerCase().includes('asian') ||
+              pack.title.toLowerCase().includes('chinese')
+            )
           case 'mexican':
-            return pack.title.toLowerCase().includes('mexican') || pack.title.toLowerCase().includes('taco')
+            return (
+              pack.title.toLowerCase().includes('mexican') ||
+              pack.title.toLowerCase().includes('taco')
+            )
           default:
             return true
         }
@@ -141,10 +164,13 @@ export default function PacksExplorer() {
 
     // Filter by search query
     if (searchQuery) {
-      filtered = filtered.filter(pack => 
-        pack.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        pack.establishment.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        pack.description.toLowerCase().includes(searchQuery.toLowerCase())
+      filtered = filtered.filter(
+        pack =>
+          pack.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          pack.establishment.name
+            .toLowerCase()
+            .includes(searchQuery.toLowerCase()) ||
+          pack.description.toLowerCase().includes(searchQuery.toLowerCase())
       )
     }
 
@@ -187,7 +213,7 @@ export default function PacksExplorer() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
-      
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header - Enhanced */}
         <div className="text-center mb-12">
@@ -201,11 +227,13 @@ export default function PacksExplorer() {
             </button>
           </div>
           <h1 className="text-5xl md:text-6xl font-black text-gray-900 mb-6 leading-tight">
-            🍽️ Packs Disponibles<br />
+            🍽️ Packs Disponibles
+            <br />
             <span className="text-green-600">Cerca de Ti</span>
           </h1>
           <p className="text-2xl text-gray-600 font-medium">
-            Descubre packs sorpresa con hasta <span className="text-green-600 font-bold">50% de descuento</span>
+            Descubre packs sorpresa con hasta{' '}
+            <span className="text-green-600 font-bold">50% de descuento</span>
           </p>
         </div>
 
@@ -216,12 +244,22 @@ export default function PacksExplorer() {
               type="text"
               placeholder="🔍 Buscar restaurantes, comida o tipo de cocina..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
+              onChange={e => setSearchQuery(e.target.value)}
               className="w-full px-6 py-5 pl-16 pr-6 text-lg text-gray-700 bg-white border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-100 shadow-lg transition-all"
             />
             <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
-              <svg className="h-7 w-7 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              <svg
+                className="h-7 w-7 text-green-500"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+                />
               </svg>
             </div>
             {searchQuery && (
@@ -229,8 +267,18 @@ export default function PacksExplorer() {
                 onClick={() => setSearchQuery('')}
                 className="absolute inset-y-0 right-0 pr-4 flex items-center"
               >
-                <svg className="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                <svg
+                  className="h-5 w-5 text-gray-400 hover:text-gray-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
                 </svg>
               </button>
             )}
@@ -239,7 +287,7 @@ export default function PacksExplorer() {
 
         {/* Category Filters - Compact Chips */}
         <div className="flex flex-wrap justify-center gap-3 mb-10">
-          {foodCategories.map((category) => (
+          {foodCategories.map(category => (
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
@@ -267,22 +315,37 @@ export default function PacksExplorer() {
           <>
             <div className="mb-6 text-center">
               <p className="text-gray-600">
-                {getUniqueRestaurants(filteredPacks).length} restaurante{getUniqueRestaurants(filteredPacks).length !== 1 ? 's' : ''} con packs disponibles
+                {getUniqueRestaurants(filteredPacks).length} restaurante
+                {getUniqueRestaurants(filteredPacks).length !== 1
+                  ? 's'
+                  : ''}{' '}
+                con packs disponibles
               </p>
             </div>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-              {getUniqueRestaurants(filteredPacks).map((restaurant) => {
-                const restaurantPacks = filteredPacks.filter(pack => pack.establishment.id === restaurant.id)
-                const activePacks = restaurantPacks.filter(pack => pack.quantity > 0)
-                const upcomingPacks = restaurantPacks.filter(pack => pack.quantity > 0 && new Date(pack.availableFrom) > new Date())
-                
+              {getUniqueRestaurants(filteredPacks).map(restaurant => {
+                const restaurantPacks = filteredPacks.filter(
+                  pack => pack.establishment.id === restaurant.id
+                )
+                const activePacks = restaurantPacks.filter(
+                  pack => pack.quantity > 0
+                )
+                const upcomingPacks = restaurantPacks.filter(
+                  pack =>
+                    pack.quantity > 0 &&
+                    new Date(pack.availableFrom) > new Date()
+                )
+
                 return (
-                  <div key={restaurant.id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow">
+                  <div
+                    key={restaurant.id}
+                    className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                  >
                     {/* Restaurant Image Placeholder */}
                     <div className="h-48 bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center">
                       <span className="text-6xl text-white">🍽️</span>
                     </div>
-                    
+
                     <div className="p-6">
                       <div className="mb-4">
                         <div className="flex items-start justify-between">
@@ -290,8 +353,12 @@ export default function PacksExplorer() {
                             <h3 className="text-xl font-bold text-gray-900 mb-1">
                               {restaurant.name} 🍽️
                             </h3>
-                            <p className="text-sm text-gray-600">{restaurant.address}</p>
-                            <p className="text-xs text-gray-500 capitalize">{restaurant.category.toLowerCase()}</p>
+                            <p className="text-sm text-gray-600">
+                              {restaurant.address}
+                            </p>
+                            <p className="text-xs text-gray-500 capitalize">
+                              {restaurant.category.toLowerCase()}
+                            </p>
                           </div>
                           <a
                             href={`/establecimiento/${restaurant.id}`}
@@ -310,11 +377,15 @@ export default function PacksExplorer() {
                             🟢 Horarios Activos
                           </h4>
                           <div className="space-y-2">
-                            {activePacks.slice(0, 2).map((pack) => (
-                              <div key={pack.id} className="flex justify-between items-center bg-green-50 rounded-lg p-3 border border-green-200">
+                            {activePacks.slice(0, 2).map(pack => (
+                              <div
+                                key={pack.id}
+                                className="flex justify-between items-center bg-green-50 rounded-lg p-3 border border-green-200"
+                              >
                                 <div>
                                   <div className="font-medium text-green-800">
-                                    {pack.pickupTimeStart.slice(0, 5)} - {pack.pickupTimeEnd.slice(0, 5)}
+                                    {pack.pickupTimeStart.slice(0, 5)} -{' '}
+                                    {pack.pickupTimeEnd.slice(0, 5)}
                                   </div>
                                   <div className="text-sm text-green-600">
                                     {pack.quantity} packs restantes
@@ -325,7 +396,9 @@ export default function PacksExplorer() {
                                     ${pack.discountedPrice.toFixed(2)}
                                   </div>
                                   <button
-                                    onClick={() => handleReservePack(pack.id, 1)}
+                                    onClick={() =>
+                                      handleReservePack(pack.id, 1)
+                                    }
                                     className="bg-green-500 hover:bg-green-600 text-white text-xs px-3 py-1 rounded-full transition-colors mt-1"
                                   >
                                     Reservar
@@ -344,14 +417,20 @@ export default function PacksExplorer() {
                             🔜 Próximos Horarios
                           </h4>
                           <div className="space-y-2">
-                            {upcomingPacks.slice(0, 2).map((pack) => (
-                              <div key={pack.id} className="flex justify-between items-center bg-blue-50 rounded-lg p-3 border border-blue-200">
+                            {upcomingPacks.slice(0, 2).map(pack => (
+                              <div
+                                key={pack.id}
+                                className="flex justify-between items-center bg-blue-50 rounded-lg p-3 border border-blue-200"
+                              >
                                 <div>
                                   <div className="font-medium text-blue-800">
-                                    {pack.pickupTimeStart.slice(0, 5)} - {pack.pickupTimeEnd.slice(0, 5)}
+                                    {pack.pickupTimeStart.slice(0, 5)} -{' '}
+                                    {pack.pickupTimeEnd.slice(0, 5)}
                                   </div>
                                   <div className="text-sm text-blue-600">
-                                    {new Date(pack.availableFrom).toLocaleDateString()}
+                                    {new Date(
+                                      pack.availableFrom
+                                    ).toLocaleDateString()}
                                   </div>
                                 </div>
                                 <div className="text-right">
@@ -371,7 +450,9 @@ export default function PacksExplorer() {
                       {/* Main Action Button */}
                       {activePacks.length > 0 ? (
                         <button
-                          onClick={() => handleReservePack(activePacks[0].id, 1)}
+                          onClick={() =>
+                            handleReservePack(activePacks[0].id, 1)
+                          }
                           className="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg transition-colors"
                         >
                           🚀 Reservar Ahora
@@ -394,7 +475,7 @@ export default function PacksExplorer() {
 
         {/* Empty State */}
         {!isLoading && filteredPacks.length === 0 && (
-          <EmptyState 
+          <EmptyState
             searchQuery={searchQuery}
             selectedCategory={selectedCategory}
             totalPacks={packs.length}

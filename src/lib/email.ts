@@ -36,7 +36,9 @@ interface PickupReminderEmailData {
   pickupTimeEnd: string
 }
 
-export async function sendOrderConfirmationEmail(data: OrderConfirmationEmailData) {
+export async function sendOrderConfirmationEmail(
+  data: OrderConfirmationEmailData
+) {
   const mailOptions = {
     from: process.env.SMTP_USER,
     to: data.to,
@@ -64,7 +66,9 @@ export async function sendOrderConfirmationEmail(data: OrderConfirmationEmailDat
             <h2 style="margin-top: 0; color: #92400e;">📍 Pickup Information</h2>
             <p><strong>${data.establishmentName}</strong></p>
             <p>${data.establishmentAddress}</p>
-            <p><strong>Date:</strong> ${new Date(data.pickupDate).toLocaleDateString('en-US', {
+            <p><strong>Date:</strong> ${new Date(
+              data.pickupDate
+            ).toLocaleDateString('en-US', {
               weekday: 'long',
               year: 'numeric',
               month: 'long',
@@ -130,7 +134,9 @@ export async function sendPickupReminderEmail(data: PickupReminderEmailData) {
           <div style="background-color: #dcfce7; padding: 20px; border-radius: 8px; margin: 20px 0;">
             <h2 style="margin-top: 0; color: #166534;">📍 Pickup Details</h2>
             <p><strong>Location:</strong> ${data.establishmentAddress}</p>
-            <p><strong>Date:</strong> ${new Date(data.pickupDate).toLocaleDateString('en-US', {
+            <p><strong>Date:</strong> ${new Date(
+              data.pickupDate
+            ).toLocaleDateString('en-US', {
               weekday: 'long',
               year: 'numeric',
               month: 'long',

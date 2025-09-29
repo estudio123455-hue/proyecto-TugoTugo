@@ -38,14 +38,14 @@ export async function POST(request: NextRequest) {
     switch (event.type) {
       case 'checkout.session.completed':
         const session = event.data.object as Stripe.Checkout.Session
-        
+
         if (session.metadata?.orderId) {
           // Update order status and reduce pack quantity
-          const order = await prisma.$transaction(async (tx) => {
+          const order = await prisma.$transaction(async tx => {
             const updatedOrder = await tx.order.update({
               where: { id: session.metadata!.orderId },
               data: { status: 'CONFIRMED' },
-              include: { 
+              include: {
                 pack: {
                   include: {
                     establishment: true,
@@ -96,7 +96,7 @@ export async function POST(request: NextRequest) {
 
       case 'checkout.session.expired':
         const expiredSession = event.data.object as Stripe.Checkout.Session
-        
+
         if (expiredSession.metadata?.orderId) {
           // Cancel the order
           await prisma.order.update({
@@ -104,7 +104,10 @@ export async function POST(request: NextRequest) {
             data: { status: 'CANCELLED' },
           })
 
-          console.log('Order cancelled due to expired session:', expiredSession.metadata.orderId)
+          console.log(
+            'Order cancelled due to expired session:',
+            expiredSession.metadata.orderId
+          )
         }
         break
 

@@ -9,7 +9,11 @@ interface EmptyStateProps {
   totalPacks: number
 }
 
-export default function EmptyState({ searchQuery, selectedCategory, totalPacks }: EmptyStateProps) {
+export default function EmptyState({
+  searchQuery,
+  selectedCategory,
+  totalPacks,
+}: EmptyStateProps) {
   const [emailForNotifications, setEmailForNotifications] = useState('')
   const [showNotificationForm, setShowNotificationForm] = useState(false)
 
@@ -31,9 +35,10 @@ export default function EmptyState({ searchQuery, selectedCategory, totalPacks }
           No encontramos packs con esos criterios
         </h2>
         <p className="text-gray-600 mb-8 max-w-md mx-auto">
-          Intenta con otros filtros o amplía tu búsqueda. ¡Los restaurantes suben nuevos packs constantemente!
+          Intenta con otros filtros o amplía tu búsqueda. ¡Los restaurantes
+          suben nuevos packs constantemente!
         </p>
-        
+
         <div className="space-y-4">
           <button
             onClick={() => window.location.reload()}
@@ -41,7 +46,7 @@ export default function EmptyState({ searchQuery, selectedCategory, totalPacks }
           >
             🔄 Buscar Todos los Packs
           </button>
-          
+
           <div className="text-sm text-gray-500">
             <p>¿No encuentras lo que buscas?</p>
             <button
@@ -67,10 +72,13 @@ export default function EmptyState({ searchQuery, selectedCategory, totalPacks }
             <div className="p-8 md:p-12 flex flex-col justify-center text-center md:text-left">
               <div className="text-8xl mb-6 text-center md:text-left">🌟</div>
               <h2 className="text-4xl font-bold text-gray-900 mb-4">
-                ¡Eres de los Primeros<br />en tu Zona!
+                ¡Eres de los Primeros
+                <br />
+                en tu Zona!
               </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Cuando se unan más restaurantes a FoodSave, serás el primero en enterarte de los mejores packs sorpresa.
+                Cuando se unan más restaurantes a FoodSave, serás el primero en
+                enterarte de los mejores packs sorpresa.
               </p>
 
               {/* Action Buttons */}
@@ -83,7 +91,7 @@ export default function EmptyState({ searchQuery, selectedCategory, totalPacks }
                     >
                       🔔 Activar Alertas
                     </button>
-                    
+
                     <div className="grid grid-cols-2 gap-3">
                       <Link
                         href="/auth/signup?role=establishment"
@@ -100,12 +108,15 @@ export default function EmptyState({ searchQuery, selectedCategory, totalPacks }
                     </div>
                   </>
                 ) : (
-                  <form onSubmit={handleNotificationSignup} className="space-y-4">
+                  <form
+                    onSubmit={handleNotificationSignup}
+                    className="space-y-4"
+                  >
                     <input
                       type="email"
                       placeholder="tu@email.com"
                       value={emailForNotifications}
-                      onChange={(e) => setEmailForNotifications(e.target.value)}
+                      onChange={e => setEmailForNotifications(e.target.value)}
                       required
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:border-green-500 focus:ring-2 focus:ring-green-200"
                     />
@@ -134,15 +145,19 @@ export default function EmptyState({ searchQuery, selectedCategory, totalPacks }
               <h3 className="text-2xl font-bold text-green-800 mb-8 text-center">
                 Mientras tanto, sabías que:
               </h3>
-              
+
               <div className="space-y-6">
                 <div className="flex items-start space-x-4">
                   <div className="bg-white rounded-full p-3 shadow-md">
                     <span className="text-2xl">💰</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-green-800 mb-1">Ahorro Garantizado</h4>
-                    <p className="text-green-700">Los usuarios ahorran 50% promedio en cada pack</p>
+                    <h4 className="font-semibold text-green-800 mb-1">
+                      Ahorro Garantizado
+                    </h4>
+                    <p className="text-green-700">
+                      Los usuarios ahorran 50% promedio en cada pack
+                    </p>
                   </div>
                 </div>
 
@@ -151,8 +166,12 @@ export default function EmptyState({ searchQuery, selectedCategory, totalPacks }
                     <span className="text-2xl">🌍</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-green-800 mb-1">Impacto Real</h4>
-                    <p className="text-green-700">Hemos salvado más de 10,000 comidas del desperdicio</p>
+                    <h4 className="font-semibold text-green-800 mb-1">
+                      Impacto Real
+                    </h4>
+                    <p className="text-green-700">
+                      Hemos salvado más de 10,000 comidas del desperdicio
+                    </p>
                   </div>
                 </div>
 
@@ -161,17 +180,27 @@ export default function EmptyState({ searchQuery, selectedCategory, totalPacks }
                     <span className="text-2xl">😋</span>
                   </div>
                   <div>
-                    <h4 className="font-semibold text-green-800 mb-1">Sorpresas Deliciosas</h4>
-                    <p className="text-green-700">Cada pack es una sorpresa deliciosa y única</p>
+                    <h4 className="font-semibold text-green-800 mb-1">
+                      Sorpresas Deliciosas
+                    </h4>
+                    <p className="text-green-700">
+                      Cada pack es una sorpresa deliciosa y única
+                    </p>
                   </div>
                 </div>
               </div>
 
               <div className="mt-8 bg-white rounded-lg p-4 shadow-md">
                 <div className="text-center">
-                  <div className="text-sm text-gray-600 mb-1">Únete a la comunidad</div>
-                  <div className="text-2xl font-bold text-green-600">+1,000 usuarios</div>
-                  <div className="text-xs text-gray-500">salvando comida cada día</div>
+                  <div className="text-sm text-gray-600 mb-1">
+                    Únete a la comunidad
+                  </div>
+                  <div className="text-2xl font-bold text-green-600">
+                    +1,000 usuarios
+                  </div>
+                  <div className="text-xs text-gray-500">
+                    salvando comida cada día
+                  </div>
                 </div>
               </div>
             </div>
@@ -185,17 +214,43 @@ export default function EmptyState({ searchQuery, selectedCategory, totalPacks }
           </h3>
           <div className="grid md:grid-cols-3 gap-6">
             {[
-              { name: "Pizzería Bella Vista", category: "🍕 Pizza", rating: "4.8", image: "🍕" },
-              { name: "Green Salads Co.", category: "🥗 Saludable", rating: "4.9", image: "🥗" },
-              { name: "Sushi Master", category: "🍣 Japonés", rating: "4.7", image: "🍣" }
+              {
+                name: 'Pizzería Bella Vista',
+                category: '🍕 Pizza',
+                rating: '4.8',
+                image: '🍕',
+              },
+              {
+                name: 'Green Salads Co.',
+                category: '🥗 Saludable',
+                rating: '4.9',
+                image: '🥗',
+              },
+              {
+                name: 'Sushi Master',
+                category: '🍣 Japonés',
+                rating: '4.7',
+                image: '🍣',
+              },
             ].map((restaurant, index) => (
-              <div key={index} className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow">
-                <div className="text-4xl mb-3 text-center">{restaurant.image}</div>
-                <h4 className="font-semibold text-gray-900 text-center">{restaurant.name}</h4>
-                <p className="text-sm text-gray-600 text-center">{restaurant.category}</p>
+              <div
+                key={index}
+                className="bg-white rounded-lg p-6 shadow-md hover:shadow-lg transition-shadow"
+              >
+                <div className="text-4xl mb-3 text-center">
+                  {restaurant.image}
+                </div>
+                <h4 className="font-semibold text-gray-900 text-center">
+                  {restaurant.name}
+                </h4>
+                <p className="text-sm text-gray-600 text-center">
+                  {restaurant.category}
+                </p>
                 <div className="flex items-center justify-center mt-2">
                   <span className="text-yellow-500">⭐</span>
-                  <span className="text-sm text-gray-600 ml-1">{restaurant.rating}</span>
+                  <span className="text-sm text-gray-600 ml-1">
+                    {restaurant.rating}
+                  </span>
                 </div>
               </div>
             ))}

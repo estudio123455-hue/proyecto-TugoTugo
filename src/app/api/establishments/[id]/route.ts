@@ -9,10 +9,7 @@ export async function GET(
     const { id } = params
 
     if (!id) {
-      return NextResponse.json(
-        { message: 'ID is required' },
-        { status: 400 }
-      )
+      return NextResponse.json({ message: 'ID is required' }, { status: 400 })
     }
 
     const establishment = await prisma.establishment.findUnique({
@@ -25,9 +22,9 @@ export async function GET(
           select: {
             name: true,
             email: true,
-          }
-        }
-      }
+          },
+        },
+      },
     })
 
     if (!establishment) {

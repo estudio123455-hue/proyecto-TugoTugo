@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url)
     const establishmentId = searchParams.get('establishmentId')
-    
+
     // Base query conditions
     const where: any = {
       isActive: true,
@@ -20,7 +20,7 @@ export async function GET(request: NextRequest) {
         gte: new Date(),
       },
     }
-    
+
     // Filter by establishment if provided
     if (establishmentId) {
       where.establishmentId = establishmentId
@@ -37,8 +37,8 @@ export async function GET(request: NextRequest) {
             category: true,
             image: true,
             isActive: true,
-          }
-        }
+          },
+        },
       },
       orderBy: [
         {
@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
         },
         {
           createdAt: 'desc',
-        }
+        },
       ],
     })
 

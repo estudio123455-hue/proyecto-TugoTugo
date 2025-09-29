@@ -78,7 +78,9 @@ export default function PackCard({ pack, onReserve }: PackCardProps) {
               {pack.title}
             </h3>
             <p className="text-sm text-gray-600">{pack.establishment.name}</p>
-            <p className="text-xs text-gray-500">{pack.establishment.address}</p>
+            <p className="text-xs text-gray-500">
+              {pack.establishment.address}
+            </p>
           </div>
           <div className="text-right">
             <div className="flex items-center space-x-2">
@@ -101,13 +103,15 @@ export default function PackCard({ pack, onReserve }: PackCardProps) {
           <div className="flex justify-between text-sm">
             <span className="text-gray-600">Available:</span>
             <span className="font-medium">
-              {formatDate(pack.availableFrom)} - {formatDate(pack.availableUntil)}
+              {formatDate(pack.availableFrom)} -{' '}
+              {formatDate(pack.availableUntil)}
             </span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-gray-600">Pickup time:</span>
             <span className="font-medium">
-              {formatTime(pack.pickupTimeStart)} - {formatTime(pack.pickupTimeEnd)}
+              {formatTime(pack.pickupTimeStart)} -{' '}
+              {formatTime(pack.pickupTimeEnd)}
             </span>
           </div>
           <div className="flex justify-between text-sm">
@@ -121,13 +125,16 @@ export default function PackCard({ pack, onReserve }: PackCardProps) {
         {pack.quantity > 0 ? (
           <div className="space-y-3">
             <div className="flex items-center space-x-3">
-              <label htmlFor={`quantity-${pack.id}`} className="text-sm font-medium text-gray-700">
+              <label
+                htmlFor={`quantity-${pack.id}`}
+                className="text-sm font-medium text-gray-700"
+              >
                 Quantity:
               </label>
               <select
                 id={`quantity-${pack.id}`}
                 value={quantity}
-                onChange={(e) => setQuantity(parseInt(e.target.value))}
+                onChange={e => setQuantity(parseInt(e.target.value))}
                 className="border border-gray-300 rounded px-3 py-1 text-sm"
               >
                 {Array.from({ length: Math.min(pack.quantity, 5) }, (_, i) => (
@@ -143,7 +150,9 @@ export default function PackCard({ pack, onReserve }: PackCardProps) {
               disabled={isReserving}
               className="w-full bg-green-500 hover:bg-green-600 disabled:bg-gray-300 text-white font-medium py-2 px-4 rounded transition-colors"
             >
-              {isReserving ? 'Reserving...' : `Reserve for $${(pack.discountedPrice * quantity).toFixed(2)}`}
+              {isReserving
+                ? 'Reserving...'
+                : `Reserve for $${(pack.discountedPrice * quantity).toFixed(2)}`}
             </button>
           </div>
         ) : (

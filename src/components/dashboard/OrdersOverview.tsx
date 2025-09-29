@@ -24,7 +24,9 @@ interface OrdersOverviewProps {
   establishmentId: string
 }
 
-export default function OrdersOverview({ establishmentId }: OrdersOverviewProps) {
+export default function OrdersOverview({
+  establishmentId,
+}: OrdersOverviewProps) {
   const [orders, setOrders] = useState<Order[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [filter, setFilter] = useState('all')
@@ -125,11 +127,11 @@ export default function OrdersOverview({ establishmentId }: OrdersOverviewProps)
       {/* Header */}
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-900">Orders</h2>
-        
+
         {/* Filter */}
         <select
           value={filter}
-          onChange={(e) => setFilter(e.target.value)}
+          onChange={e => setFilter(e.target.value)}
           className="border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-green-500 focus:border-green-500"
         >
           <option value="all">All Orders</option>
@@ -146,11 +148,13 @@ export default function OrdersOverview({ establishmentId }: OrdersOverviewProps)
         {filteredOrders.length === 0 ? (
           <div className="text-center py-12 bg-white rounded-lg shadow">
             <p className="text-gray-500">
-              {filter === 'all' ? 'No orders yet' : `No ${filter.toLowerCase()} orders`}
+              {filter === 'all'
+                ? 'No orders yet'
+                : `No ${filter.toLowerCase()} orders`}
             </p>
           </div>
         ) : (
-          filteredOrders.map((order) => (
+          filteredOrders.map(order => (
             <div key={order.id} className="bg-white rounded-lg shadow-md p-6">
               <div className="flex justify-between items-start mb-4">
                 <div>
@@ -165,7 +169,9 @@ export default function OrdersOverview({ establishmentId }: OrdersOverviewProps)
                   <div className="text-lg font-semibold text-green-600 mb-1">
                     ${order.totalAmount.toFixed(2)}
                   </div>
-                  <span className={`px-2 py-1 rounded-full text-xs ${getStatusColor(order.status)}`}>
+                  <span
+                    className={`px-2 py-1 rounded-full text-xs ${getStatusColor(order.status)}`}
+                  >
                     {order.status.replace('_', ' ')}
                   </span>
                 </div>
@@ -175,7 +181,9 @@ export default function OrdersOverview({ establishmentId }: OrdersOverviewProps)
                 <div>
                   <span className="text-sm text-gray-500">Customer</span>
                   <div className="font-medium">{order.user.name}</div>
-                  <div className="text-sm text-gray-600">{order.user.email}</div>
+                  <div className="text-sm text-gray-600">
+                    {order.user.email}
+                  </div>
                 </div>
                 <div>
                   <span className="text-sm text-gray-500">Pickup Date</span>
@@ -205,9 +213,7 @@ export default function OrdersOverview({ establishmentId }: OrdersOverviewProps)
                     </span>
                   )}
                 </div>
-                <div>
-                  {getStatusActions(order)}
-                </div>
+                <div>{getStatusActions(order)}</div>
               </div>
             </div>
           ))

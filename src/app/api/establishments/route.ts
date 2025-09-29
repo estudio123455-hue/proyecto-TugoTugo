@@ -4,7 +4,7 @@ import { prisma } from '@/lib/prisma'
 export async function GET() {
   try {
     console.log('🔍 API: Fetching establishments...')
-    
+
     const establishments = await prisma.establishment.findMany({
       where: {
         isActive: true,
@@ -31,7 +31,9 @@ export async function GET() {
     establishments.forEach(est => {
       console.log(`🏪 API: ${est.name} has ${est.packs.length} active packs`)
       est.packs.forEach(pack => {
-        console.log(`📦 API: Pack "${pack.title}" - quantity: ${pack.quantity}, isActive: ${pack.isActive}`)
+        console.log(
+          `📦 API: Pack "${pack.title}" - quantity: ${pack.quantity}, isActive: ${pack.isActive}`
+        )
       })
     })
 
@@ -48,7 +50,7 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const data = await request.json()
-    
+
     const establishment = await prisma.establishment.create({
       data: {
         name: data.name,

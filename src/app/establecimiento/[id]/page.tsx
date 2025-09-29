@@ -51,7 +51,7 @@ export default function EstablishmentProfile() {
   const fetchEstablishment = async (id: string) => {
     try {
       setLoading(true)
-      
+
       // Fetch establishment details
       const establishmentResponse = await fetch(`/api/establishments/${id}`)
       if (!establishmentResponse.ok) {
@@ -61,27 +61,32 @@ export default function EstablishmentProfile() {
       setEstablishment(establishmentData)
 
       // Fetch packs from this establishment
-      const packsResponse = await fetch(`/api/packs/public?establishmentId=${id}`)
+      const packsResponse = await fetch(
+        `/api/packs/public?establishmentId=${id}`
+      )
       if (packsResponse.ok) {
         const packsData = await packsResponse.json()
         setPacks(packsData)
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al cargar el establecimiento')
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'Error al cargar el establecimiento'
+      )
     } finally {
       setLoading(false)
     }
   }
 
-
   const getCategoryEmoji = (category: string) => {
     const categoryMap: { [key: string]: string } = {
-      'RESTAURANT': '🍽️',
-      'CAFE': '☕',
-      'BAKERY': '🥖',
-      'SUPERMARKET': '🛒',
-      'GROCERY': '🏪',
-      'OTHER': '🏢'
+      RESTAURANT: '🍽️',
+      CAFE: '☕',
+      BAKERY: '🥖',
+      SUPERMARKET: '🛒',
+      GROCERY: '🏪',
+      OTHER: '🏢',
     }
     return categoryMap[category] || '🏢'
   }
@@ -111,7 +116,8 @@ export default function EstablishmentProfile() {
               Establecimiento no encontrado
             </h2>
             <p className="text-gray-600 mb-6">
-              {error || 'El establecimiento que buscas no existe o no está disponible'}
+              {error ||
+                'El establecimiento que buscas no existe o no está disponible'}
             </p>
             <Link
               href="/packs"
@@ -128,7 +134,7 @@ export default function EstablishmentProfile() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
-      
+
       {/* Hero Section */}
       <section className="bg-white shadow-sm">
         <div className="max-w-6xl mx-auto px-6 py-12">
@@ -137,8 +143,8 @@ export default function EstablishmentProfile() {
             <div className="w-full lg:w-1/3">
               <div className="aspect-square bg-gradient-to-br from-fresh-100 to-warm-100 rounded-2xl flex items-center justify-center overflow-hidden">
                 {establishment.image ? (
-                  <img 
-                    src={establishment.image} 
+                  <img
+                    src={establishment.image}
                     alt={establishment.name}
                     className="w-full h-full object-cover"
                   />
@@ -149,7 +155,7 @@ export default function EstablishmentProfile() {
                 )}
               </div>
             </div>
-            
+
             {/* Establishment Info */}
             <div className="w-full lg:w-2/3">
               <div className="flex items-start justify-between mb-6">
@@ -158,30 +164,33 @@ export default function EstablishmentProfile() {
                     {establishment.name}
                   </h1>
                   <div className="flex items-center text-gray-600 mb-4">
-                    <span className="mr-2">{getCategoryEmoji(establishment.category)}</span>
-                    <span className="capitalize">{establishment.category.toLowerCase()}</span>
+                    <span className="mr-2">
+                      {getCategoryEmoji(establishment.category)}
+                    </span>
+                    <span className="capitalize">
+                      {establishment.category.toLowerCase()}
+                    </span>
                   </div>
                 </div>
-                
               </div>
-              
+
               {establishment.description && (
                 <p className="text-lg text-gray-700 mb-6 leading-relaxed">
                   {establishment.description}
                 </p>
               )}
-              
+
               {/* Contact Info */}
               <div className="grid md:grid-cols-2 gap-4 mb-6">
                 <div className="flex items-center text-gray-600">
                   <span className="mr-3 text-xl">📍</span>
                   <span>{establishment.address}</span>
                 </div>
-                
+
                 {establishment.phone && (
                   <div className="flex items-center text-gray-600">
                     <span className="mr-3 text-xl">📞</span>
-                    <a 
+                    <a
                       href={`tel:${establishment.phone}`}
                       className="hover:text-fresh-600 transition-colors"
                     >
@@ -189,11 +198,11 @@ export default function EstablishmentProfile() {
                     </a>
                   </div>
                 )}
-                
+
                 {establishment.email && (
                   <div className="flex items-center text-gray-600">
                     <span className="mr-3 text-xl">📧</span>
-                    <a 
+                    <a
                       href={`mailto:${establishment.email}`}
                       className="hover:text-fresh-600 transition-colors"
                     >
@@ -202,15 +211,19 @@ export default function EstablishmentProfile() {
                   </div>
                 )}
               </div>
-              
+
               {/* Status Badge */}
               <div className="inline-flex items-center">
-                <div className={`px-4 py-2 rounded-full text-sm font-medium ${
-                  establishment.isActive 
-                    ? 'bg-green-100 text-green-800' 
-                    : 'bg-red-100 text-red-800'
-                }`}>
-                  <span className="mr-2">{establishment.isActive ? '✅' : '❌'}</span>
+                <div
+                  className={`px-4 py-2 rounded-full text-sm font-medium ${
+                    establishment.isActive
+                      ? 'bg-green-100 text-green-800'
+                      : 'bg-red-100 text-red-800'
+                  }`}
+                >
+                  <span className="mr-2">
+                    {establishment.isActive ? '✅' : '❌'}
+                  </span>
                   {establishment.isActive ? 'Activo' : 'Inactivo'}
                 </div>
               </div>
@@ -218,7 +231,7 @@ export default function EstablishmentProfile() {
           </div>
         </div>
       </section>
-      
+
       {/* Packs Section */}
       <section className="py-12">
         <div className="max-w-6xl mx-auto px-6">
@@ -230,12 +243,12 @@ export default function EstablishmentProfile() {
               {packs.filter(pack => pack.isActive).length} disponibles
             </span>
           </div>
-          
+
           {packs.length > 0 ? (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
               {packs
                 .filter(pack => pack.isActive)
-                .map((pack) => (
+                .map(pack => (
                   <PackCard key={pack.id} pack={pack} />
                 ))}
             </div>
@@ -259,7 +272,7 @@ export default function EstablishmentProfile() {
           )}
         </div>
       </section>
-      
+
       {/* Call to Action */}
       <section className="bg-gradient-to-r from-fresh-600 to-warm-500 py-16">
         <div className="max-w-4xl mx-auto px-6 text-center">
@@ -267,7 +280,8 @@ export default function EstablishmentProfile() {
             ¿Te gusta {establishment.name}?
           </h2>
           <p className="text-xl text-white/90 mb-8">
-            Descubre más establecimientos como este y ayuda a reducir el desperdicio de comida
+            Descubre más establecimientos como este y ayuda a reducir el
+            desperdicio de comida
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link

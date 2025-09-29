@@ -12,12 +12,12 @@ export default function Welcome() {
   const [preferences, setPreferences] = useState({
     city: '',
     foodTypes: [] as string[],
-    location: null as { lat: number; lng: number } | null
+    location: null as { lat: number; lng: number } | null,
   })
 
   useEffect(() => {
     if (status === 'loading') return
-    
+
     if (!session) {
       router.push('/auth/signin')
       return
@@ -27,17 +27,17 @@ export default function Welcome() {
   const handleLocationRequest = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        position => {
           setPreferences({
             ...preferences,
             location: {
               lat: position.coords.latitude,
-              lng: position.coords.longitude
-            }
+              lng: position.coords.longitude,
+            },
           })
           setCurrentStep(2)
         },
-        (error) => {
+        error => {
           console.error('Error getting location:', error)
           // Si no puede obtener ubicación, continúa al paso 2
           setCurrentStep(2)
@@ -56,7 +56,7 @@ export default function Welcome() {
     { id: 'dessert', name: '🍰 Postres', emoji: '🍰' },
     { id: 'coffee', name: '☕ Café & Panadería', emoji: '☕' },
     { id: 'asian', name: '🥢 Asiática', emoji: '🥢' },
-    { id: 'mexican', name: '🌮 Mexicana', emoji: '🌮' }
+    { id: 'mexican', name: '🌮 Mexicana', emoji: '🌮' },
   ]
 
   const toggleFoodPreference = (foodId: string) => {
@@ -64,7 +64,7 @@ export default function Welcome() {
       ...preferences,
       foodTypes: preferences.foodTypes.includes(foodId)
         ? preferences.foodTypes.filter(id => id !== foodId)
-        : [...preferences.foodTypes, foodId]
+        : [...preferences.foodTypes, foodId],
     })
   }
 
@@ -85,7 +85,6 @@ export default function Welcome() {
     <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50">
       <div className="flex flex-col items-center justify-center min-h-screen px-4">
         <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-          
           {/* Step 1: Welcome */}
           {currentStep === 1 && (
             <>
@@ -94,13 +93,15 @@ export default function Welcome() {
                 ¡Bienvenido a FoodSave, {session?.user?.name?.split(' ')[0]}!
               </h1>
               <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-                Descubre packs sorpresa y empieza a ahorrar mientras ayudas a reducir el desperdicio de comida.
+                Descubre packs sorpresa y empieza a ahorrar mientras ayudas a
+                reducir el desperdicio de comida.
               </p>
-              
+
               {/* Gamification touch */}
               <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-8">
                 <p className="text-green-800 text-sm font-medium">
-                  🎉 Ya formas parte de +1,000 personas que han salvado más de 10,000 comidas
+                  🎉 Ya formas parte de +1,000 personas que han salvado más de
+                  10,000 comidas
                 </p>
               </div>
 
@@ -111,7 +112,7 @@ export default function Welcome() {
                 >
                   📍 Buscar Packs Cerca de Mí
                 </button>
-                
+
                 <Link
                   href="/packs"
                   className="block w-full text-green-600 hover:text-green-700 px-4 py-2 text-sm font-medium"
@@ -134,7 +135,7 @@ export default function Welcome() {
               </p>
 
               <div className="grid grid-cols-2 gap-3 mb-8">
-                {foodOptions.map((food) => (
+                {foodOptions.map(food => (
                   <button
                     key={food.id}
                     onClick={() => toggleFoodPreference(food.id)}
@@ -145,7 +146,9 @@ export default function Welcome() {
                     }`}
                   >
                     <div className="text-2xl mb-1">{food.emoji}</div>
-                    <div className="text-xs font-medium">{food.name.replace(food.emoji + ' ', '')}</div>
+                    <div className="text-xs font-medium">
+                      {food.name.replace(food.emoji + ' ', '')}
+                    </div>
                   </button>
                 ))}
               </div>
@@ -157,7 +160,7 @@ export default function Welcome() {
                 >
                   🚀 ¡Rescatar mi Primer Pack!
                 </button>
-                
+
                 <button
                   onClick={handleFinish}
                   className="w-full text-gray-500 hover:text-gray-700 px-4 py-2 text-sm"
@@ -170,8 +173,12 @@ export default function Welcome() {
 
           {/* Progress indicator */}
           <div className="flex justify-center mt-6 space-x-2">
-            <div className={`w-2 h-2 rounded-full ${currentStep >= 1 ? 'bg-green-500' : 'bg-gray-300'}`}></div>
-            <div className={`w-2 h-2 rounded-full ${currentStep >= 2 ? 'bg-green-500' : 'bg-gray-300'}`}></div>
+            <div
+              className={`w-2 h-2 rounded-full ${currentStep >= 1 ? 'bg-green-500' : 'bg-gray-300'}`}
+            ></div>
+            <div
+              className={`w-2 h-2 rounded-full ${currentStep >= 2 ? 'bg-green-500' : 'bg-gray-300'}`}
+            ></div>
           </div>
         </div>
 

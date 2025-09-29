@@ -79,7 +79,6 @@ export default function Dashboard() {
     }
   }
 
-
   if (status === 'loading' || isLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
@@ -112,7 +111,7 @@ export default function Dashboard() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
-      
+
       <div className="max-w-7xl mx-auto pt-8 px-4">
         {/* Header */}
         <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between">
@@ -122,7 +121,6 @@ export default function Dashboard() {
             </h1>
             <p className="text-gray-600 mt-2">{establishment.address}</p>
           </div>
-          
         </div>
 
         {/* Stats Cards */}
@@ -132,38 +130,50 @@ export default function Dashboard() {
               <div className="flex items-center">
                 <div className="text-2xl mr-3">📈</div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Total Orders</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.totalOrders}</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    Total Orders
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.totalOrders}
+                  </p>
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center">
                 <div className="text-2xl mr-3">💰</div>
                 <div>
                   <p className="text-sm font-medium text-gray-500">Revenue</p>
-                  <p className="text-2xl font-bold text-gray-900">${stats.totalRevenue.toFixed(2)}</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    ${stats.totalRevenue.toFixed(2)}
+                  </p>
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center">
                 <div className="text-2xl mr-3">📦</div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">Active Packs</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.activePacks}</p>
+                  <p className="text-sm font-medium text-gray-500">
+                    Active Packs
+                  </p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.activePacks}
+                  </p>
                 </div>
               </div>
             </div>
-            
+
             <div className="bg-white rounded-lg shadow p-6">
               <div className="flex items-center">
                 <div className="text-2xl mr-3">✅</div>
                 <div>
                   <p className="text-sm font-medium text-gray-500">Completed</p>
-                  <p className="text-2xl font-bold text-gray-900">{stats.completedOrders}</p>
+                  <p className="text-2xl font-bold text-gray-900">
+                    {stats.completedOrders}
+                  </p>
                 </div>
               </div>
             </div>
@@ -173,7 +183,7 @@ export default function Dashboard() {
         {/* Tabs */}
         <div className="border-b border-gray-200 mb-8">
           <nav className="-mb-px flex space-x-8">
-            {tabs.map((tab) => (
+            {tabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
@@ -195,13 +205,18 @@ export default function Dashboard() {
           {activeTab === 'overview' && (
             <div className="space-y-6">
               <div className="bg-white rounded-lg shadow p-6">
-                <h2 className="text-xl font-semibold mb-4">Welcome to your dashboard!</h2>
+                <h2 className="text-xl font-semibold mb-4">
+                  Welcome to your dashboard!
+                </h2>
                 <p className="text-gray-600 mb-4">
-                  Here you can manage your food packs, view orders, and track your impact on reducing food waste.
+                  Here you can manage your food packs, view orders, and track
+                  your impact on reducing food waste.
                 </p>
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">Quick Actions</h3>
+                    <h3 className="font-semibold text-gray-900 mb-2">
+                      Quick Actions
+                    </h3>
                     <ul className="space-y-2">
                       <li>
                         <button
@@ -222,7 +237,9 @@ export default function Dashboard() {
                     </ul>
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900 mb-2">Tips for Success</h3>
+                    <h3 className="font-semibold text-gray-900 mb-2">
+                      Tips for Success
+                    </h3>
                     <ul className="space-y-1 text-sm text-gray-600">
                       <li>• Update pack quantities regularly</li>
                       <li>• Set realistic pickup windows</li>
@@ -245,9 +262,12 @@ export default function Dashboard() {
 
           {activeTab === 'settings' && (
             <div className="bg-white rounded-lg shadow p-6">
-              <h2 className="text-xl font-semibold mb-4">Establishment Settings</h2>
+              <h2 className="text-xl font-semibold mb-4">
+                Establishment Settings
+              </h2>
               <p className="text-gray-600">
-                Settings panel coming soon. Contact support for any changes needed.
+                Settings panel coming soon. Contact support for any changes
+                needed.
               </p>
             </div>
           )}

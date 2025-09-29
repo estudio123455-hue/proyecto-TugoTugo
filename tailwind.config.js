@@ -11,7 +11,7 @@ module.exports = {
         // Verde fresco (sostenibilidad)
         fresh: {
           50: '#f0fdf4',
-          100: '#dcfce7', 
+          100: '#dcfce7',
           200: '#bbf7d0',
           300: '#86efac',
           400: '#4ade80',
@@ -75,11 +75,13 @@ module.exports = {
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'food-pattern': 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%2310b981" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+        'gradient-conic':
+          'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
+        'food-pattern':
+          'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%2310b981" fill-opacity="0.05"%3E%3Ccircle cx="30" cy="30" r="4"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
       },
       animation: {
-        'float': 'float 6s ease-in-out infinite',
+        float: 'float 6s ease-in-out infinite',
         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
         'bounce-slow': 'bounce 3s infinite',
       },
@@ -87,37 +89,38 @@ module.exports = {
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
           '50%': { transform: 'translateY(-20px)' },
-        }
+        },
       },
       boxShadow: {
-        'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
-        'medium': '0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
-        'large': '0 10px 50px -12px rgba(0, 0, 0, 0.25)',
-        'colored': '0 10px 40px -10px rgba(34, 197, 94, 0.3)',
+        soft: '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
+        medium:
+          '0 4px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)',
+        large: '0 10px 50px -12px rgba(0, 0, 0, 0.25)',
+        colored: '0 10px 40px -10px rgba(34, 197, 94, 0.3)',
         'colored-blue': '0 10px 40px -10px rgba(14, 165, 233, 0.3)',
         'warm-glow': '0 10px 40px -10px rgba(249, 115, 22, 0.3)',
       },
       fontFamily: {
-        'sans': ['Poppins', 'system-ui', 'sans-serif'],
-        'display': ['Poppins', 'system-ui', 'sans-serif'],
+        sans: ['Poppins', 'system-ui', 'sans-serif'],
+        display: ['Poppins', 'system-ui', 'sans-serif'],
       },
     },
   },
   plugins: [
-    function({ addUtilities }) {
+    function ({ addUtilities }) {
       const newUtilities = {
         '.glass': {
           'backdrop-filter': 'blur(10px)',
-          'background': 'rgba(255, 255, 255, 0.7)',
-          'border': '1px solid rgba(255, 255, 255, 0.2)',
+          background: 'rgba(255, 255, 255, 0.7)',
+          border: '1px solid rgba(255, 255, 255, 0.2)',
         },
         '.glass-dark': {
           'backdrop-filter': 'blur(10px)',
-          'background': 'rgba(0, 0, 0, 0.3)',
-          'border': '1px solid rgba(255, 255, 255, 0.1)',
-        }
+          background: 'rgba(0, 0, 0, 0.3)',
+          border: '1px solid rgba(255, 255, 255, 0.1)',
+        },
       }
       addUtilities(newUtilities)
-    }
+    },
   ],
 }

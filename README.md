@@ -5,6 +5,7 @@ A web application that connects customers with local restaurants and stores to p
 ## Features
 
 ### For Customers
+
 - 🗺️ **Interactive Map**: Browse nearby establishments with available food packs
 - 🛒 **Easy Booking**: Reserve and pay for surprise packs online
 - 👤 **User Profile**: Track purchase history and manage personal data
@@ -12,6 +13,7 @@ A web application that connects customers with local restaurants and stores to p
 - 💳 **Secure Payments**: Integrated with Stripe for safe transactions
 
 ### For Establishments
+
 - 📊 **Dashboard**: Manage inventory and publish available packs
 - ⏰ **Flexible Scheduling**: Set pickup windows and availability
 - 💰 **Revenue Recovery**: Convert waste into revenue
@@ -39,41 +41,45 @@ A web application that connects customers with local restaurants and stores to p
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone <repository-url>
    cd food-waste-marketplace
    ```
 
 2. **Install dependencies**
+
    ```bash
    npm install
    ```
 
 3. **Set up environment variables**
+
    ```bash
    cp env.example .env.local
    ```
-   
+
    Fill in your environment variables:
+
    ```env
    # Database
    DATABASE_URL="postgresql://username:password@localhost:5432/foodwaste_db"
-   
+
    # NextAuth
    NEXTAUTH_URL="http://localhost:3000"
    NEXTAUTH_SECRET="your-secret-key"
-   
+
    # OAuth Providers (optional)
    GOOGLE_CLIENT_ID="your-google-client-id"
    GOOGLE_CLIENT_SECRET="your-google-client-secret"
    FACEBOOK_CLIENT_ID="your-facebook-app-id"
    FACEBOOK_CLIENT_SECRET="your-facebook-app-secret"
-   
+
    # Stripe
    STRIPE_PUBLISHABLE_KEY="pk_test_..."
    STRIPE_SECRET_KEY="sk_test_..."
    STRIPE_WEBHOOK_SECRET="whsec_..."
-   
+
    # Email
    SMTP_HOST="smtp.gmail.com"
    SMTP_PORT=587
@@ -82,12 +88,14 @@ A web application that connects customers with local restaurants and stores to p
    ```
 
 4. **Set up the database**
+
    ```bash
    npx prisma generate
    npx prisma db push
    ```
 
 5. **Run the development server**
+
    ```bash
    npm run dev
    ```
@@ -122,6 +130,7 @@ A web application that connects customers with local restaurants and stores to p
 ## OAuth Setup (Optional)
 
 ### Google OAuth
+
 1. Go to [Google Cloud Console](https://console.cloud.google.com)
 2. Create a new project or select existing
 3. Enable Google+ API
@@ -129,6 +138,7 @@ A web application that connects customers with local restaurants and stores to p
 5. Add authorized redirect URI: `http://localhost:3000/api/auth/callback/google`
 
 ### Facebook OAuth
+
 1. Go to [Facebook Developers](https://developers.facebook.com)
 2. Create a new app
 3. Add Facebook Login product
@@ -147,6 +157,7 @@ A web application that connects customers with local restaurants and stores to p
 ### Other Platforms
 
 The app can be deployed to any platform that supports Next.js:
+
 - Railway
 - Render
 - Heroku

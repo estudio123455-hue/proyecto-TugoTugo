@@ -6,7 +6,7 @@ export async function POST() {
   try {
     // Create a demo restaurant user
     const hashedPassword = await bcrypt.hash('123456', 12)
-    
+
     const demoUser = await prisma.user.upsert({
       where: { email: 'demo.restaurant@foodsave.com' },
       update: {},
@@ -15,7 +15,7 @@ export async function POST() {
         email: 'demo.restaurant@foodsave.com',
         password: hashedPassword,
         role: 'ESTABLISHMENT',
-      }
+      },
     })
 
     // Create a demo establishment
@@ -32,7 +32,7 @@ export async function POST() {
         email: 'estudio.123455@gmail.com',
         category: 'RESTAURANT',
         userId: demoUser.id,
-      }
+      },
     })
 
     // Create some demo packs (time slots)
@@ -47,8 +47,12 @@ export async function POST() {
         originalPrice: 35000, // $35,000 COP
         discountedPrice: 18000, // $18,000 COP
         quantity: 5,
-        availableFrom: new Date(`${today.toISOString().split('T')[0]}T12:00:00`),
-        availableUntil: new Date(`${today.toISOString().split('T')[0]}T14:00:00`),
+        availableFrom: new Date(
+          `${today.toISOString().split('T')[0]}T12:00:00`
+        ),
+        availableUntil: new Date(
+          `${today.toISOString().split('T')[0]}T14:00:00`
+        ),
         pickupTimeStart: '12:00',
         pickupTimeEnd: '14:00',
         establishmentId: demoEstablishment.id,
@@ -59,8 +63,12 @@ export async function POST() {
         originalPrice: 40000, // $40,000 COP
         discountedPrice: 20000, // $20,000 COP
         quantity: 8,
-        availableFrom: new Date(`${today.toISOString().split('T')[0]}T18:00:00`),
-        availableUntil: new Date(`${today.toISOString().split('T')[0]}T20:00:00`),
+        availableFrom: new Date(
+          `${today.toISOString().split('T')[0]}T18:00:00`
+        ),
+        availableUntil: new Date(
+          `${today.toISOString().split('T')[0]}T20:00:00`
+        ),
         pickupTimeStart: '18:00',
         pickupTimeEnd: '20:00',
         establishmentId: demoEstablishment.id,
@@ -71,24 +79,28 @@ export async function POST() {
         originalPrice: 32000, // $32,000 COP
         discountedPrice: 16000, // $16,000 COP
         quantity: 10,
-        availableFrom: new Date(`${tomorrow.toISOString().split('T')[0]}T12:00:00`),
-        availableUntil: new Date(`${tomorrow.toISOString().split('T')[0]}T14:00:00`),
+        availableFrom: new Date(
+          `${tomorrow.toISOString().split('T')[0]}T12:00:00`
+        ),
+        availableUntil: new Date(
+          `${tomorrow.toISOString().split('T')[0]}T14:00:00`
+        ),
         pickupTimeStart: '12:00',
         pickupTimeEnd: '14:00',
         establishmentId: demoEstablishment.id,
-      }
+      },
     ]
 
     for (const packData of demoPacks) {
       await prisma.pack.upsert({
         where: {
-          id: `demo-${packData.pickupTimeStart}-${packData.availableFrom.toISOString().split('T')[0]}-${demoEstablishment.id}`
+          id: `demo-${packData.pickupTimeStart}-${packData.availableFrom.toISOString().split('T')[0]}-${demoEstablishment.id}`,
         },
         update: packData,
         create: {
           id: `demo-${packData.pickupTimeStart}-${packData.availableFrom.toISOString().split('T')[0]}-${demoEstablishment.id}`,
-          ...packData
-        }
+          ...packData,
+        },
       })
     }
 
@@ -98,14 +110,17 @@ export async function POST() {
         restaurant: {
           email: 'demo.restaurant@foodsave.com',
           password: '123456',
-          dashboard: '/dashboard'
-        }
-      }
+          dashboard: '/dashboard',
+        },
+      },
     })
   } catch (error) {
     console.error('Error creating demo data:', error)
     return NextResponse.json(
-      { message: 'Error creating demo data', error: error instanceof Error ? error.message : 'Unknown error' },
+      {
+        message: 'Error creating demo data',
+        error: error instanceof Error ? error.message : 'Unknown error',
+      },
       { status: 500 }
     )
   }

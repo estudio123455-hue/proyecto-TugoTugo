@@ -11,12 +11,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { message: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
     const { packId, quantity } = await request.json()
@@ -37,10 +34,7 @@ export async function POST(request: NextRequest) {
     })
 
     if (!pack) {
-      return NextResponse.json(
-        { message: 'Pack not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ message: 'Pack not found' }, { status: 404 })
     }
 
     if (pack.quantity < quantity) {
@@ -117,12 +111,9 @@ export async function POST(request: NextRequest) {
 export async function GET(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { message: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
     const orders = await prisma.order.findMany({

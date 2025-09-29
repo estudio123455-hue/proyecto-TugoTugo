@@ -10,12 +10,9 @@ export async function POST(
 ) {
   try {
     const session = await getServerSession(authOptions)
-    
+
     if (!session?.user?.id) {
-      return NextResponse.json(
-        { message: 'Unauthorized' },
-        { status: 401 }
-      )
+      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
     // Get the order with all necessary details
@@ -38,10 +35,7 @@ export async function POST(
     })
 
     if (!order) {
-      return NextResponse.json(
-        { message: 'Order not found' },
-        { status: 404 }
-      )
+      return NextResponse.json({ message: 'Order not found' }, { status: 404 })
     }
 
     if (order.status !== 'READY_FOR_PICKUP') {

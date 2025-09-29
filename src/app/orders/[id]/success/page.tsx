@@ -85,7 +85,9 @@ export default function OrderSuccess() {
         <div className="max-w-md mx-auto pt-20 px-4">
           <div className="bg-white rounded-lg shadow-md p-6 text-center">
             <div className="text-red-500 text-6xl mb-4">❌</div>
-            <h1 className="text-2xl font-bold text-gray-900 mb-2">Order Not Found</h1>
+            <h1 className="text-2xl font-bold text-gray-900 mb-2">
+              Order Not Found
+            </h1>
             <p className="text-gray-600 mb-6">{error}</p>
             <Link
               href="/map"
@@ -102,24 +104,30 @@ export default function OrderSuccess() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
-      
+
       <div className="max-w-2xl mx-auto pt-20 px-4">
         <div className="bg-white rounded-lg shadow-md overflow-hidden">
           {/* Success Header */}
           <div className="bg-green-500 text-white p-6 text-center">
             <div className="text-6xl mb-4">🎉</div>
             <h1 className="text-3xl font-bold mb-2">¡Pack Reservado!</h1>
-            <p className="text-green-100 text-lg">Tu pack sorpresa está confirmado</p>
+            <p className="text-green-100 text-lg">
+              Tu pack sorpresa está confirmado
+            </p>
           </div>
 
           {/* Order Details */}
           <div className="p-6">
             <div className="border-b border-gray-200 pb-6 mb-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Order Details</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                Order Details
+              </h2>
               <div className="space-y-3">
                 <div className="flex justify-between">
                   <span className="text-gray-600">Order ID:</span>
-                  <span className="font-medium">{order.id.slice(-8).toUpperCase()}</span>
+                  <span className="font-medium">
+                    {order.id.slice(-8).toUpperCase()}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Pack:</span>
@@ -131,7 +139,9 @@ export default function OrderSuccess() {
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Total Paid:</span>
-                  <span className="font-medium text-green-600">${order.totalAmount.toFixed(2)}</span>
+                  <span className="font-medium text-green-600">
+                    ${order.totalAmount.toFixed(2)}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span className="text-gray-600">Status:</span>
@@ -144,32 +154,41 @@ export default function OrderSuccess() {
 
             {/* Pickup Information */}
             <div className="border-b border-gray-200 pb-6 mb-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">📍 Información de Recogida</h2>
-              
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                📍 Información de Recogida
+              </h2>
+
               <div className="bg-gradient-to-r from-green-50 to-blue-50 border border-green-200 rounded-lg p-6 mb-4">
                 <div className="text-center mb-4">
                   <h3 className="text-xl font-bold text-green-800 mb-2">
-                    Recógelo entre {formatTime(order.pack.pickupTimeStart)} y {formatTime(order.pack.pickupTimeEnd)}
+                    Recógelo entre {formatTime(order.pack.pickupTimeStart)} y{' '}
+                    {formatTime(order.pack.pickupTimeEnd)}
                   </h3>
                   <p className="text-green-700 font-medium">
                     en {order.pack.establishment.name}
                   </p>
                 </div>
-                
+
                 <div className="bg-white rounded-lg p-4">
                   <div className="flex items-start">
                     <div className="text-2xl mr-3">🏪</div>
                     <div>
-                      <h4 className="font-semibold text-gray-900">{order.pack.establishment.name}</h4>
-                      <p className="text-gray-600 text-sm">{order.pack.establishment.address}</p>
+                      <h4 className="font-semibold text-gray-900">
+                        {order.pack.establishment.name}
+                      </h4>
+                      <p className="text-gray-600 text-sm">
+                        {order.pack.establishment.address}
+                      </p>
                       {order.pack.establishment.phone && (
-                        <p className="text-gray-600 text-sm mt-1">📞 {order.pack.establishment.phone}</p>
+                        <p className="text-gray-600 text-sm mt-1">
+                          📞 {order.pack.establishment.phone}
+                        </p>
                       )}
                     </div>
                   </div>
                 </div>
               </div>
-              
+
               <div className="bg-blue-50 rounded-lg p-4">
                 <div className="flex items-center justify-center text-blue-800">
                   <div className="text-xl mr-2">⏰</div>
@@ -178,7 +197,8 @@ export default function OrderSuccess() {
                       {formatDate(order.pickupDate)}
                     </div>
                     <div className="text-sm">
-                      Horario: {formatTime(order.pack.pickupTimeStart)} - {formatTime(order.pack.pickupTimeEnd)}
+                      Horario: {formatTime(order.pack.pickupTimeStart)} -{' '}
+                      {formatTime(order.pack.pickupTimeEnd)}
                     </div>
                   </div>
                 </div>
@@ -187,7 +207,9 @@ export default function OrderSuccess() {
 
             {/* Important Notes */}
             <div className="mb-6">
-              <h2 className="text-lg font-semibold text-gray-900 mb-4">Important Notes</h2>
+              <h2 className="text-lg font-semibold text-gray-900 mb-4">
+                Important Notes
+              </h2>
               <ul className="space-y-2 text-sm text-gray-600">
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">•</span>
@@ -199,7 +221,8 @@ export default function OrderSuccess() {
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">•</span>
-                  The pack contents are a surprise - enjoy discovering what's inside!
+                  The pack contents are a surprise - enjoy discovering what's
+                  inside!
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">•</span>
@@ -229,7 +252,8 @@ export default function OrderSuccess() {
         {/* Email Reminder */}
         <div className="mt-6 bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
           <p className="text-blue-700 text-sm">
-            📧 A confirmation email has been sent to your registered email address with all the details.
+            📧 A confirmation email has been sent to your registered email
+            address with all the details.
           </p>
         </div>
       </div>

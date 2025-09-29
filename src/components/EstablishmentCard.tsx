@@ -22,32 +22,30 @@ interface EstablishmentCardProps {
   activePacks?: number
 }
 
-export default function EstablishmentCard({ 
-  establishment, 
+export default function EstablishmentCard({
+  establishment,
   showActions = true,
-  activePacks = 0 
+  activePacks = 0,
 }: EstablishmentCardProps) {
-  
   const getCategoryEmoji = (category: string) => {
     const categoryMap: { [key: string]: string } = {
-      'RESTAURANT': '🍽️',
-      'CAFE': '☕',
-      'BAKERY': '🥖',
-      'SUPERMARKET': '🛒',
-      'GROCERY': '🏪',
-      'OTHER': '🏢'
+      RESTAURANT: '🍽️',
+      CAFE: '☕',
+      BAKERY: '🥖',
+      SUPERMARKET: '🛒',
+      GROCERY: '🏪',
+      OTHER: '🏢',
     }
     return categoryMap[category] || '🏢'
   }
-
 
   return (
     <div className="bg-white rounded-2xl shadow-soft hover:shadow-lg transition-all overflow-hidden border border-gray-100">
       {/* Establishment Image */}
       <div className="h-48 bg-gradient-to-br from-fresh-100 to-warm-100 flex items-center justify-center overflow-hidden">
         {establishment.image ? (
-          <img 
-            src={establishment.image} 
+          <img
+            src={establishment.image}
             alt={establishment.name}
             className="w-full h-full object-cover"
           />
@@ -57,7 +55,7 @@ export default function EstablishmentCard({
           </span>
         )}
       </div>
-      
+
       {/* Content */}
       <div className="p-6">
         <div className="flex items-start justify-between mb-3">
@@ -66,44 +64,50 @@ export default function EstablishmentCard({
               {establishment.name}
             </h3>
             <div className="flex items-center text-gray-600 mb-2">
-              <span className="mr-2">{getCategoryEmoji(establishment.category)}</span>
-              <span className="text-sm capitalize">{establishment.category.toLowerCase()}</span>
+              <span className="mr-2">
+                {getCategoryEmoji(establishment.category)}
+              </span>
+              <span className="text-sm capitalize">
+                {establishment.category.toLowerCase()}
+              </span>
             </div>
           </div>
-          
+
           {/* Status Badge */}
-          <div className={`px-3 py-1 rounded-full text-xs font-medium ${
-            establishment.isActive 
-              ? 'bg-green-100 text-green-800' 
-              : 'bg-red-100 text-red-800'
-          }`}>
+          <div
+            className={`px-3 py-1 rounded-full text-xs font-medium ${
+              establishment.isActive
+                ? 'bg-green-100 text-green-800'
+                : 'bg-red-100 text-red-800'
+            }`}
+          >
             {establishment.isActive ? 'Activo' : 'Inactivo'}
           </div>
         </div>
-        
+
         {establishment.description && (
           <p className="text-gray-600 text-sm mb-4 line-clamp-2">
             {establishment.description}
           </p>
         )}
-        
+
         {/* Address */}
         <div className="flex items-center text-gray-600 mb-4">
           <span className="mr-2 text-sm">📍</span>
           <span className="text-sm truncate">{establishment.address}</span>
         </div>
-        
+
         {/* Stats */}
         <div className="flex items-center justify-between mb-4">
           <div className="flex items-center text-sm text-gray-600">
             <span className="mr-2">📦</span>
             <span>{activePacks} packs disponibles</span>
           </div>
-          
+
           {establishment.phone && (
             <div className="flex items-center text-sm text-gray-600">
               <span className="mr-1">📞</span>
-              <a 
+              <a
                 href={`tel:${establishment.phone}`}
                 className="hover:text-fresh-600 transition-colors"
               >
@@ -112,7 +116,7 @@ export default function EstablishmentCard({
             </div>
           )}
         </div>
-        
+
         {/* Actions */}
         {showActions && (
           <div className="flex space-x-2">
