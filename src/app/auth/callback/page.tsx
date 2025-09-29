@@ -13,6 +13,12 @@ export default function AuthCallback() {
   useEffect(() => {
     const handleAuthCallback = async () => {
       try {
+        if (!supabase) {
+          setStatus('error')
+          setMessage('Error de configuración. Por favor intenta de nuevo.')
+          return
+        }
+        
         const { data, error } = await supabase.auth.getSession()
         
         if (error) {
