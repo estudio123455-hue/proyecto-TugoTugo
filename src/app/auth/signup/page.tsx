@@ -291,7 +291,10 @@ export default function SignUp() {
 
               <div className="mt-6">
                 <button
-                  onClick={() => signIn('google')}
+                  onClick={() => signIn('google', { 
+                    callbackUrl: '/welcome',
+                    redirect: true 
+                  })}
                   className="inline-flex w-full justify-center rounded-lg border border-gray-300 bg-white py-3 px-4 text-sm font-medium text-gray-500 shadow-sm hover:bg-gray-50 transition-colors"
                 >
                   <svg className="h-5 w-5 mr-2" viewBox="0 0 24 24">

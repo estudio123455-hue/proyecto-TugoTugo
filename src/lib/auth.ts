@@ -57,9 +57,15 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt',
   },
   callbacks: {
-    async jwt({ token, user }) {
+    async jwt({ token, user, account }) {
       if (user) {
         token.role = user.role
+      }
+      if (account?.provider === 'google') {
+        // For Google OAuth, set default role if not exists
+        if (!token.role) {
+          token.role = 'CUSTOMER'
+        }
       }
       return token
     },
@@ -70,8 +76,35 @@ export const authOptions: NextAuthOptions = {
       }
       return session
     },
+    async signIn({ user, account, profile }) {
+      if (account?.provider === 'google') {
+        // Create or update user in database for Google OAuth
+        try {
+          const existingUser = await prisma.user.findUnique({
+            where: { email: user.email! },
+          })
+          
+          if (!existingUser) {
+            await prisma.user.create({
+              data: {
+                email: user.email!,
+                name: user.name || profile?.name || '',
+                role: 'CUSTOMER',
+                image: user.image,
+              },
+            })
+          }
+          return true
+        } catch (error) {
+          console.error('Error creating Google user:', error)
+          return false
+        }
+      }
+      return true
+    },
   },
   pages: {
     signIn: '/auth/signin',
+    newUser: '/auth/oauth-callback', // Redirect here after OAuth signup
   },
 }
