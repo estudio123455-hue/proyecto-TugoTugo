@@ -36,7 +36,7 @@ export async function POST(request: NextRequest) {
     }
 
     switch (event.type) {
-      case 'checkout.session.completed':
+      case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session
 
         if (session.metadata?.orderId) {
@@ -93,8 +93,9 @@ export async function POST(request: NextRequest) {
           console.log('Order confirmed:', session.metadata.orderId)
         }
         break
+      }
 
-      case 'checkout.session.expired':
+      case 'checkout.session.expired': {
         const expiredSession = event.data.object as Stripe.Checkout.Session
 
         if (expiredSession.metadata?.orderId) {
@@ -110,6 +111,7 @@ export async function POST(request: NextRequest) {
           )
         }
         break
+      }
 
       default:
         console.log(`Unhandled event type: ${event.type}`)
