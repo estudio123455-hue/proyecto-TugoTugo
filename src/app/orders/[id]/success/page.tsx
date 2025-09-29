@@ -221,12 +221,12 @@ export default function OrderSuccess() {
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">•</span>
-                  The pack contents are a surprise - enjoy discovering what's
+                  The pack contents are a surprise - enjoy discovering what&apos;s
                   inside!
                 </li>
                 <li className="flex items-start">
                   <span className="text-green-500 mr-2">•</span>
-                  If you can't make it, please contact the establishment
+                  If you can&apos;t make it, please contact the establishment
                 </li>
               </ul>
             </div>

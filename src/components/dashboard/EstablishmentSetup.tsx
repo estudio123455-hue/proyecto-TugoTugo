@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useSession } from 'next-auth/react'
 
 interface EstablishmentSetupProps {
@@ -114,7 +114,7 @@ export default function EstablishmentSetup({
             Welcome to FoodSave!
           </h1>
           <p className="text-gray-600">
-            Let's set up your establishment profile to start reducing food waste
+            Let&apos;s set up your establishment profile to start reducing food waste
           </p>
         </div>
 

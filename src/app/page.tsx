@@ -326,7 +326,7 @@ export default function Home() {
                 </div>
 
                 <p className="text-gray-700 leading-relaxed">
-                  "{testimonial.text}"
+                  &ldquo;{testimonial.text}&rdquo;
                 </p>
               </div>
             ))}

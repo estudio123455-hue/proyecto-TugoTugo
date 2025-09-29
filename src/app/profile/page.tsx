@@ -423,7 +423,7 @@ export default function Profile() {
                   </h4>
                   <ul className="text-sm text-green-700 space-y-1">
                     <li>
-                      • You've helped {stats?.packsCollected || 0} local
+                      • You&apos;ve helped {stats?.packsCollected || 0} local
                       businesses reduce waste
                     </li>
                     <li>
@@ -431,7 +431,7 @@ export default function Profile() {
                       system
                     </li>
                     <li>
-                      • You've saved ${stats?.totalSaved.toFixed(2) || '0.00'}{' '}
+                      • You&apos;ve saved ${stats?.totalSaved.toFixed(2) || '0.00'}{' '}
                       while making a positive impact
                     </li>
                   </ul>

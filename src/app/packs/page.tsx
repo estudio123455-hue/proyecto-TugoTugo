@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import Navigation from '@/components/Navigation'
-import PackCard from '@/components/PackCard'
+// import PackCard from '@/components/PackCard' // TODO: Use this component
 import EmptyState from '@/components/EmptyState'
 
 interface Pack {

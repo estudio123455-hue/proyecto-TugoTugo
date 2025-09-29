@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { useState } from 'react'
 
+import React from 'react'
+
 interface EmptyStateProps {
   searchQuery: string
   selectedCategory: string
