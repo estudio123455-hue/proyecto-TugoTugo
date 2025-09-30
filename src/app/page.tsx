@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import Navigation from '@/components/Navigation'
 import FloatingSupport from '@/components/FloatingSupport'
 
@@ -41,9 +41,9 @@ export default function Home() {
 
   useEffect(() => {
     fetchRestaurants()
-  }, [])
+  }, [fetchRestaurants])
 
-  const fetchRestaurants = async () => {
+  const fetchRestaurants = useCallback(async () => {
     try {
       const response = await fetch('/api/restaurants/feed?limit=3')
       if (response.ok) {
@@ -55,7 +55,7 @@ export default function Home() {
     } finally {
       setIsLoadingRestaurants(false)
     }
-  }
+  }, [])
 
   if (!mounted) return null
 

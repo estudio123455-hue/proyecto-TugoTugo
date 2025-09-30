@@ -42,12 +42,12 @@ interface Pack {
 
 interface MapProps {
   establishments: Establishment[]
-  onEstablishmentSelect: (establishment: Establishment) => void
+  onEstablishmentSelect?: (establishment: Establishment) => void
 }
 
 export default function Map({
   establishments,
-  onEstablishmentSelect: _,
+  onEstablishmentSelect,
 }: MapProps) {
   const [isClient, setIsClient] = useState(false)
 
@@ -133,7 +133,7 @@ export default function Map({
                       {availablePacks.length !== 1 ? 's' : ''} available
                     </p>
                     <button
-                      onClick={() => onEstablishmentSelect(establishment)}
+                      onClick={() => onEstablishmentSelect?.(establishment)}
                       className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded text-sm w-full"
                     >
                       View Packs

@@ -101,7 +101,7 @@ export default function RestaurantsPage() {
     })
 
     setFilteredRestaurants(filtered)
-  }, [restaurants, selectedCategory, searchQuery, sortBy])
+  }, [restaurants, searchQuery, sortBy])
 
   const getTotalPacks = (restaurant: Restaurant) => {
     return restaurant.packs.length

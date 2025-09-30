@@ -14,7 +14,7 @@ interface RichTextEditorProps {
 }
 
 export default function RichTextEditor({ 
-  content: _ = '', 
+  content: initialContent = '', 
   onChange, 
   placeholder = 'Escribe tu descripción...',
   className = ''
@@ -35,7 +35,7 @@ export default function RichTextEditor({
         },
       }),
     ],
-    content,
+    content: initialContent,
     onUpdate: ({ editor }) => {
       onChange?.(editor.getHTML())
     },
