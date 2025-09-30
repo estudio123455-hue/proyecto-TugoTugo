@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { getFirstName, getUserInitials } from '@/lib/user-utils'
 import { useCleanSession } from '@/hooks/useCleanSession'
+import ThemeToggle from './ThemeToggle'
 
 export default function Navigation() {
   const { data: session, status } = useCleanSession()
@@ -115,8 +116,11 @@ export default function Navigation() {
           </div>
 
           <div className="flex items-center space-x-4">
+            {/* Theme Toggle */}
+            <ThemeToggle />
+            
             {status === 'loading' ? (
-              <div className="animate-pulse bg-gray-200 h-8 w-20 rounded"></div>
+              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-8 w-20 rounded"></div>
             ) : session ? (
               <div className="flex items-center space-x-4">
                 {/* User Menu Dropdown */}
