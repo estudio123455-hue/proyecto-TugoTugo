@@ -6,11 +6,9 @@ export function getCleanUserName(name?: string | null): string {
   
   // Check if name contains verification data
   if (name.startsWith('VERIFY:')) {
-    const parts = name.split(':')
-    if (parts.length >= 4) {
-      // Return the original name (everything after the third colon)
-      return parts.slice(3).join(':') || 'Usuario'
-    }
+    // Use regex to remove VERIFY:number:number: pattern
+    const cleanName = name.replace(/^VERIFY:\d+:\d+:/, '')
+    return cleanName || 'Usuario'
   }
   
   return name

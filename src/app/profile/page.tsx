@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Navigation from '@/components/Navigation'
 import Link from 'next/link'
+import { useCleanSession } from '@/hooks/useCleanSession'
 
 interface Order {
   id: string
@@ -34,7 +35,7 @@ interface UserStats {
 }
 
 export default function Profile() {
-  const { data: session, status } = useSession()
+  const { data: session, status } = useCleanSession()
   const router = useRouter()
   const [orders, setOrders] = useState<Order[]>([])
   const [stats, setStats] = useState<UserStats | null>(null)

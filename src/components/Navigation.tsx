@@ -4,9 +4,10 @@ import { useSession, signIn, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import { useState } from 'react'
 import { getFirstName, getUserInitials } from '@/lib/user-utils'
+import { useCleanSession } from '@/hooks/useCleanSession'
 
 export default function Navigation() {
-  const { data: session, status, update } = useSession()
+  const { data: session, status, update } = useCleanSession()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const getRoleDisplay = (role?: string) => {
