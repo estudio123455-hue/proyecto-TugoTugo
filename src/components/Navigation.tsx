@@ -49,6 +49,12 @@ export default function Navigation() {
                   🗺️ Find Packs
                 </Link>
                 <Link
+                  href="/restaurants"
+                  className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                >
+                  🍽️ Restaurants
+                </Link>
+                <Link
                   href="/how-it-works"
                   className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium"
                 >

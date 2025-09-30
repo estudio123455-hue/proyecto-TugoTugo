@@ -41,38 +41,26 @@ export default function Home() {
     },
   ]
 
-  const restaurants = [
-    {
-      id: 1,
-      name: 'Panadería Artesanal',
-      description: 'Panadería tradicional con productos frescos',
-      image: '🥖',
-      originalPrice: 15,
-      salePrice: 7,
-      pickupTime: '18:00 - 20:00',
-      available: true,
-    },
-    {
-      id: 2,
-      name: 'Supermercado Local',
-      description: 'Productos frescos y variados',
-      image: '🛒',
-      originalPrice: 20,
-      salePrice: 10,
-      pickupTime: '19:00 - 21:00',
-      available: true,
-    },
-    {
-      id: 3,
-      name: 'Restaurante Verde',
-      description: 'Comida saludable y sostenible',
-      image: '🥗',
-      originalPrice: 25,
-      salePrice: 12,
-      pickupTime: '20:00 - 22:00',
-      available: false,
-    },
-  ]
+  const [restaurants, setRestaurants] = useState([])
+  const [isLoadingRestaurants, setIsLoadingRestaurants] = useState(true)
+
+  useEffect(() => {
+    fetchRestaurants()
+  }, [])
+
+  const fetchRestaurants = async () => {
+    try {
+      const response = await fetch('/api/restaurants/feed?limit=3')
+      if (response.ok) {
+        const data = await response.json()
+        setRestaurants(data.data)
+      }
+    } catch (error) {
+      console.error('Error fetching restaurants:', error)
+    } finally {
+      setIsLoadingRestaurants(false)
+    }
+  }
 
   if (!mounted) return null
 
@@ -216,71 +204,98 @@ export default function Home() {
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {restaurants.map(restaurant => (
-              <div
-                key={restaurant.id}
-                className="bg-white rounded-2xl shadow-soft hover:shadow-lg transition-shadow overflow-hidden"
-              >
-                {/* Imagen del restaurante */}
-                <div className="h-48 bg-gradient-to-br from-warm-100 to-fresh-100 flex items-center justify-center">
-                  <span className="text-6xl">{restaurant.image}</span>
+            {isLoadingRestaurants ? (
+              // Loading skeleton
+              Array.from({ length: 3 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="bg-white rounded-2xl shadow-soft overflow-hidden animate-pulse"
+                >
+                  <div className="h-48 bg-gray-200"></div>
+                  <div className="p-6">
+                    <div className="h-4 bg-gray-200 rounded mb-2"></div>
+                    <div className="h-3 bg-gray-200 rounded mb-4"></div>
+                    <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+                  </div>
                 </div>
-
-                {/* Contenido */}
-                <div className="p-6">
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    {restaurant.name}
-                  </h3>
-                  <p className="text-gray-600 mb-4">{restaurant.description}</p>
-
-                  {/* Precios */}
-                  <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center space-x-2">
-                      <span className="text-lg line-through text-gray-400">
-                        €{restaurant.originalPrice}
-                      </span>
-                      <span className="text-2xl font-bold text-fresh-600">
-                        €{restaurant.salePrice}
-                      </span>
-                    </div>
-                    <div className="bg-warm-100 text-warm-700 px-3 py-1 rounded-full text-sm font-medium">
-                      -
-                      {Math.round(
-                        (1 - restaurant.salePrice / restaurant.originalPrice) *
-                          100
-                      )}
-                      %
-                    </div>
+              ))
+            ) : restaurants.length > 0 ? (
+              restaurants.map(restaurant => (
+                <div
+                  key={restaurant.id}
+                  className="bg-white rounded-2xl shadow-soft hover:shadow-lg transition-shadow overflow-hidden"
+                >
+                  {/* Imagen del restaurante */}
+                  <div className="h-48 bg-gradient-to-br from-warm-100 to-fresh-100 flex items-center justify-center">
+                    <span className="text-6xl">{restaurant.image || '🍽️'}</span>
                   </div>
 
-                  {/* Horario */}
-                  <div className="flex items-center text-gray-600 mb-4">
-                    <span className="mr-2">🕐</span>
-                    <span className="text-sm">
-                      Recogida: {restaurant.pickupTime}
-                    </span>
-                  </div>
+                  {/* Contenido */}
+                  <div className="p-6">
+                    <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                      {restaurant.name}
+                    </h3>
+                    <p className="text-gray-600 mb-4 line-clamp-2">
+                      {restaurant.description}
+                    </p>
 
-                  {/* Botón */}
-                  <button
-                    className={`w-full py-3 rounded-xl font-semibold transition-all ${
-                      restaurant.available
-                        ? 'bg-gradient-to-r from-fresh-600 to-fresh-700 hover:from-fresh-700 hover:to-fresh-800 text-white shadow-lg hover:shadow-xl'
-                        : 'bg-gray-100 text-gray-400 cursor-not-allowed'
-                    }`}
-                    disabled={!restaurant.available}
-                  >
-                    {restaurant.available ? 'Reservar pack' : 'No disponible'}
-                  </button>
-                </div>
+                    {/* Packs Summary */}
+                    <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-sm font-medium text-gray-700">Packs disponibles</span>
+                        <span className="text-sm text-gray-600">
+                          {restaurant.packs?.filter(pack => pack.quantity > 0).length || 0}
+                        </span>
+                      </div>
+                      
+                      {restaurant.packs?.slice(0, 1).map(pack => (
+                        <div key={pack.id} className="flex justify-between items-center text-sm">
+                          <span className="truncate">{pack.title}</span>
+                          <div className="flex items-center space-x-1">
+                            <span className="text-green-600 font-semibold">
+                              ${pack.discountedPrice}
+                            </span>
+                            <span className="text-gray-400 line-through text-xs">
+                              ${pack.originalPrice}
+                            </span>
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* Botón */}
+                    <Link
+                      href={`/establecimiento/${restaurant.id}`}
+                      className="w-full py-3 rounded-xl font-semibold transition-all bg-gradient-to-r from-fresh-600 to-fresh-700 hover:from-fresh-700 hover:to-fresh-800 text-white shadow-lg hover:shadow-xl text-center block"
+                    >
+                      Ver Packs
+                    </Link>
+                  </div>
               </div>
-            ))}
+              ))
+            ) : (
+              <div className="col-span-full text-center py-12">
+                <div className="text-6xl mb-4">🍽️</div>
+                <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                  No hay restaurantes disponibles
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Los restaurantes aparecerán aquí cuando publiquen packs
+                </p>
+                <Link
+                  href="/restaurants"
+                  className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg"
+                >
+                  Ver todos los restaurantes
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* Ver más */}
           <div className="text-center mt-12">
             <Link
-              href="/packs"
+              href="/restaurants"
               className="inline-flex items-center text-fresh-600 hover:text-fresh-700 font-semibold"
             >
               Ver todos los restaurantes
