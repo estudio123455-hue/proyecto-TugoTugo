@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useState } from 'react'
 
 export default function Navigation() {
-  const { data: session, status } = useSession()
+  const { data: session, status, update } = useSession()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
 
   const getRoleDisplay = (role?: string) => {

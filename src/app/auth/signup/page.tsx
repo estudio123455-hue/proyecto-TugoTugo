@@ -56,9 +56,10 @@ export default function SignUp() {
             'Registration successful but login failed. Please sign in manually.'
           )
         } else {
-          router.push(
-            formData.role === 'ESTABLISHMENT' ? '/dashboard' : '/welcome'
-          )
+          // Wait for session to update before redirecting
+          setTimeout(() => {
+            window.location.href = formData.role === 'ESTABLISHMENT' ? '/dashboard' : '/welcome'
+          }, 1000)
         }
       } else {
         const data = await response.json()

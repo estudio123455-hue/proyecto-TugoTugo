@@ -60,12 +60,17 @@ export default function SignIn() {
           return
         }
 
-        // Redirect based on actual role
-        if (session?.user?.role === 'ESTABLISHMENT') {
-          router.push('/dashboard')
-        } else {
-          router.push('/packs')
-        }
+        // Show success message and redirect
+        setError('') // Clear any previous errors
+        
+        // Redirect based on actual role with full page reload to ensure session is updated
+        setTimeout(() => {
+          if (session?.user?.role === 'ESTABLISHMENT') {
+            window.location.href = '/dashboard'
+          } else {
+            window.location.href = '/packs'
+          }
+        }, 800) // Slightly longer delay for better UX
       }
     } catch (error) {
       setError('Ocurrió un error. Inténtalo de nuevo.')
@@ -249,7 +254,7 @@ export default function SignIn() {
                   {isLoading ? (
                     <div className="flex items-center justify-center space-x-2">
                       <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                      <span>Iniciando sesión...</span>
+                      <span>Iniciando sesión y configurando tu cuenta...</span>
                     </div>
                   ) : (
                     <div className="flex items-center justify-center space-x-2">
