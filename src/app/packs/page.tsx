@@ -27,15 +27,14 @@ interface Pack {
 }
 
 const foodCategories = [
-  { id: 'all', name: 'Todos', emoji: '🍽️' },
-  { id: 'pizza', name: 'Pizza', emoji: '🍕' },
-  { id: 'healthy', name: 'Saludable', emoji: '🥗' },
-  { id: 'sushi', name: 'Sushi', emoji: '🍣' },
-  { id: 'burger', name: 'Hamburguesas', emoji: '🍔' },
-  { id: 'dessert', name: 'Postres', emoji: '🍰' },
-  { id: 'coffee', name: 'Café', emoji: '☕' },
-  { id: 'asian', name: 'Asiática', emoji: '🥢' },
-  { id: 'mexican', name: 'Mexicana', emoji: '🌮' },
+  { id: 'all', name: 'Todos', emoji: '🍽️', color: 'bg-gray-100 text-gray-700' },
+  { id: 'bakery', name: 'Panadería', emoji: '🥖', color: 'bg-amber-100 text-amber-700' },
+  { id: 'lunch', name: 'Almuerzo', emoji: '🍛', color: 'bg-orange-100 text-orange-700' },
+  { id: 'dessert', name: 'Postres', emoji: '🍰', color: 'bg-pink-100 text-pink-700' },
+  { id: 'coffee', name: 'Café', emoji: '☕', color: 'bg-brown-100 text-brown-700' },
+  { id: 'healthy', name: 'Saludable', emoji: '🥗', color: 'bg-green-100 text-green-700' },
+  { id: 'pizza', name: 'Pizza', emoji: '🍕', color: 'bg-red-100 text-red-700' },
+  { id: 'asian', name: 'Asiática', emoji: '🥢', color: 'bg-yellow-100 text-yellow-700' },
 ]
 
 export default function PacksExplorer() {
@@ -202,26 +201,43 @@ export default function PacksExplorer() {
       <Navigation />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header - Mobile Optimized */}
+        {/* Hero Section with Impact - Brand Identity */}
         <div className="text-center mb-8 sm:mb-12">
+          {/* Slogan de impacto */}
+          <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 px-4 rounded-2xl mb-6 shadow-lg">
+            <p className="text-sm sm:text-base font-semibold">
+              🌱 Salva comida, ahorra dinero, ayuda al planeta
+            </p>
+          </div>
+          
           <div className="flex justify-between items-center mb-4 sm:mb-6">
             <div></div>
             <button
               onClick={fetchPacks}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors"
+              className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 sm:px-6 sm:py-3 rounded-full text-sm sm:text-base font-semibold transition-all transform hover:scale-105 shadow-lg flex items-center gap-2"
             >
-              🔄 Actualizar
+              <span className="animate-pulse">🔄</span>
+              Ver nuevos packs disponibles
             </button>
           </div>
+          
           <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-4 sm:mb-6 leading-tight px-4">
-            🍽️ Packs Disponibles
+            🍽️ Packs Sorpresa
             <br />
-            <span className="text-green-600">Cerca de Ti</span>
+            <span className="text-green-600">Disponibles Ahora</span>
           </h1>
-          <p className="text-lg sm:text-xl md:text-2xl text-gray-600 font-medium px-4">
-            Descubre packs sorpresa con hasta{' '}
-            <span className="text-green-600 font-bold">50% de descuento</span>
+          
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-600 font-medium px-4 mb-4">
+            Comida deliciosa con hasta{' '}
+            <span className="text-green-600 font-bold">70% de descuento</span>
           </p>
+          
+          {/* Sección de impacto */}
+          <div className="bg-green-50 border border-green-200 rounded-xl p-4 mx-4 sm:mx-auto max-w-lg">
+            <p className="text-green-800 font-semibold text-sm sm:text-base">
+              🌍 Este mes hemos salvado <span className="text-green-600 font-bold">2,847 kg</span> de comida en Bogotá
+            </p>
+          </div>
         </div>
 
         {/* Search Bar - Full Width */}
@@ -281,7 +297,7 @@ export default function PacksExplorer() {
               className={`inline-flex items-center px-3 py-2 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all transform hover:scale-105 ${
                 selectedCategory === category.id
                   ? 'bg-green-500 text-white shadow-lg ring-2 ring-green-200'
-                  : 'bg-white text-gray-700 hover:bg-green-50 border-2 border-gray-200 hover:border-green-300 shadow-sm'
+                  : `${category.color} hover:bg-green-50 border-2 border-gray-200 hover:border-green-300 shadow-sm`
               }`}
             >
               <span className="text-base mr-1">{category.emoji}</span>
@@ -309,7 +325,7 @@ export default function PacksExplorer() {
                 con packs disponibles
               </p>
             </div>
-            <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-2 sm:px-0">
+            <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 px-2 sm:px-0">
               {getUniqueRestaurants(filteredPacks).map(restaurant => {
                 const restaurantPacks = filteredPacks.filter(
                   pack => pack.establishment.id === restaurant.id
@@ -326,11 +342,23 @@ export default function PacksExplorer() {
                 return (
                   <div
                     key={restaurant.id}
-                    className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
+                    className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all transform hover:-translate-y-1 border border-gray-100"
                   >
-                    {/* Restaurant Image Placeholder - Mobile Optimized */}
-                    <div className="h-32 sm:h-48 bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center">
-                      <span className="text-4xl sm:text-6xl text-white">🍽️</span>
+                    {/* Restaurant Image with Category Badge */}
+                    <div className="relative h-32 sm:h-48 bg-gradient-to-br from-green-400 via-emerald-500 to-teal-600 flex items-center justify-center">
+                      <span className="text-4xl sm:text-6xl text-white drop-shadow-lg">🍽️</span>
+                      {/* Category Badge */}
+                      <div className="absolute top-3 left-3 bg-white/90 backdrop-blur-sm px-2 py-1 rounded-full">
+                        <span className="text-xs font-semibold text-gray-700 capitalize">
+                          {restaurant.category.toLowerCase()}
+                        </span>
+                      </div>
+                      {/* Distance Badge (placeholder) */}
+                      <div className="absolute top-3 right-3 bg-green-500/90 backdrop-blur-sm px-2 py-1 rounded-full">
+                        <span className="text-xs font-semibold text-white">
+                          📍 2.1 km
+                        </span>
+                      </div>
                     </div>
 
                     <div className="p-4 sm:p-6">
@@ -357,43 +385,67 @@ export default function PacksExplorer() {
                         </div>
                       </div>
 
-                      {/* Active Time Slots */}
+                      {/* Packs Disponibles - Rediseñado */}
                       {activePacks.length > 0 && (
-                        <div className="mb-4">
-                          <h4 className="text-sm font-semibold text-green-800 mb-2 flex items-center">
-                            🟢 Horarios Activos
-                          </h4>
-                          <div className="space-y-2">
-                            {activePacks.slice(0, 2).map(pack => (
-                              <div
-                                key={pack.id}
-                                className="flex justify-between items-center bg-green-50 rounded-lg p-3 border border-green-200"
-                              >
-                                <div>
-                                  <div className="font-medium text-green-800">
-                                    {pack.pickupTimeStart.slice(0, 5)} -{' '}
-                                    {pack.pickupTimeEnd.slice(0, 5)}
-                                  </div>
-                                  <div className="text-sm text-green-600">
-                                    {pack.quantity} packs restantes
-                                  </div>
+                        <div className="space-y-3">
+                          {activePacks.slice(0, 2).map(pack => (
+                            <div
+                              key={pack.id}
+                              className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-4 border border-green-200 hover:border-green-300 transition-all"
+                            >
+                              {/* Pack Header */}
+                              <div className="flex justify-between items-start mb-3">
+                                <div className="flex-1">
+                                  <h4 className="font-bold text-gray-900 mb-1">
+                                    📦 {pack.title}
+                                  </h4>
+                                  <p className="text-sm text-gray-600 line-clamp-2">
+                                    {pack.description}
+                                  </p>
                                 </div>
-                                <div className="text-right">
-                                  <div className="font-bold text-green-600">
-                                    ${pack.discountedPrice.toFixed(2)}
+                                <div className="ml-3 text-right">
+                                  <div className="flex items-center gap-2 mb-1">
+                                    <span className="text-sm text-gray-500 line-through">
+                                      ${pack.originalPrice.toFixed(2)}
+                                    </span>
+                                    <span className="font-bold text-green-600 text-lg">
+                                      ${pack.discountedPrice.toFixed(2)}
+                                    </span>
                                   </div>
-                                  <button
-                                    onClick={() =>
-                                      handleReservePack(pack.id, 1)
-                                    }
-                                    className="bg-green-500 hover:bg-green-600 text-white text-xs px-3 py-1 rounded-full transition-colors mt-1"
-                                  >
-                                    Reservar
-                                  </button>
+                                  <div className="text-xs text-green-600 font-semibold">
+                                    {Math.round(((pack.originalPrice - pack.discountedPrice) / pack.originalPrice) * 100)}% OFF
+                                  </div>
                                 </div>
                               </div>
-                            ))}
-                          </div>
+                              
+                              {/* Pack Info */}
+                              <div className="flex justify-between items-center mb-3">
+                                <div className="flex items-center gap-4">
+                                  <div className="flex items-center gap-1">
+                                    <span className="text-green-600">⏰</span>
+                                    <span className="text-sm font-medium text-gray-700">
+                                      {pack.pickupTimeStart.slice(0, 5)} - {pack.pickupTimeEnd.slice(0, 5)}
+                                    </span>
+                                  </div>
+                                  <div className="flex items-center gap-1">
+                                    <span className="text-orange-500">📦</span>
+                                    <span className="text-sm font-medium text-gray-700">
+                                      {pack.quantity} disponibles
+                                    </span>
+                                  </div>
+                                </div>
+                              </div>
+                              
+                              {/* CTA Button */}
+                              <button
+                                onClick={() => handleReservePack(pack.id, 1)}
+                                className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition-all transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                              >
+                                <span>🛒</span>
+                                Reservar Pack Sorpresa
+                              </button>
+                            </div>
+                          ))}
                         </div>
                       )}
 
