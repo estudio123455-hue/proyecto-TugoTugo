@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { validatePackData, sanitizeHtml, createRateLimit } from '@/lib/validation'
 
 export async function GET() {
   try {
@@ -48,6 +49,9 @@ export async function GET() {
   }
 }
 
+// Rate limiting: 10 requests per minute per user
+const rateLimit = createRateLimit(10, 60 * 1000)
+
 export async function POST(request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
@@ -60,7 +64,24 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ message: 'Access denied' }, { status: 403 })
     }
 
+    // Rate limiting
+    if (!rateLimit(session.user.id)) {
+      return NextResponse.json(
+        { message: 'Too many requests. Please try again later.' },
+        { status: 429 }
+      )
+    }
+
     const data = await request.json()
+
+    // Validate pack data
+    const validation = validatePackData(data)
+    if (!validation.isValid) {
+      return NextResponse.json(
+        { message: 'Validation failed', errors: validation.errors },
+        { status: 400 }
+      )
+    }
 
     // Get establishment
     const establishment = await prisma.establishment.findUnique({
@@ -76,10 +97,13 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Sanitize HTML content
+    const sanitizedDescription = sanitizeHtml(data.description)
+
     const pack = await prisma.pack.create({
       data: {
-        title: data.title,
-        description: data.description,
+        title: data.title.trim(),
+        description: sanitizedDescription,
         originalPrice: data.originalPrice,
         discountedPrice: data.discountedPrice,
         quantity: data.quantity,
@@ -90,6 +114,15 @@ export async function POST(request: NextRequest) {
         isActive: true, // Make packs active by default
         establishmentId: establishment.id,
       },
+    })
+
+    // Emit real-time event (in a real implementation, you'd use WebSocket server)
+    // This would trigger notifications to subscribed clients
+    console.log('📢 Pack created:', {
+      id: pack.id,
+      title: pack.title,
+      establishmentId: establishment.id,
+      establishmentName: establishment.name,
     })
 
     return NextResponse.json(pack, { status: 201 })

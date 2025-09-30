@@ -3,7 +3,9 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import Navigation from '@/components/Navigation'
+import NotificationSystem from '@/components/NotificationSystem'
 import Link from 'next/link'
+import { useRestaurantsFeed } from '@/hooks/useRestaurantsFeed'
 
 interface Pack {
   id: string
@@ -52,63 +54,54 @@ const categories = [
 
 export default function RestaurantsPage() {
   const { data: session } = useSession()
-  const [restaurants, setRestaurants] = useState<Restaurant[]>([])
   const [filteredRestaurants, setFilteredRestaurants] = useState<Restaurant[]>([])
-  const [isLoading, setIsLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
-  const [lastUpdate, setLastUpdate] = useState<string>('')
+  const [sortBy, setSortBy] = useState<'newest' | 'popular' | 'name'>('newest')
 
-  useEffect(() => {
-    fetchRestaurants()
-    
-    // Auto-refresh every 30 seconds
-    const interval = setInterval(fetchRestaurants, 30000)
-    
-    return () => clearInterval(interval)
-  }, [])
+  // Use the new hook with real-time updates
+  const { 
+    restaurants, 
+    total, 
+    lastUpdate, 
+    isLoading, 
+    error, 
+    isConnected 
+  } = useRestaurantsFeed(selectedCategory === 'all' ? undefined : selectedCategory)
 
   useEffect(() => {
     filterRestaurants()
-  }, [restaurants, selectedCategory, searchQuery])
-
-  const fetchRestaurants = async () => {
-    console.log('🔄 Fetching restaurants feed...')
-    try {
-      const response = await fetch('/api/restaurants/feed')
-      if (response.ok) {
-        const data = await response.json()
-        console.log('📊 Restaurants feed received:', data.data.length)
-        setRestaurants(data.data)
-        setLastUpdate(data.timestamp)
-      } else {
-        console.error('❌ API response not OK:', response.status)
-        const errorText = await response.text()
-        console.error('❌ Error response:', errorText)
-      }
-    } catch (error) {
-      console.error('❌ Error fetching restaurants:', error)
-    } finally {
-      setIsLoading(false)
-    }
-  }
+  }, [restaurants, selectedCategory, searchQuery, sortBy])
 
   const filterRestaurants = () => {
-    let filtered = restaurants
-
-    // Filter by category
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(restaurant => restaurant.category === selectedCategory)
-    }
+    let filtered = [...restaurants]
 
     // Filter by search query
     if (searchQuery) {
       filtered = filtered.filter(restaurant =>
         restaurant.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         restaurant.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        restaurant.address.toLowerCase().includes(searchQuery.toLowerCase())
+        restaurant.address.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        restaurant.packs.some(pack => 
+          pack.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          pack.description.toLowerCase().includes(searchQuery.toLowerCase())
+        )
       )
     }
+
+    // Sort results
+    filtered.sort((a, b) => {
+      switch (sortBy) {
+        case 'newest':
+          return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+        case 'popular':
+          return b.packs.length - a.packs.length
+        case 'name':
+          return a.name.localeCompare(b.name)
+        default:
+          return 0
+      }
+    })
 
     setFilteredRestaurants(filtered)
   }
@@ -139,6 +132,7 @@ export default function RestaurantsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
+      <NotificationSystem />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
@@ -150,12 +144,20 @@ export default function RestaurantsPage() {
             Descubre los mejores packs sorpresa de restaurantes cerca de ti
           </p>
           
-          {/* Last update info */}
-          {lastUpdate && (
-            <p className="text-sm text-gray-500">
-              Última actualización: {new Date(lastUpdate).toLocaleString()}
-            </p>
-          )}
+          {/* Connection status and last update */}
+          <div className="flex items-center justify-center space-x-4 text-sm">
+            <div className="flex items-center space-x-2">
+              <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
+              <span className="text-gray-500">
+                {isConnected ? 'Tiempo real activo' : 'Modo offline'}
+              </span>
+            </div>
+            {lastUpdate && (
+              <span className="text-gray-500">
+                Última actualización: {new Date(lastUpdate).toLocaleString()}
+              </span>
+            )}
+          </div>
         </div>
 
         {/* Filters */}
@@ -172,7 +174,7 @@ export default function RestaurantsPage() {
           </div>
 
           {/* Category filters */}
-          <div className="flex flex-wrap justify-center gap-2">
+          <div className="flex flex-wrap justify-center gap-2 mb-4">
             {categories.map(category => (
               <button
                 key={category.id}
@@ -187,6 +189,36 @@ export default function RestaurantsPage() {
                 {category.name}
               </button>
             ))}
+          </div>
+
+          {/* Sort options */}
+          <div className="flex justify-center">
+            <div className="flex bg-gray-100 rounded-lg p-1">
+              <button
+                onClick={() => setSortBy('newest')}
+                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                  sortBy === 'newest' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Más recientes
+              </button>
+              <button
+                onClick={() => setSortBy('popular')}
+                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                  sortBy === 'popular' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Más populares
+              </button>
+              <button
+                onClick={() => setSortBy('name')}
+                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
+                  sortBy === 'name' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                Por nombre
+              </button>
+            </div>
           </div>
         </div>
 

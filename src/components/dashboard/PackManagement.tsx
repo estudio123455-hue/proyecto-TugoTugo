@@ -1,6 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
+import RichTextEditor from '@/components/RichTextEditor'
 
 interface Pack {
   id: string
@@ -234,15 +235,11 @@ export default function PackManagement({
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Description *
               </label>
-              <textarea
-                required
-                rows={3}
-                value={formData.description}
-                onChange={e =>
-                  setFormData({ ...formData, description: e.target.value })
-                }
-                className="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-green-500 focus:border-green-500"
+              <RichTextEditor
+                content={formData.description}
+                onChange={(content) => setFormData({ ...formData, description: content })}
                 placeholder="Describe what might be included in this pack..."
+                className="min-h-[120px]"
               />
             </div>
 
