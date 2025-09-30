@@ -80,13 +80,13 @@ export default function SignIn() {
     <div className="min-h-screen bg-gradient-to-br from-fresh-50 to-warm-50 font-sans">
       <Navigation />
 
-      <div className="flex min-h-full flex-col justify-center py-12 px-6">
-        {/* Hero Section - Minimalista */}
-        <div className="max-w-md mx-auto text-center mb-12">
-          <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-fresh-500 to-warm-500 rounded-2xl shadow-lg mb-6">
-            <span className="text-2xl">🍃</span>
+      <div className="flex min-h-full flex-col justify-center py-6 sm:py-12 px-4 sm:px-6">
+        {/* Hero Section - Mobile Optimized */}
+        <div className="max-w-md mx-auto text-center mb-8 sm:mb-12">
+          <div className="inline-flex items-center justify-center w-12 h-12 sm:w-16 sm:h-16 bg-gradient-to-r from-fresh-500 to-warm-500 rounded-xl sm:rounded-2xl shadow-lg mb-4 sm:mb-6">
+            <span className="text-xl sm:text-2xl">🍃</span>
           </div>
-          <h1 className="text-3xl font-bold text-gray-900 mb-4">
+          <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4">
             ¡Bienvenido de vuelta!
           </h1>
           <p className="text-gray-600 mb-2">

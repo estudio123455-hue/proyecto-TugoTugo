@@ -9,6 +9,7 @@ export const metadata = {
   title: 'FoodSave - Reduce Food Waste',
   description:
     'Discover surprise food packs from local restaurants and reduce food waste',
+  viewport: 'width=device-width, initial-scale=1, maximum-scale=1',
 }
 
 export default function RootLayout({

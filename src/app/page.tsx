@@ -91,9 +91,9 @@ export default function Home() {
           backgroundPosition: '0 0',
         }}
       >
-        <div className="relative z-10 max-w-6xl mx-auto px-6 py-20 text-center">
-          {/* Título principal - más limpio */}
-          <h1 className="text-5xl lg:text-7xl font-bold mb-6 text-gray-900 leading-tight">
+        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-20 text-center">
+          {/* Título principal - Mobile Optimized */}
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 sm:mb-6 text-gray-900 leading-tight">
             Salva comida deliciosa
             <br />
             <span className="bg-gradient-to-r from-fresh-600 to-warm-500 bg-clip-text text-transparent">
@@ -102,27 +102,27 @@ export default function Home() {
           </h1>
 
           {/* Subtítulo */}
-          <p className="text-xl lg:text-2xl text-gray-600 mb-12 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed px-4">
             Encuentra packs sorpresa en restaurantes cercanos a un precio
             reducido
           </p>
 
-          {/* Botón principal */}
+          {/* Botón principal - Mobile Optimized */}
           <Link
             href="/packs"
-            className="inline-flex items-center bg-gradient-to-r from-fresh-600 to-fresh-700 hover:from-fresh-700 hover:to-fresh-800 text-white px-12 py-5 rounded-2xl text-xl font-semibold transition-all transform hover:scale-105 shadow-lg hover:shadow-xl mb-16"
+            className="inline-flex items-center bg-gradient-to-r from-fresh-600 to-fresh-700 hover:from-fresh-700 hover:to-fresh-800 text-white px-8 py-4 sm:px-12 sm:py-5 rounded-xl sm:rounded-2xl text-lg sm:text-xl font-semibold transition-all transform hover:scale-105 shadow-lg hover:shadow-xl mb-12 sm:mb-16"
           >
-            <span className="mr-3 text-2xl">📍</span>
+            <span className="mr-2 sm:mr-3 text-xl sm:text-2xl">📍</span>
             Explorar negocios
           </Link>
 
-          {/* Imagen hero simple */}
-          <div className="mt-16 relative max-w-4xl mx-auto">
-            <div className="bg-white rounded-3xl shadow-2xl p-8 border border-gray-100">
-              <div className="flex items-center justify-center text-8xl mb-4">
+          {/* Imagen hero - Mobile Optimized */}
+          <div className="mt-8 sm:mt-16 relative max-w-4xl mx-auto px-4">
+            <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 border border-gray-100">
+              <div className="flex items-center justify-center text-6xl sm:text-8xl mb-3 sm:mb-4">
                 🥘
               </div>
-              <p className="text-gray-600 text-lg">
+              <p className="text-gray-600 text-base sm:text-lg">
                 Miles de restaurantes cerca de ti con packs sorpresa disponibles
               </p>
             </div>

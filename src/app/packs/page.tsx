@@ -202,23 +202,23 @@ export default function PacksExplorer() {
       <Navigation />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header - Enhanced */}
-        <div className="text-center mb-12">
-          <div className="flex justify-between items-center mb-6">
+        {/* Header - Mobile Optimized */}
+        <div className="text-center mb-8 sm:mb-12">
+          <div className="flex justify-between items-center mb-4 sm:mb-6">
             <div></div>
             <button
               onClick={fetchPacks}
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+              className="bg-blue-500 hover:bg-blue-600 text-white px-3 py-2 sm:px-4 sm:py-2 rounded-lg text-xs sm:text-sm font-medium transition-colors"
             >
               🔄 Actualizar
             </button>
           </div>
-          <h1 className="text-5xl md:text-6xl font-black text-gray-900 mb-6 leading-tight">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-4 sm:mb-6 leading-tight px-4">
             🍽️ Packs Disponibles
             <br />
             <span className="text-green-600">Cerca de Ti</span>
           </h1>
-          <p className="text-2xl text-gray-600 font-medium">
+          <p className="text-lg sm:text-xl md:text-2xl text-gray-600 font-medium px-4">
             Descubre packs sorpresa con hasta{' '}
             <span className="text-green-600 font-bold">50% de descuento</span>
           </p>
@@ -272,13 +272,13 @@ export default function PacksExplorer() {
           </div>
         </div>
 
-        {/* Category Filters - Compact Chips */}
-        <div className="flex flex-wrap justify-center gap-3 mb-10">
+        {/* Category Filters - Mobile Optimized */}
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6 sm:mb-10 px-2">
           {foodCategories.map(category => (
             <button
               key={category.id}
               onClick={() => setSelectedCategory(category.id)}
-              className={`inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold transition-all transform hover:scale-105 ${
+              className={`inline-flex items-center px-3 py-2 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all transform hover:scale-105 ${
                 selectedCategory === category.id
                   ? 'bg-green-500 text-white shadow-lg ring-2 ring-green-200'
                   : 'bg-white text-gray-700 hover:bg-green-50 border-2 border-gray-200 hover:border-green-300 shadow-sm'
@@ -309,7 +309,7 @@ export default function PacksExplorer() {
                 con packs disponibles
               </p>
             </div>
-            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-4 sm:gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3 px-2 sm:px-0">
               {getUniqueRestaurants(filteredPacks).map(restaurant => {
                 const restaurantPacks = filteredPacks.filter(
                   pack => pack.establishment.id === restaurant.id
@@ -328,19 +328,19 @@ export default function PacksExplorer() {
                     key={restaurant.id}
                     className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow"
                   >
-                    {/* Restaurant Image Placeholder */}
-                    <div className="h-48 bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center">
-                      <span className="text-6xl text-white">🍽️</span>
+                    {/* Restaurant Image Placeholder - Mobile Optimized */}
+                    <div className="h-32 sm:h-48 bg-gradient-to-r from-green-400 to-blue-500 flex items-center justify-center">
+                      <span className="text-4xl sm:text-6xl text-white">🍽️</span>
                     </div>
 
-                    <div className="p-6">
+                    <div className="p-4 sm:p-6">
                       <div className="mb-4">
                         <div className="flex items-start justify-between">
                           <div className="flex-1">
-                            <h3 className="text-xl font-bold text-gray-900 mb-1">
+                            <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-1">
                               {restaurant.name} 🍽️
                             </h3>
-                            <p className="text-sm text-gray-600">
+                            <p className="text-xs sm:text-sm text-gray-600">
                               {restaurant.address}
                             </p>
                             <p className="text-xs text-gray-500 capitalize">
