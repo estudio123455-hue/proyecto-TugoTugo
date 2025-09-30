@@ -19,6 +19,7 @@ interface Establishment {
   email?: string
   category: string
   isActive: boolean
+  isApproved: boolean
 }
 
 interface DashboardStats {
@@ -103,6 +104,7 @@ export default function Dashboard() {
 
   const tabs = [
     { id: 'overview', name: 'Overview', icon: '📊' },
+    { id: 'posts', name: 'Publicaciones', icon: '📱' },
     { id: 'packs', name: 'Gestionar Horarios', icon: '⏰' },
     { id: 'orders', name: 'Orders', icon: '🛒' },
     { id: 'settings', name: 'Settings', icon: '⚙️' },
@@ -249,6 +251,57 @@ export default function Dashboard() {
                   </div>
                 </div>
               </div>
+            </div>
+          )}
+
+          {activeTab === 'posts' && (
+            <div className="bg-white rounded-lg shadow p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-xl font-semibold">Mis Publicaciones</h2>
+                <button
+                  onClick={() => router.push('/dashboard/posts/new')}
+                  className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium flex items-center space-x-2"
+                >
+                  <span>➕</span>
+                  <span>Nueva Publicación</span>
+                </button>
+              </div>
+              
+              {!establishment.isApproved ? (
+                <div className="text-center py-12">
+                  <div className="text-6xl mb-4">⏳</div>
+                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                    Cuenta Pendiente de Aprobación
+                  </h3>
+                  <p className="text-gray-600 mb-4">
+                    Tu restaurante está siendo revisado por un administrador.
+                    Una vez aprobado, podrás crear publicaciones de tus platillos.
+                  </p>
+                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 max-w-md mx-auto">
+                    <p className="text-yellow-800 text-sm">
+                      <strong>Estado:</strong> Pendiente de aprobación
+                    </p>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <p className="text-gray-600 mb-4">
+                    Crea publicaciones para mostrar tus platillos, promociones y menús especiales a los clientes.
+                  </p>
+                  <div className="text-center py-8">
+                    <div className="text-6xl mb-4">📱</div>
+                    <p className="text-gray-500 mb-4">
+                      Aún no tienes publicaciones
+                    </p>
+                    <button
+                      onClick={() => router.push('/dashboard/posts/new')}
+                      className="bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium"
+                    >
+                      Crear mi primera publicación
+                    </button>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 
