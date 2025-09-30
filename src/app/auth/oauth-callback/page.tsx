@@ -30,7 +30,7 @@ export default function OAuthCallback() {
     if (status === 'unauthenticated') {
       // Authentication failed, redirect to signin
       setTimeout(() => {
-        router.push('/auth/signin?error=OAuthError')
+        router.push('/auth?error=OAuthError')
       }, 2000)
     }
   }, [session, status, router, isRedirecting])
@@ -83,7 +83,7 @@ export default function OAuthCallback() {
           Hubo un problema con la autenticación. Por favor intenta de nuevo.
         </p>
         <button
-          onClick={() => router.push('/auth/signin')}
+          onClick={() => router.push('/auth')}
           className="w-full bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
         >
           Volver al login

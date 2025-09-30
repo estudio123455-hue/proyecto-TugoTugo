@@ -104,7 +104,7 @@ export const authOptions: NextAuthOptions = {
     },
   },
   pages: {
-    signIn: '/auth/signin',
+    signIn: '/auth',
     newUser: '/auth/oauth-callback', // Redirect here after OAuth signup
   },
 }

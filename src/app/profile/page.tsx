@@ -45,7 +45,7 @@ export default function Profile() {
     if (status === 'loading') return
 
     if (!session) {
-      router.push('/auth/signin')
+      router.push('/auth')
       return
     }
 

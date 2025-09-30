@@ -40,7 +40,7 @@ export default function Dashboard() {
     if (status === 'loading') return
 
     if (!session) {
-      router.push('/auth/signin')
+      router.push('/auth')
       return
     }
 

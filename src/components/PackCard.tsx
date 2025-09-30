@@ -42,7 +42,7 @@ export default function PackCard({ pack, onReserve }: PackCardProps) {
 
   const handleReserve = async () => {
     if (!session) {
-      router.push('/auth/signin')
+      router.push('/auth')
       return
     }
 

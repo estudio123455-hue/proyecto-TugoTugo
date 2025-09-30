@@ -97,7 +97,7 @@ export default function AuthCallback() {
             <p className="text-gray-600 mb-6">{message}</p>
             <div className="space-y-3">
               <button
-                onClick={() => router.push('/auth/signin')}
+                onClick={() => router.push('/auth')}
                 className="w-full bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
               >
                 Ir al Login

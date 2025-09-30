@@ -110,7 +110,7 @@ export default function Home() {
           {/* Botón principal - Redirige a auth */}
           <div className="space-y-4">
             <Link
-              href="/auth/signin"
+              href="/auth"
               className="inline-flex items-center bg-gradient-to-r from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600 text-white px-8 py-4 sm:px-12 sm:py-5 rounded-xl sm:rounded-2xl text-lg sm:text-xl font-bold transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
             >
               <span className="mr-2 sm:mr-3 text-xl sm:text-2xl">🚀</span>

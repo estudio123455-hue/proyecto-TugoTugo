@@ -12,8 +12,7 @@ interface AuthGuardProps {
 // Páginas que NO requieren autenticación
 const publicRoutes = [
   '/',
-  '/auth/signin',
-  '/auth/signup',
+  '/auth',
   '/auth/callback',
   '/auth/confirm-email',
   '/auth/oauth-callback',

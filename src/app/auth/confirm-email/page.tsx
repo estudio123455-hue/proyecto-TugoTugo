@@ -90,7 +90,7 @@ export default function ConfirmEmail() {
         {/* Back to login */}
         <div className="mt-8">
           <Link
-            href="/auth/signin"
+            href="/auth"
             className="text-green-600 hover:text-green-700 text-sm underline"
           >
             ← Volver al login
