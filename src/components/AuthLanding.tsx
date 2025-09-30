@@ -11,6 +11,7 @@ export default function AuthLanding() {
   const [name, setName] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
   const [userType, setUserType] = useState<'CUSTOMER' | 'ESTABLISHMENT'>('CUSTOMER')
+  const [loginType, setLoginType] = useState<'customer' | 'restaurant'>('customer')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
@@ -31,6 +32,29 @@ export default function AuthLanding() {
         setError('Email o contraseña incorrectos')
       } else {
         const session = await getSession()
+
+        // Verify that the user role matches the selected login type
+        if (
+          loginType === 'restaurant' &&
+          session?.user?.role !== 'ESTABLISHMENT'
+        ) {
+          setError('Esta cuenta no es de restaurante. Usa el login de cliente.')
+          setIsLoading(false)
+          return
+        }
+
+        if (
+          loginType === 'customer' &&
+          session?.user?.role === 'ESTABLISHMENT'
+        ) {
+          setError('Esta cuenta es de restaurante. Usa el login de restaurante.')
+          setIsLoading(false)
+          return
+        }
+
+        // Show success message and redirect
+        setError('') // Clear any previous errors
+        
         setTimeout(() => {
           if (session?.user?.role === 'ESTABLISHMENT') {
             window.location.href = '/dashboard'
@@ -184,20 +208,52 @@ export default function AuthLanding() {
 
                   {/* Sign In Form */}
                   {activeTab === 'signin' && (
-                    <form onSubmit={handleSignIn} className="space-y-6">
-                      <div>
+                    <>
+                      {/* Login Type Selector */}
+                      <div className="mb-6">
                         <label className="block text-sm font-semibold text-gray-700 mb-2">
-                          Email
+                          Tipo de cuenta
                         </label>
-                        <input
-                          type="email"
-                          value={email}
-                          onChange={e => setEmail(e.target.value)}
-                          className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
-                          placeholder="tu@email.com"
-                          required
-                        />
+                        <div className="flex bg-gray-100 rounded-xl p-1">
+                          <button
+                            type="button"
+                            onClick={() => setLoginType('customer')}
+                            className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+                              loginType === 'customer'
+                                ? 'bg-white text-purple-600 shadow-sm'
+                                : 'text-gray-600 hover:text-gray-900'
+                            }`}
+                          >
+                            🛒 Cliente
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => setLoginType('restaurant')}
+                            className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+                              loginType === 'restaurant'
+                                ? 'bg-white text-purple-600 shadow-sm'
+                                : 'text-gray-600 hover:text-gray-900'
+                            }`}
+                          >
+                            🏪 Restaurante
+                          </button>
+                        </div>
                       </div>
+
+                      <form onSubmit={handleSignIn} className="space-y-6">
+                        <div>
+                          <label className="block text-sm font-semibold text-gray-700 mb-2">
+                            Email
+                          </label>
+                          <input
+                            type="email"
+                            value={email}
+                            onChange={e => setEmail(e.target.value)}
+                            className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
+                            placeholder="tu@email.com"
+                            required
+                          />
+                        </div>
 
                       <div>
                         <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -224,21 +280,22 @@ export default function AuthLanding() {
                         </div>
                       </div>
 
-                      <button
-                        type="submit"
-                        disabled={isLoading}
-                        className="w-full bg-gradient-to-r from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600 text-white py-4 px-6 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50"
-                      >
-                        {isLoading ? (
-                          <div className="flex items-center justify-center space-x-2">
-                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                            <span>Iniciando sesión...</span>
-                          </div>
-                        ) : (
-                          <span>INICIAR SESIÓN</span>
-                        )}
-                      </button>
-                    </form>
+                        <button
+                          type="submit"
+                          disabled={isLoading}
+                          className="w-full bg-gradient-to-r from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600 text-white py-4 px-6 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50"
+                        >
+                          {isLoading ? (
+                            <div className="flex items-center justify-center space-x-2">
+                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                              <span>Iniciando sesión...</span>
+                            </div>
+                          ) : (
+                            <span>INICIAR SESIÓN</span>
+                          )}
+                        </button>
+                      </form>
+                    </>
                   )}
 
                   {/* Sign Up Form */}
