@@ -53,7 +53,7 @@ export async function POST(request: NextRequest) {
         console.log('[BULLETPROOF] Code verified via VerificationToken table')
       }
     } catch (error) {
-      console.log(`[BULLETPROOF] VerificationToken check failed:`, error)
+      console.log('[BULLETPROOF] VerificationToken check failed:', error)
     }
 
     // STRATEGY 2: Check User table backup (if Strategy 1 failed)
