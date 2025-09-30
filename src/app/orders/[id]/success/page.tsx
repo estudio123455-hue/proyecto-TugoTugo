@@ -32,12 +32,6 @@ export default function OrderSuccess() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState('')
 
-  useEffect(() => {
-    if (orderId) {
-      fetchOrder()
-    }
-  }, [orderId, fetchOrder])
-
   const fetchOrder = useCallback(async () => {
     try {
       const response = await fetch(`/api/orders/${orderId}`)
@@ -53,6 +47,12 @@ export default function OrderSuccess() {
       setIsLoading(false)
     }
   }, [orderId])
+
+  useEffect(() => {
+    if (orderId) {
+      fetchOrder()
+    }
+  }, [orderId, fetchOrder])
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
