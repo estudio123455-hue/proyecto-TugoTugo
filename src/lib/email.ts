@@ -36,6 +36,13 @@ interface PickupReminderEmailData {
   pickupTimeEnd: string
 }
 
+interface EmailVerificationData {
+  to: string
+  userName: string
+  code: string
+  type: 'REGISTRATION' | 'LOGIN' | 'PASSWORD_RESET'
+}
+
 export async function sendOrderConfirmationEmail(
   data: OrderConfirmationEmailData
 ) {
@@ -219,6 +226,119 @@ export async function sendPickupReminderEmail(data: PickupReminderEmailData) {
     console.log('Pickup reminder email sent successfully')
   } catch (error) {
     console.error('Error sending pickup reminder email:', error)
+    throw error
+  }
+}
+
+export async function sendVerificationEmail(data: EmailVerificationData) {
+  const getSubjectAndContent = () => {
+    switch (data.type) {
+      case 'REGISTRATION':
+        return {
+          subject: '🔐 Verifica tu cuenta - FoodSave',
+          title: '¡Bienvenido a FoodSave!',
+          subtitle: 'Verifica tu cuenta para comenzar',
+          message: 'Para completar tu registro y empezar a ahorrar en comida deliciosa, necesitamos verificar tu dirección de email.',
+          codeLabel: 'Tu código de verificación es:',
+          instructions: 'Ingresa este código en la página de verificación para activar tu cuenta.',
+          footer: '¡Estamos emocionados de tenerte en nuestra comunidad!'
+        }
+      case 'LOGIN':
+        return {
+          subject: '🔐 Código de acceso - FoodSave',
+          title: '¡Hola de nuevo!',
+          subtitle: 'Código de verificación para iniciar sesión',
+          message: 'Alguien está intentando iniciar sesión en tu cuenta de FoodSave. Si fuiste tú, usa el código de abajo.',
+          codeLabel: 'Tu código de acceso es:',
+          instructions: 'Ingresa este código para completar el inicio de sesión.',
+          footer: 'Si no fuiste tú, ignora este email y tu cuenta permanecerá segura.'
+        }
+      case 'PASSWORD_RESET':
+        return {
+          subject: '🔑 Restablece tu contraseña - FoodSave',
+          title: 'Restablecer Contraseña',
+          subtitle: 'Código para cambiar tu contraseña',
+          message: 'Recibimos una solicitud para restablecer la contraseña de tu cuenta de FoodSave.',
+          codeLabel: 'Tu código de restablecimiento es:',
+          instructions: 'Ingresa este código para crear una nueva contraseña.',
+          footer: 'Si no solicitaste este cambio, ignora este email.'
+        }
+    }
+  }
+
+  const content = getSubjectAndContent()
+
+  const mailOptions = {
+    from: process.env.SMTP_USER,
+    to: data.to,
+    subject: content.subject,
+    html: `
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+        <div style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white; padding: 30px; text-align: center; border-radius: 12px 12px 0 0;">
+          <h1 style="margin: 0; font-size: 28px; font-weight: bold;">${content.title}</h1>
+          <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">${content.subtitle}</p>
+        </div>
+        
+        <div style="padding: 30px;">
+          <p style="font-size: 16px; color: #374151; margin-bottom: 20px;">¡Hola ${data.userName}!</p>
+          
+          <p style="font-size: 16px; color: #374151; line-height: 1.6; margin-bottom: 25px;">
+            ${content.message}
+          </p>
+          
+          <div style="background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%); border: 3px solid #0ea5e9; padding: 30px; border-radius: 16px; margin: 30px 0; text-align: center;">
+            <p style="margin: 0 0 15px 0; font-size: 16px; color: #0369a1; font-weight: 600;">${content.codeLabel}</p>
+            <div style="background: white; padding: 20px; border-radius: 12px; border: 2px solid #0ea5e9; display: inline-block;">
+              <span style="font-size: 36px; font-weight: bold; color: #0369a1; letter-spacing: 8px; font-family: 'Courier New', monospace;">${data.code}</span>
+            </div>
+            <p style="margin: 15px 0 0 0; font-size: 14px; color: #64748b;">Este código expira en 15 minutos</p>
+          </div>
+          
+          <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; padding: 25px; border-radius: 12px; margin: 25px 0;">
+            <h3 style="margin-top: 0; color: #92400e; font-size: 16px;">📋 Instrucciones</h3>
+            <p style="margin: 10px 0; color: #374151; line-height: 1.6;">
+              ${content.instructions}
+            </p>
+            <ul style="margin: 15px 0; padding-left: 20px; color: #374151; line-height: 1.8;">
+              <li style="margin: 5px 0;">⏰ <strong>El código expira en 15 minutos</strong></li>
+              <li style="margin: 5px 0;">🔒 <strong>No compartas este código</strong> con nadie</li>
+              <li style="margin: 5px 0;">💻 <strong>Úsalo solo en el sitio oficial</strong> de FoodSave</li>
+            </ul>
+          </div>
+
+          ${data.type === 'LOGIN' ? `
+          <div style="background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%); border: 2px solid #ef4444; padding: 20px; border-radius: 12px; margin: 25px 0;">
+            <h3 style="margin: 0 0 10px 0; color: #dc2626; font-size: 16px;">🛡️ Seguridad</h3>
+            <p style="margin: 0; color: #374151; font-size: 14px;">
+              Si no fuiste tú quien intentó iniciar sesión, ignora este email. Tu cuenta permanece segura.
+            </p>
+          </div>
+          ` : ''}
+          
+          <p style="font-size: 16px; color: #374151; line-height: 1.6; margin-top: 30px;">
+            ${content.footer}
+          </p>
+          
+          <p style="font-size: 16px; color: #374151; margin-top: 20px;">
+            Saludos cordiales,<br>
+            <strong style="color: #6366f1;">El Equipo de FoodSave</strong> 🍃
+          </p>
+        </div>
+        
+        <div style="background-color: #f8fafc; padding: 20px; text-align: center; font-size: 12px; color: #6b7280; border-radius: 0 0 12px 12px;">
+          <p style="margin: 5px 0;">Este código fue enviado a ${data.to}</p>
+          <p style="margin: 5px 0; font-weight: bold; color: #6366f1;">🍃 FoodSave - Salvando comida, un pack a la vez</p>
+          <p style="margin: 10px 0 5px 0;">¿Problemas? Visita nuestro <a href="#" style="color: #6366f1;">centro de ayuda</a></p>
+        </div>
+      </div>
+    `,
+  }
+
+  try {
+    await transporter.sendMail(mailOptions)
+    console.log(`${data.type} verification email sent successfully to ${data.to}`)
+  } catch (error) {
+    console.error(`Error sending ${data.type} verification email:`, error)
     throw error
   }
 }

@@ -59,6 +59,21 @@ model VerificationToken {
   @@unique([identifier, token])
 }
 
+model EmailVerification {
+  id        String   @id @default(cuid())
+  email     String
+  code      String
+  type      String   // "REGISTRATION", "LOGIN", "PASSWORD_RESET"
+  expires   DateTime
+  verified  Boolean  @default(false)
+  attempts  Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([email, code])
+  @@index([email, type])
+}
+
 model Establishment {
   id          String   @id @default(cuid())
   name        String

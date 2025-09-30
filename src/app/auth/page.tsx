@@ -1,8 +1,9 @@
 'use client'
 
-import { signIn, getSession } from 'next-auth/react'
+import { signIn, getSession, signOut } from 'next-auth/react'
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { shouldRequireVerificationSimple } from '@/lib/security'
 
 export default function AuthPage() {
   // Estado principal
@@ -22,6 +23,7 @@ export default function AuthPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [enableExtraSecurity, setEnableExtraSecurity] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -42,6 +44,7 @@ export default function AuthPage() {
     setError('')
 
     try {
+      // First verify credentials
       const result = await signIn('credentials', {
         email: formData.email,
         password: formData.password,
@@ -50,22 +53,61 @@ export default function AuthPage() {
 
       if (result?.error) {
         setError('Email o contraseña incorrectos')
-      } else {
-        const session = await getSession()
+        setIsLoading(false)
+        return
+      }
 
-        // Verificar que el tipo de cuenta coincida con el rol del usuario
-        const userRole = session?.user?.role
-        const expectedRole = accountType === 'restaurant' ? 'ESTABLISHMENT' : 'CUSTOMER'
+      const session = await getSession()
 
-        if (userRole !== expectedRole) {
-          const typeText = accountType === 'restaurant' ? 'restaurante' : 'cliente'
-          const oppositeText = accountType === 'restaurant' ? 'cliente' : 'restaurante'
-          setError(`Esta cuenta no es de ${typeText}. Usa el login de ${oppositeText}.`)
-          setIsLoading(false)
-          return
+      // Verificar que el tipo de cuenta coincida con el rol del usuario
+      const userRole = session?.user?.role
+      const expectedRole = accountType === 'restaurant' ? 'ESTABLISHMENT' : 'CUSTOMER'
+
+      if (userRole !== expectedRole) {
+        const typeText = accountType === 'restaurant' ? 'restaurante' : 'cliente'
+        const oppositeText = accountType === 'restaurant' ? 'cliente' : 'restaurante'
+        setError(`Esta cuenta no es de ${typeText}. Usa el login de ${oppositeText}.`)
+        setIsLoading(false)
+        return
+      }
+
+      // Check if additional email verification is required
+      const isNewAccount = false // You can implement logic to check account age
+      const automaticVerification = shouldRequireVerificationSimple(userRole, isNewAccount)
+      const shouldVerifyEmail = automaticVerification || enableExtraSecurity
+
+      if (shouldVerifyEmail) {
+        // Send verification code for login
+        const verificationResponse = await fetch('/api/auth/send-verification', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            type: 'LOGIN',
+          }),
+        })
+
+        if (verificationResponse.ok) {
+          // Sign out temporarily and redirect to verification
+          await signOut({ redirect: false })
+          
+          const params = new URLSearchParams({
+            email: formData.email,
+            type: 'LOGIN',
+            userData: encodeURIComponent(JSON.stringify({
+              role: userRole,
+              accountType: accountType,
+            })),
+          })
+
+          window.location.href = `/auth/verify?${params.toString()}`
+        } else {
+          setError('Error al enviar código de verificación. Inténtalo de nuevo.')
         }
-
-        // Redirección exitosa
+      } else {
+        // Normal login flow
         setTimeout(() => {
           if (userRole === 'ESTABLISHMENT') {
             window.location.href = '/dashboard'
@@ -102,37 +144,37 @@ export default function AuthPage() {
     try {
       const role = accountType === 'restaurant' ? 'ESTABLISHMENT' : 'CUSTOMER'
       
-      const response = await fetch('/api/auth/register', {
+      // Send verification code instead of creating account directly
+      const response = await fetch('/api/auth/send-verification', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          name: formData.name,
           email: formData.email,
-          password: formData.password,
-          role: role,
+          type: 'REGISTRATION',
         }),
       })
 
+      const data = await response.json()
+
       if (response.ok) {
-        // Auto login después del registro exitoso
-        const result = await signIn('credentials', {
-          email: formData.email,
+        // Redirect to verification page with user data
+        const userData = {
+          name: formData.name,
           password: formData.password,
-          redirect: false,
+          role: role,
+        }
+        
+        const params = new URLSearchParams({
+          email: formData.email,
+          type: 'REGISTRATION',
+          userData: encodeURIComponent(JSON.stringify(userData)),
         })
 
-        if (result?.error) {
-          setError('Registro exitoso pero falló el login. Por favor inicia sesión.')
-        } else {
-          setTimeout(() => {
-            window.location.href = role === 'ESTABLISHMENT' ? '/dashboard' : '/welcome'
-          }, 1000)
-        }
+        window.location.href = `/auth/verify?${params.toString()}`
       } else {
-        const data = await response.json()
-        setError(data.message || 'Error en el registro')
+        setError(data.message || 'Error al enviar código de verificación')
       }
     } catch (error) {
       setError('Ocurrió un error. Por favor intenta de nuevo.')
@@ -333,6 +375,24 @@ export default function AuthPage() {
                         </button>
                       </div>
                     </div>
+
+                    {/* Seguridad Extra (solo para login) */}
+                    {activeTab === 'signin' && (
+                      <div className="flex items-center gap-3 p-4 bg-blue-50 rounded-xl border border-blue-200">
+                        <input
+                          type="checkbox"
+                          id="extra-security"
+                          checked={enableExtraSecurity}
+                          onChange={(e) => setEnableExtraSecurity(e.target.checked)}
+                          className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
+                        />
+                        <label htmlFor="extra-security" className="flex-1 text-sm">
+                          <span className="font-semibold text-blue-800">🔒 Seguridad Extra</span>
+                          <br />
+                          <span className="text-blue-600">Recibir código de verificación por email</span>
+                        </label>
+                      </div>
+                    )}
 
                     {/* Confirmar Contraseña (solo para registro) */}
                     {activeTab === 'signup' && (
