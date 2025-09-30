@@ -23,7 +23,7 @@ export async function POST(request: NextRequest) {
     // Check if name contains verification data
     if (user.name?.startsWith('VERIFY:')) {
       // More robust cleaning using regex
-      const cleanName = user.name.replace(/^VERIFY:\d+:\d+:VERIFY:\d+:\d+:/, '')
+      const cleanName = user.name.replace(/^VERIFY:\d+:\d+:/, '')
       
       if (cleanName !== user.name) {
         // Update user with clean name
@@ -73,7 +73,7 @@ export async function GET() {
     for (const user of usersWithVerifyData) {
       if (user.name?.startsWith('VERIFY:')) {
         // More robust cleaning using regex
-        const cleanName = user.name.replace(/^VERIFY:\d+:\d+:VERIFY:\d+:\d+:/, '')
+        const cleanName = user.name.replace(/^VERIFY:\d+:\d+:/, '')
         
         if (cleanName !== user.name) {
           await prisma.user.update({

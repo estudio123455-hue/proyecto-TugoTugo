@@ -127,7 +127,7 @@ export const authOptions: NextAuthOptions = {
           
           if (!existingUser) {
             // Clean name from any verification codes
-            const cleanName = (user.name || profile?.name || '').replace(/^VERIFY:\d+:\d+:VERIFY:\d+:\d+:/, '')
+            const cleanName = (user.name || profile?.name || '').replace(/^VERIFY:\d+:\d+:/, '')
             
             await prisma.user.create({
               data: {
@@ -140,7 +140,7 @@ export const authOptions: NextAuthOptions = {
           } else {
             // If user exists but has verification codes in name, clean it
             if (existingUser.name?.startsWith('VERIFY:')) {
-              const cleanName = existingUser.name.replace(/^VERIFY:\d+:\d+:VERIFY:\d+:\d+:/, '')
+              const cleanName = existingUser.name.replace(/^VERIFY:\d+:\d+:/, '')
               await prisma.user.update({
                 where: { email: user.email! },
                 data: { name: cleanName },
