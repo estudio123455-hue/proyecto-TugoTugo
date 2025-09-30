@@ -57,19 +57,6 @@ export default function PacksExplorer() {
     return Array.from(restaurantMap.values())
   }
 
-  useEffect(() => {
-    fetchPacks()
-
-    // Auto-refresh every 30 seconds
-    const interval = setInterval(fetchPacks, 30000)
-
-    return () => clearInterval(interval)
-  }, [])
-
-  useEffect(() => {
-    filterPacks()
-  }, [packs, selectedCategory, searchQuery, filterPacks])
-
   const fetchPacks = async () => {
     console.log('🔄 Fetching packs from API...')
     try {
@@ -167,6 +154,19 @@ export default function PacksExplorer() {
 
     setFilteredPacks(filtered)
   }, [packs, selectedCategory, searchQuery])
+
+  useEffect(() => {
+    fetchPacks()
+
+    // Auto-refresh every 30 seconds
+    const interval = setInterval(fetchPacks, 30000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    filterPacks()
+  }, [packs, selectedCategory, searchQuery, filterPacks])
 
   const handleReservePack = async (packId: string, quantity: number) => {
     if (!session) {
