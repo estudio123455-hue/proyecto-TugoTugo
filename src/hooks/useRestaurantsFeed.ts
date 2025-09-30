@@ -53,6 +53,14 @@ const fetcher = async (url: string): Promise<FeedResponse> => {
   return response.json()
 }
 
+const singleFetcher = async (url: string): Promise<Restaurant> => {
+  const response = await fetch(url)
+  if (!response.ok) {
+    throw new Error('Failed to fetch restaurant')
+  }
+  return response.json()
+}
+
 export const useRestaurantsFeed = (category?: string, limit?: number) => {
   const { connect, subscribe, unsubscribe, isConnected } = useWebSocket()
   
@@ -122,7 +130,7 @@ export const useRestaurantsFeed = (category?: string, limit?: number) => {
 export const useRestaurant = (id: string) => {
   const { data, error, isLoading } = useSWR<Restaurant>(
     id ? `/api/restaurants/${id}` : null,
-    fetcher,
+    singleFetcher,
     {
       refreshInterval: 10000,
       revalidateOnFocus: true,
