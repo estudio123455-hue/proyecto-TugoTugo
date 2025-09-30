@@ -107,14 +107,19 @@ export default function Home() {
             reducido
           </p>
 
-          {/* Botón principal - Mobile Optimized */}
-          <Link
-            href="/packs"
-            className="inline-flex items-center bg-gradient-to-r from-fresh-600 to-fresh-700 hover:from-fresh-700 hover:to-fresh-800 text-white px-8 py-4 sm:px-12 sm:py-5 rounded-xl sm:rounded-2xl text-lg sm:text-xl font-semibold transition-all transform hover:scale-105 shadow-lg hover:shadow-xl mb-12 sm:mb-16"
-          >
-            <span className="mr-2 sm:mr-3 text-xl sm:text-2xl">📍</span>
-            Explorar negocios
-          </Link>
+          {/* Botón principal - Redirige a auth */}
+          <div className="space-y-4">
+            <Link
+              href="/auth/signin"
+              className="inline-flex items-center bg-gradient-to-r from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600 text-white px-8 py-4 sm:px-12 sm:py-5 rounded-xl sm:rounded-2xl text-lg sm:text-xl font-bold transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
+            >
+              <span className="mr-2 sm:mr-3 text-xl sm:text-2xl">🚀</span>
+              Comenzar Ahora
+            </Link>
+            <p className="text-sm text-gray-500">
+              Regístrate gratis y empieza a ahorrar
+            </p>
+          </div>
 
           {/* Imagen hero - Mobile Optimized */}
           <div className="mt-8 sm:mt-16 relative max-w-4xl mx-auto px-4">
