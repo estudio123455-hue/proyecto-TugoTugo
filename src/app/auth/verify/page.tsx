@@ -33,12 +33,13 @@ export default function VerifyPage() {
     setSuccess('')
 
     try {
-      const response = await fetch('/api/auth/verify-code', {
+      const response = await fetch('/api/auth/simple-verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          action: 'verify',
           email,
           code,
           type,

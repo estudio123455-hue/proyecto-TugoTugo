@@ -81,8 +81,8 @@ export default function AuthPage() {
         // Sign out first
         await signOut({ redirect: false })
         
-        // Send verification code
-        const verificationResponse = await fetch('/api/auth/send-verification', {
+        // Send verification code using bulletproof system
+        const verificationResponse = await fetch('/api/auth/send-code-bulletproof', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -90,6 +90,7 @@ export default function AuthPage() {
           body: JSON.stringify({
             email: formData.email,
             type: 'LOGIN',
+            userName: session?.user?.name || 'Usuario',
           }),
         })
 
@@ -166,15 +167,21 @@ export default function AuthPage() {
     try {
       const role = accountType === 'restaurant' ? 'ESTABLISHMENT' : 'CUSTOMER'
       
-      // Send verification code instead of creating account directly
-      const response = await fetch('/api/auth/send-verification', {
+      // Send verification code using simple reliable system
+      const response = await fetch('/api/auth/simple-verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          action: 'send',
           email: formData.email,
           type: 'REGISTRATION',
+          userData: {
+            name: formData.name,
+            password: formData.password,
+            role: role,
+          },
         }),
       })
 

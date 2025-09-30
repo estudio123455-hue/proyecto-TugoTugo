@@ -48,7 +48,7 @@ export default function VerifyLoginPage() {
 
     try {
       // Verify the code
-      const response = await fetch('/api/auth/verify-code', {
+      const response = await fetch('/api/auth/verify-code-bulletproof', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -124,7 +124,7 @@ export default function VerifyLoginPage() {
     setError('')
     
     try {
-      const response = await fetch('/api/auth/send-verification', {
+      const response = await fetch('/api/auth/send-code-bulletproof', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -132,6 +132,7 @@ export default function VerifyLoginPage() {
         body: JSON.stringify({
           email,
           type: 'LOGIN',
+          userName: 'Usuario',
         }),
       })
 
