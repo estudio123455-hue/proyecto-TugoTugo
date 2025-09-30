@@ -47,7 +47,7 @@ interface MapProps {
 
 export default function Map({
   establishments,
-  onEstablishmentSelect,
+  onEstablishmentSelect: _,
 }: MapProps) {
   const [isClient, setIsClient] = useState(false)
 

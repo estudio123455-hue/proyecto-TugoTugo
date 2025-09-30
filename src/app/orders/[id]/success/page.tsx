@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import Navigation from '@/components/Navigation'
@@ -38,7 +38,7 @@ export default function OrderSuccess() {
     }
   }, [orderId, fetchOrder])
 
-  const fetchOrder = async () => {
+  const fetchOrder = useCallback(async () => {
     try {
       const response = await fetch(`/api/orders/${orderId}`)
       if (response.ok) {
@@ -52,7 +52,7 @@ export default function OrderSuccess() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [orderId])
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {

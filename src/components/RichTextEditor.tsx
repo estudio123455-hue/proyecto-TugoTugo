@@ -4,7 +4,7 @@ import { useEditor, EditorContent } from '@tiptap/react'
 import StarterKit from '@tiptap/starter-kit'
 import Image from '@tiptap/extension-image'
 import Link from '@tiptap/extension-link'
-import { useState } from 'react'
+// import { useState } from 'react'
 
 interface RichTextEditorProps {
   content?: string
@@ -14,7 +14,7 @@ interface RichTextEditorProps {
 }
 
 export default function RichTextEditor({ 
-  content = '', 
+  content: _ = '', 
   onChange, 
   placeholder = 'Escribe tu descripción...',
   className = ''

@@ -1,7 +1,7 @@
 'use client'
 
-import { useState, useEffect } from 'react'
-import { useSession } from 'next-auth/react'
+import { useState, useEffect, useCallback } from 'react'
+// import { useSession } from 'next-auth/react'
 import Navigation from '@/components/Navigation'
 import NotificationSystem from '@/components/NotificationSystem'
 import Link from 'next/link'
@@ -70,7 +70,7 @@ export default function RestaurantsPage() {
     filterRestaurants()
   }, [restaurants, selectedCategory, searchQuery, sortBy, filterRestaurants])
 
-  const filterRestaurants = () => {
+  const filterRestaurants = useCallback(() => {
     let filtered = [...restaurants]
 
     // Filter by search query
@@ -101,7 +101,7 @@ export default function RestaurantsPage() {
     })
 
     setFilteredRestaurants(filtered)
-  }
+  }, [restaurants, selectedCategory, searchQuery, sortBy])
 
   const getTotalPacks = (restaurant: Restaurant) => {
     return restaurant.packs.length

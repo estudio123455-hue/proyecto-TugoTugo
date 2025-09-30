@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import Head from 'next/head'
 import Navigation from '@/components/Navigation'
@@ -102,7 +102,7 @@ export default function PacksExplorer() {
     }
   }
 
-  const filterPacks = () => {
+  const filterPacks = useCallback(() => {
     let filtered = packs
 
     // Filter by category
@@ -166,7 +166,7 @@ export default function PacksExplorer() {
     }
 
     setFilteredPacks(filtered)
-  }
+  }, [packs, selectedCategory, searchQuery])
 
   const handleReservePack = async (packId: string, quantity: number) => {
     if (!session) {

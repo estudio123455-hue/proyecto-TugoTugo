@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react'
 
 interface VerificationCodeInputProps {
   length?: number
-  onComplete: (code: string) => void
+  onComplete: (inputCode: string) => void
   onResend?: () => void
   isLoading?: boolean
   error?: string

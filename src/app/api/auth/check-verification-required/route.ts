@@ -32,16 +32,8 @@ export async function POST(request: NextRequest) {
     }
 
     // Get request info for security analysis
-    const userAgent = request.headers.get('user-agent') || undefined
-    const forwarded = request.headers.get('x-forwarded-for')
-    const ip = forwarded ? forwarded.split(',')[0] : request.ip || undefined
-
     // Check if verification is required
-    const securityCheck = await shouldRequireEmailVerification(
-      email,
-      userAgent,
-      ip
-    )
+    const securityCheck = await shouldRequireEmailVerification(email)
 
     return NextResponse.json({
       requiresVerification: securityCheck.requiresVerification,
