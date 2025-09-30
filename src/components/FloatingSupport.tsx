@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
+import { getFirstName, getCleanUserName } from '@/lib/user-utils'
 
 export default function FloatingSupport() {
   const [isOpen, setIsOpen] = useState(false)
@@ -41,7 +42,7 @@ export default function FloatingSupport() {
 
   const handleEmailSupport = () => {
     const subject = session
-      ? `Soporte FoodSave - ${session.user?.name}`
+      ? `Soporte FoodSave - ${getCleanUserName(session.user?.name)}`
       : 'Soporte FoodSave'
     const body = session
       ? `Hola, necesito ayuda con mi cuenta: ${session.user?.email}\n\nMi consulta es:\n\n`
@@ -97,7 +98,7 @@ export default function FloatingSupport() {
           <div className="bg-gradient-to-r from-green-500 to-green-600 text-white p-6">
             <h3 className="text-xl font-bold mb-1">
               {session
-                ? `Hola, ${session.user?.name?.split(' ')[0]} 👋`
+                ? `Hola, ${getFirstName(session.user?.name)} 👋`
                 : 'Need Help? 🤝'}
             </h3>
             <p className="text-sm text-green-100">

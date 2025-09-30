@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { getFirstName } from '@/lib/user-utils'
 
 export default function OAuthCallback() {
   const { data: session, status } = useSession()
@@ -60,7 +61,7 @@ export default function OAuthCallback() {
             ¡Autenticación exitosa!
           </h1>
           <p className="text-gray-600 mb-6">
-            Bienvenido, {session.user?.name || session.user?.email}
+            Bienvenido, {getFirstName(session.user?.name) || session.user?.email}
           </p>
           <div className="bg-green-50 border border-green-200 rounded-lg p-4">
             <p className="text-green-700 text-sm">
