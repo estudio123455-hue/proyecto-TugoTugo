@@ -47,13 +47,14 @@ export default function VerifyLoginPage() {
     setSuccess('')
 
     try {
-      // Verify the code
-      const response = await fetch('/api/auth/verify-code-bulletproof', {
+      // Verify the code using simple system
+      const response = await fetch('/api/auth/simple-verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          action: 'verify',
           email,
           code,
           type: 'LOGIN',
@@ -63,48 +64,37 @@ export default function VerifyLoginPage() {
       const data = await response.json()
 
       if (response.ok && data.success) {
-        setSuccess('✅ Código verificado correctamente')
+        setSuccess('✅ Código verificado correctamente. Iniciando sesión...')
 
-        // Now complete the verified login with the session token
+        // Login with credentials - the user already exists
         setTimeout(async () => {
-          if (sessionToken) {
-            const completeLoginResponse = await fetch('/api/auth/complete-verified-login', {
-              method: 'POST',
-              headers: {
-                'Content-Type': 'application/json',
-              },
-              body: JSON.stringify({
-                sessionToken,
-              }),
+          // Get user data from database to login
+          const userResponse = await fetch(`/api/users/by-email?email=${encodeURIComponent(email)}`)
+          
+          if (userResponse.ok) {
+            // Create NextAuth session
+            const result = await signIn('credentials', {
+              email: email,
+              password: 'verified-login', // Special password for verified logins
+              verified: 'true',
+              redirect: false,
             })
 
-            if (completeLoginResponse.ok) {
-              const loginData = await completeLoginResponse.json()
-              
-              // Create NextAuth session using the verified user data
-              const result = await signIn('credentials', {
-                email: loginData.user.email,
-                verified: 'true', // Special flag to bypass password check
-                redirect: false,
-              })
-
-              if (result?.error) {
-                setError('Error al establecer sesión. Inicia sesión nuevamente.')
-                setTimeout(() => {
-                  router.push('/auth')
-                }, 2000)
+            if (!result?.error) {
+              // Redirect based on role
+              if (expectedRole === 'ESTABLISHMENT') {
+                window.location.href = '/dashboard'
               } else {
-                // Direct access granted - redirect to appropriate dashboard
-                window.location.href = loginData.redirectUrl
+                window.location.href = '/packs'
               }
             } else {
-              setError('Sesión de verificación expirada. Inicia sesión nuevamente.')
+              setError('Error al iniciar sesión. Por favor intenta nuevamente.')
               setTimeout(() => {
                 router.push('/auth')
               }, 2000)
             }
           } else {
-            setError('Error en el token de sesión. Inicia sesión nuevamente.')
+            setError('Usuario no encontrado. Inicia sesión nuevamente.')
             setTimeout(() => {
               router.push('/auth')
             }, 2000)
@@ -124,15 +114,15 @@ export default function VerifyLoginPage() {
     setError('')
     
     try {
-      const response = await fetch('/api/auth/send-code-bulletproof', {
+      const response = await fetch('/api/auth/simple-verify', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          action: 'send',
           email,
           type: 'LOGIN',
-          userName: 'Usuario',
         }),
       })
 

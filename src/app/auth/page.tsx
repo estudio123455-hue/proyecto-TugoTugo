@@ -75,59 +75,40 @@ export default function AuthPage() {
       const shouldVerifyEmail = true // Always require verification
 
       if (shouldVerifyEmail) {
-        // For login verification, we'll show a message and require re-login
-        setError('🔒 Verificación de seguridad requerida. Te enviaremos un código por email.')
-        
-        // Sign out first
+        // Sign out first to prevent auto-login
         await signOut({ redirect: false })
         
-        // Send verification code using bulletproof system
-        const verificationResponse = await fetch('/api/auth/send-code-bulletproof', {
+        // Send verification code using simple system
+        const verificationResponse = await fetch('/api/auth/simple-verify', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify({
+            action: 'send',
             email: formData.email,
             type: 'LOGIN',
-            userName: session?.user?.name || 'Usuario',
+            userData: {
+              role: userRole,
+              accountType: accountType,
+            },
           }),
         })
 
+        const verificationData = await verificationResponse.json()
+
         if (verificationResponse.ok) {
-          // Create a verified session token for seamless login after verification
-          const tokenResponse = await fetch('/api/auth/create-login-token', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email: formData.email,
-              role: userRole,
-              accountType: accountType,
-            }),
+          // Redirect to verification page
+          const params = new URLSearchParams({
+            email: formData.email,
+            type: 'LOGIN',
+            role: userRole,
+            accountType: accountType,
           })
 
-          if (tokenResponse.ok) {
-            const tokenData = await tokenResponse.json()
-            
-            // Show message that code was sent
-            setTimeout(() => {
-              const params = new URLSearchParams({
-                email: formData.email,
-                type: 'LOGIN',
-                role: userRole,
-                accountType: accountType,
-                sessionToken: tokenData.token,
-              })
-
-              window.location.href = `/auth/verify-login?${params.toString()}`
-            }, 2000)
-          } else {
-            setError('Error al crear sesión de verificación.')
-          }
+          window.location.href = `/auth/verify-login?${params.toString()}`
         } else {
-          setError('Error al enviar código de verificación. Inténtalo de nuevo.')
+          setError(verificationData.message || 'Error al enviar código de verificación. Inténtalo de nuevo.')
         }
       } else {
         // Normal login flow
