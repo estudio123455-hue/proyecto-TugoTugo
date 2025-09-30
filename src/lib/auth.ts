@@ -164,26 +164,4 @@ export const authOptions: NextAuthOptions = {
     signIn: '/auth',
     error: '/auth', // Redirect to auth page on error
   },
-  callbacks: {
-    async redirect({ url, baseUrl }) {
-      console.log('NextAuth redirect:', { url, baseUrl })
-      
-      // If URL is relative, make it absolute
-      if (url.startsWith('/')) {
-        return `${baseUrl}${url}`
-      }
-      
-      // If URL is from same origin, allow it
-      if (url.startsWith(baseUrl)) {
-        return url
-      }
-      
-      // For OAuth callbacks, always redirect to home
-      if (url.includes('/api/auth/callback')) {
-        return `${baseUrl}/`
-      }
-      
-      // Default: redirect to home page
-      return `${baseUrl}/`
-    },
 }
