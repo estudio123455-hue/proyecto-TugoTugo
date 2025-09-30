@@ -43,6 +43,7 @@ export default function AdminPage() {
     }
 
     fetchEstablishments()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, status, router, filter])
 
   const fetchEstablishments = async () => {
