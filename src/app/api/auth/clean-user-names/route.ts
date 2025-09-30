@@ -22,14 +22,14 @@ export async function POST(request: NextRequest) {
 
     // Check if name contains verification data
     if (user.name?.startsWith('VERIFY:')) {
-      const parts = user.name.split(':')
-      if (parts.length >= 4) {
-        const originalName = parts.slice(3).join(':')
-        
+      // More robust cleaning using regex
+      const cleanName = user.name.replace(/^VERIFY:\d+:\d+:VERIFY:\d+:\d+:/, '')
+      
+      if (cleanName !== user.name) {
         // Update user with clean name
         const updatedUser = await prisma.user.update({
           where: { email: session.user.email },
-          data: { name: originalName },
+          data: { name: cleanName },
         })
 
         return NextResponse.json({
@@ -72,20 +72,20 @@ export async function GET() {
 
     for (const user of usersWithVerifyData) {
       if (user.name?.startsWith('VERIFY:')) {
-        const parts = user.name.split(':')
-        if (parts.length >= 4) {
-          const originalName = parts.slice(3).join(':')
-          
+        // More robust cleaning using regex
+        const cleanName = user.name.replace(/^VERIFY:\d+:\d+:VERIFY:\d+:\d+:/, '')
+        
+        if (cleanName !== user.name) {
           await prisma.user.update({
             where: { id: user.id },
-            data: { name: originalName },
+            data: { name: cleanName },
           })
 
           cleanedCount++
           results.push({
             email: user.email,
             oldName: user.name,
-            newName: originalName,
+            newName: cleanName,
           })
         }
       }

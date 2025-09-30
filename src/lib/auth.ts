@@ -126,14 +126,26 @@ export const authOptions: NextAuthOptions = {
           })
           
           if (!existingUser) {
+            // Clean name from any verification codes
+            const cleanName = (user.name || profile?.name || '').replace(/^VERIFY:\d+:\d+:VERIFY:\d+:\d+:/, '')
+            
             await prisma.user.create({
               data: {
                 email: user.email!,
-                name: user.name || profile?.name || '',
+                name: cleanName,
                 role: 'CUSTOMER',
                 image: user.image,
               },
             })
+          } else {
+            // If user exists but has verification codes in name, clean it
+            if (existingUser.name?.startsWith('VERIFY:')) {
+              const cleanName = existingUser.name.replace(/^VERIFY:\d+:\d+:VERIFY:\d+:\d+:/, '')
+              await prisma.user.update({
+                where: { email: user.email! },
+                data: { name: cleanName },
+              })
+            }
           }
           return true
         } catch (error) {
