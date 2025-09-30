@@ -15,6 +15,8 @@ export default function SignUpNew() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
+  const [requiresVerification, setRequiresVerification] = useState(false)
+  const [verificationCode, setVerificationCode] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -28,40 +30,68 @@ export default function SignUpNew() {
     }
 
     try {
-      const response = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          password: formData.password,
-          role: formData.role,
-        }),
-      })
-
-      if (response.ok) {
-        // Auto sign in after successful registration
-        const result = await signIn('credentials', {
-          email: formData.email,
-          password: formData.password,
-          redirect: false,
+      if (!requiresVerification) {
+        // First step: Send verification code
+        const response = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: formData.name,
+            email: formData.email,
+            password: formData.password,
+            role: formData.role,
+          }),
         })
 
-        if (result?.error) {
-          setError(
-            'Registro exitoso pero falló el login. Por favor inicia sesión manualmente.'
-          )
+        if (response.ok) {
+          setRequiresVerification(true)
         } else {
-          // Wait for session to update before redirecting
-          setTimeout(() => {
-            window.location.href = formData.role === 'ESTABLISHMENT' ? '/dashboard' : '/welcome'
-          }, 1000)
+          const data = await response.json()
+          setError(data.message || 'Error en el registro')
         }
       } else {
-        const data = await response.json()
-        setError(data.message || 'Error en el registro')
+        // Second step: Verify code and complete registration
+        const response = await fetch('/api/auth/verify-code', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            code: verificationCode,
+            type: 'REGISTRATION',
+            userData: {
+              name: formData.name,
+              password: formData.password,
+              role: formData.role,
+            },
+          }),
+        })
+
+        if (response.ok) {
+          // Auto sign in after successful registration
+          const result = await signIn('credentials', {
+            email: formData.email,
+            password: formData.password,
+            redirect: false,
+          })
+
+          if (result?.error) {
+            setError(
+              'Registro exitoso pero falló el login. Por favor inicia sesión manualmente.'
+            )
+          } else {
+            // Wait for session to update before redirecting
+            setTimeout(() => {
+              window.location.href = formData.role === 'ESTABLISHMENT' ? '/dashboard' : '/welcome'
+            }, 1000)
+          }
+        } else {
+          const data = await response.json()
+          setError(data.message || 'Código de verificación inválido')
+        }
       }
     } catch (error) {
       setError('Ocurrió un error. Por favor intenta de nuevo.')
@@ -168,88 +198,125 @@ export default function SignUpNew() {
                   )}
 
                   <form onSubmit={handleSubmit} className="space-y-6">
-                    <div>
-                      <label
-                        htmlFor="name"
-                        className="block text-sm font-semibold text-gray-700 mb-2"
-                      >
-                        Nombre completo
-                      </label>
-                      <input
-                        id="name"
-                        type="text"
-                        value={formData.name}
-                        onChange={e => setFormData({...formData, name: e.target.value})}
-                        className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
-                        placeholder="Tu nombre completo"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="email"
-                        className="block text-sm font-semibold text-gray-700 mb-2"
-                      >
-                        Email
-                      </label>
-                      <input
-                        id="email"
-                        type="email"
-                        value={formData.email}
-                        onChange={e => setFormData({...formData, email: e.target.value})}
-                        className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
-                        placeholder="tu@email.com"
-                        required
-                      />
-                    </div>
-
-                    <div>
-                      <label
-                        htmlFor="password"
-                        className="block text-sm font-semibold text-gray-700 mb-2"
-                      >
-                        Contraseña
-                      </label>
-                      <div className="relative">
-                        <input
-                          id="password"
-                          type={showPassword ? 'text' : 'password'}
-                          value={formData.password}
-                          onChange={e => setFormData({...formData, password: e.target.value})}
-                          className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white pr-12"
-                          placeholder="••••••••"
-                          required
-                        />
-                        <button
-                          type="button"
-                          onClick={() => setShowPassword(!showPassword)}
-                          className="absolute inset-y-0 right-0 pr-4 flex items-center"
-                        >
-                          <span className="text-gray-400 hover:text-gray-600 text-lg">
-                            {showPassword ? '🙈' : '👁️'}
-                          </span>
-                        </button>
+                    {!requiresVerification ? (
+                      <>
+                        <div>
+                          <label
+                            htmlFor="name"
+                            className="block text-sm font-semibold text-gray-700 mb-2"
+                          >
+                            Nombre completo
+                          </label>
+                          <input
+                            id="name"
+                            type="text"
+                            value={formData.name}
+                            onChange={e => setFormData({...formData, name: e.target.value})}
+                            className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
+                            placeholder="Tu nombre completo"
+                            required
+                          />
+                        </div>
+                      </>
+                    ) : (
+                      <div>
+                        <div className="text-center mb-6">
+                          <h3 className="text-xl font-bold text-gray-900 mb-2">
+                            Verifica tu email
+                          </h3>
+                          <p className="text-gray-600">
+                            Hemos enviado un código de verificación a <strong>{formData.email}</strong>
+                          </p>
+                        </div>
+                        <div>
+                          <label
+                            htmlFor="verificationCode"
+                            className="block text-sm font-semibold text-gray-700 mb-2"
+                          >
+                            Código de verificación
+                          </label>
+                          <input
+                            id="verificationCode"
+                            type="text"
+                            value={verificationCode}
+                            onChange={e => setVerificationCode(e.target.value)}
+                            className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white text-center text-lg tracking-widest"
+                            placeholder="123456"
+                            maxLength={6}
+                            required
+                          />
+                        </div>
                       </div>
-                    </div>
+                    )}
 
-                    <div>
-                      <label
-                        htmlFor="confirmPassword"
-                        className="block text-sm font-semibold text-gray-700 mb-2"
-                      >
-                        Confirmar contraseña
-                      </label>
-                      <input
-                        id="confirmPassword"
-                        type="password"
-                        value={formData.confirmPassword}
-                        onChange={e => setFormData({...formData, confirmPassword: e.target.value})}
-                        className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
-                        placeholder="••••••••"
-                        required
-                      />
-                    </div>
+                    {!requiresVerification && (
+                      <>
+                        <div>
+                          <label
+                            htmlFor="email"
+                            className="block text-sm font-semibold text-gray-700 mb-2"
+                          >
+                            Email
+                          </label>
+                          <input
+                            id="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={e => setFormData({...formData, email: e.target.value})}
+                            className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
+                            placeholder="tu@email.com"
+                            required
+                          />
+                        </div>
+
+                        <div>
+                          <label
+                            htmlFor="password"
+                            className="block text-sm font-semibold text-gray-700 mb-2"
+                          >
+                            Contraseña
+                          </label>
+                          <div className="relative">
+                            <input
+                              id="password"
+                              type={showPassword ? 'text' : 'password'}
+                              value={formData.password}
+                              onChange={e => setFormData({...formData, password: e.target.value})}
+                              className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white pr-12"
+                              placeholder="••••••••"
+                              required
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowPassword(!showPassword)}
+                              className="absolute inset-y-0 right-0 pr-4 flex items-center"
+                            >
+                              <span className="text-gray-400 hover:text-gray-600 text-lg">
+                                {showPassword ? '🙈' : '👁️'}
+                              </span>
+                            </button>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label
+                            htmlFor="confirmPassword"
+                            className="block text-sm font-semibold text-gray-700 mb-2"
+                          >
+                            Confirmar contraseña
+                          </label>
+                          <input
+                            id="confirmPassword"
+                            type="password"
+                            value={formData.confirmPassword}
+                            onChange={e => setFormData({...formData, confirmPassword: e.target.value})}
+                            className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
+                            placeholder="••••••••"
+                            required
+                          />
+                        </div>
+                      </>
+                    )}
 
                     <button
                       type="submit"
@@ -259,10 +326,10 @@ export default function SignUpNew() {
                       {isLoading ? (
                         <div className="flex items-center justify-center space-x-2">
                           <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                          <span>Creando cuenta...</span>
+                          <span>{requiresVerification ? 'Verificando...' : 'Enviando código...'}</span>
                         </div>
                       ) : (
-                        <span>CREAR CUENTA</span>
+                        <span>{requiresVerification ? 'VERIFICAR CÓDIGO' : 'CREAR CUENTA'}</span>
                       )}
                     </button>
                   </form>
