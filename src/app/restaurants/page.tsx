@@ -66,10 +66,6 @@ export default function RestaurantsPage() {
     isConnected 
   } = useRestaurantsFeed(selectedCategory === 'all' ? undefined : selectedCategory)
 
-  useEffect(() => {
-    filterRestaurants()
-  }, [restaurants, selectedCategory, searchQuery, sortBy, filterRestaurants])
-
   const filterRestaurants = useCallback(() => {
     let filtered = [...restaurants]
 
@@ -102,6 +98,10 @@ export default function RestaurantsPage() {
 
     setFilteredRestaurants(filtered)
   }, [restaurants, searchQuery, sortBy])
+
+  useEffect(() => {
+    filterRestaurants()
+  }, [restaurants, selectedCategory, searchQuery, sortBy, filterRestaurants])
 
   const getTotalPacks = (restaurant: Restaurant) => {
     return restaurant.packs.length
