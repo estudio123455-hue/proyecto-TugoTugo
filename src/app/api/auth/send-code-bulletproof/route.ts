@@ -57,7 +57,7 @@ export async function POST(request: NextRequest) {
       })
       console.log('[BULLETPROOF] Code also stored in User table as backup')
     } catch (userError) {
-      console.log(`[BULLETPROOF] User table backup failed:`, userError)
+      console.log('[BULLETPROOF] User table backup failed:', userError)
     }
 
     // STRATEGY 3: Send email with code
@@ -70,7 +70,7 @@ export async function POST(request: NextRequest) {
       })
       console.log('[BULLETPROOF] Email sent successfully to ' + email)
     } catch (emailError) {
-      console.error(`[BULLETPROOF] Email sending failed:`, emailError)
+      console.error('[BULLETPROOF] Email sending failed:', emailError)
       return NextResponse.json(
         { message: 'Error al enviar el email. Verifica tu configuración SMTP.' },
         { status: 500 }

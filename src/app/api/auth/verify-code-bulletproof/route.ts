@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
           },
         })
         
-        console.log(`[BULLETPROOF] Code verified via VerificationToken table`)
+        console.log('[BULLETPROOF] Code verified via VerificationToken table')
       }
     } catch (error) {
       console.log(`[BULLETPROOF] VerificationToken check failed:`, error)
@@ -80,24 +80,24 @@ export async function POST(request: NextRequest) {
                 data: { name: originalName },
               })
               
-              console.log(`[BULLETPROOF] Code verified via User table backup`)
+              console.log('[BULLETPROOF] Code verified via User table backup')
             } else if (expiresTime <= Date.now()) {
               // Clean up expired code
               await prisma.user.update({
                 where: { email },
                 data: { name: originalName },
               })
-              console.log(`[BULLETPROOF] Code expired in User table backup`)
+              console.log('[BULLETPROOF] Code expired in User table backup')
             }
           }
         }
       } catch (error) {
-        console.log(`[BULLETPROOF] User table backup check failed:`, error)
+        console.log('[BULLETPROOF] User table backup check failed:', error)
       }
     }
 
     if (!codeValid) {
-      console.log(`[BULLETPROOF] Code verification failed for ${email}`)
+      console.log('[BULLETPROOF] Code verification failed for ' + email)
       return NextResponse.json(
         { message: 'Código de verificación inválido o expirado' },
         { status: 400 }
