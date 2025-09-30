@@ -355,19 +355,24 @@ export default function AuthPage() {
                       </div>
                     )}
 
-                    {/* Email */}
+                    {/* Email o Teléfono según tipo de cuenta */}
                     <div>
                       <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                        Email
+                        {accountType === 'restaurant' ? 'Número de Teléfono' : 'Email'}
                       </label>
                       <input
-                        type="email"
+                        type={accountType === 'restaurant' ? 'tel' : 'email'}
                         value={formData.email}
                         onChange={e => handleInputChange('email', e.target.value)}
                         className="w-full px-4 py-4 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 dark:bg-gray-800 focus:bg-white dark:focus:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
-                        placeholder="tu@email.com"
+                        placeholder={accountType === 'restaurant' ? '+1234567890' : 'tu@email.com'}
                         required
                       />
+                      {accountType === 'restaurant' && (
+                        <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                          Incluye el código de país (ej: +52 para México)
+                        </p>
+                      )}
                     </div>
 
                     {/* Contraseña */}
