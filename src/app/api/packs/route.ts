@@ -87,6 +87,7 @@ export async function POST(request: NextRequest) {
         availableUntil: new Date(data.availableUntil),
         pickupTimeStart: data.pickupTimeStart,
         pickupTimeEnd: data.pickupTimeEnd,
+        isActive: true, // Make packs active by default
         establishmentId: establishment.id,
       },
     })

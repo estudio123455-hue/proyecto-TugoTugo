@@ -12,6 +12,9 @@ export async function GET(request: NextRequest) {
     // Base query conditions
     const where: any = {
       isActive: true,
+      quantity: {
+        gt: 0, // Only show packs with quantity > 0
+      },
       // Only show packs that are currently available
       availableFrom: {
         lte: new Date(),

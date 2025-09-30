@@ -77,6 +77,7 @@ export default function PacksExplorer() {
       if (response.ok) {
         const packs = await response.json()
         console.log('📊 Public packs received:', packs.length)
+        console.log('📦 Raw packs data:', packs)
         
         // Filter packs that have quantity > 0
         const availablePacks = packs.filter((pack: any) => {
@@ -91,6 +92,8 @@ export default function PacksExplorer() {
         setPacks(availablePacks)
       } else {
         console.error('❌ API response not OK:', response.status)
+        const errorText = await response.text()
+        console.error('❌ Error response:', errorText)
       }
     } catch (error) {
       console.error('❌ Error fetching packs:', error)
