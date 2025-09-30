@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useSession } from 'next-auth/react'
 import Navigation from '@/components/Navigation'
@@ -10,6 +10,15 @@ export default function NewPostPage() {
   const { data: session, status } = useSession()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  
+  const [formData, setFormData] = useState({
+    title: '',
+    content: '',
+    price: '',
+    images: [] as string[],
+  })
+
+  const [imageUrl, setImageUrl] = useState('')
 
   // Proteger la ruta - solo restaurantes
   if (status === 'loading') {
@@ -24,15 +33,6 @@ export default function NewPostPage() {
     router.push('/')
     return null
   }
-  
-  const [formData, setFormData] = useState({
-    title: '',
-    content: '',
-    price: '',
-    images: [] as string[],
-  })
-
-  const [imageUrl, setImageUrl] = useState('')
 
   const handleAddImage = () => {
     if (imageUrl && formData.images.length < 3) {

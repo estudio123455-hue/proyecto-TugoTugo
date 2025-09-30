@@ -20,7 +20,6 @@ export default function VerifyLoginPage() {
   const email = searchParams.get('email') || ''
   const expectedRole = searchParams.get('role') || ''
   const accountType = searchParams.get('accountType') || ''
-  const sessionToken = searchParams.get('sessionToken') || ''
 
   useEffect(() => {
     setMounted(true)
