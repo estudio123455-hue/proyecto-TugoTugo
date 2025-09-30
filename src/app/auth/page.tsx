@@ -8,6 +8,7 @@ import Link from 'next/link'
 export default function AuthPage() {
   // Estado principal
   const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin')
+  const [accountType, setAccountType] = useState<'customer' | 'restaurant'>('customer')
   const [mounted, setMounted] = useState(false)
   
   // Estados del formulario
@@ -132,7 +133,7 @@ export default function AuthPage() {
     }
 
     try {
-      const role = 'CUSTOMER' // Solo clientes
+      const role = accountType === 'restaurant' ? 'ESTABLISHMENT' : 'CUSTOMER'
       
       // Send verification code using simple reliable system
       const response = await fetch('/api/auth/simple-verify', {
@@ -271,6 +272,42 @@ export default function AuthPage() {
                     >
                       Crear Cuenta
                     </button>
+                  </div>
+
+                  {/* Selector de Tipo de Cuenta */}
+                  <div className="mb-6">
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                      Tipo de cuenta
+                    </label>
+                    <div className="flex bg-gray-100 dark:bg-gray-800 rounded-xl p-1">
+                      <button
+                        type="button"
+                        onClick={() => setAccountType('customer')}
+                        className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+                          accountType === 'customer'
+                            ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-400 shadow-sm'
+                            : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
+                        }`}
+                      >
+                        🛒 Cliente
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setAccountType('restaurant')}
+                        className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
+                          accountType === 'restaurant'
+                            ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-400 shadow-sm'
+                            : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
+                        }`}
+                      >
+                        🏪 Restaurante
+                      </button>
+                    </div>
+                    {accountType === 'restaurant' && (
+                      <p className="mt-2 text-xs text-yellow-600 dark:text-yellow-400">
+                        ⚠️ Las cuentas de restaurante requieren aprobación de un administrador
+                      </p>
+                    )}
                   </div>
 
                   {/* Mensaje de Error */}

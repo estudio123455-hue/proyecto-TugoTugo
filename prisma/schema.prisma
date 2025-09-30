@@ -86,6 +86,7 @@ model Establishment {
   image       String?
   category    String
   isActive    Boolean  @default(true)
+  isApproved  Boolean  @default(false) // Requiere aprobación de admin
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -93,6 +94,7 @@ model Establishment {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   packs Pack[]
+  posts Post[]
 }
 
 model Pack {
@@ -131,6 +133,25 @@ model Order {
 
   packId String
   pack   Pack   @relation(fields: [packId], references: [id], onDelete: Cascade)
+}
+
+model Post {
+  id          String   @id @default(cuid())
+  title       String
+  content     String
+  images      String[]
+  price       Float?
+  isActive    Boolean  @default(true)
+  likes       Int      @default(0)
+  views       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  establishmentId String
+  establishment   Establishment @relation(fields: [establishmentId], references: [id], onDelete: Cascade)
+
+  @@index([establishmentId])
+  @@index([createdAt])
 }
 
 // Removed enums for SQLite compatibility
