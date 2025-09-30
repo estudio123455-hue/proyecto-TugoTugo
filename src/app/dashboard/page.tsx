@@ -112,25 +112,25 @@ export default function Dashboard() {
     <div className="min-h-screen bg-gray-50">
       <Navigation />
 
-      <div className="max-w-7xl mx-auto pt-8 px-4">
-        {/* Header */}
-        <div className="mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between">
+      <div className="max-w-7xl mx-auto pt-4 sm:pt-8 px-4">
+        {/* Header - Mobile Optimized */}
+        <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">
-              {establishment.name} Dashboard
+            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900">
+              {establishment.name}
             </h1>
-            <p className="text-gray-600 mt-2">{establishment.address}</p>
+            <p className="text-sm sm:text-base text-gray-600 mt-1 sm:mt-2">{establishment.address}</p>
           </div>
         </div>
 
-        {/* Stats Cards */}
+        {/* Stats Cards - Mobile Optimized */}
         {stats && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-lg shadow p-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-6 mb-6 sm:mb-8">
+            <div className="bg-white rounded-lg shadow p-4 sm:p-6">
               <div className="flex items-center">
-                <div className="text-2xl mr-3">📈</div>
+                <div className="text-xl sm:text-2xl mr-2 sm:mr-3">📈</div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">
+                  <p className="text-xs sm:text-sm font-medium text-gray-500">
                     Total Orders
                   </p>
                   <p className="text-2xl font-bold text-gray-900">
@@ -180,21 +180,21 @@ export default function Dashboard() {
           </div>
         )}
 
-        {/* Tabs */}
-        <div className="border-b border-gray-200 mb-8">
-          <nav className="-mb-px flex space-x-8">
+        {/* Tabs - Mobile Optimized */}
+        <div className="border-b border-gray-200 mb-6 sm:mb-8">
+          <nav className="-mb-px flex space-x-2 sm:space-x-8 overflow-x-auto">
             {tabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
+                className={`whitespace-nowrap py-2 px-2 sm:px-1 border-b-2 font-medium text-xs sm:text-sm flex items-center space-x-1 sm:space-x-2 min-w-max ${
                   activeTab === tab.id
                     ? 'border-green-500 text-green-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
                 }`}
               >
                 <span>{tab.icon}</span>
-                <span>{tab.name}</span>
+                <span className="hidden sm:inline">{tab.name}</span>
               </button>
             ))}
           </nav>
