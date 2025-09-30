@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { sendVerificationCode } from '@/lib/verification'
+import { sendVerificationCodeFallback } from '@/lib/verification-fallback'
 import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
@@ -68,8 +69,19 @@ export async function POST(request: NextRequest) {
       userName = user?.name || 'Usuario'
     }
 
-    // Send verification code
-    const result = await sendVerificationCode(email, userName, type)
+    // Send verification code - try main function first, fallback if table doesn't exist
+    let result
+    try {
+      result = await sendVerificationCode(email, userName, type)
+    } catch (error: any) {
+      // If table doesn't exist, use fallback
+      if (error.code === 'P2021' || error.message?.includes('does not exist')) {
+        console.log('EmailVerification table not found, using fallback method')
+        result = await sendVerificationCodeFallback(email, userName, type)
+      } else {
+        throw error
+      }
+    }
 
     if (!result.success) {
       return NextResponse.json(
