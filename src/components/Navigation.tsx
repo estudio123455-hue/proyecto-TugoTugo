@@ -77,7 +77,15 @@ export default function Navigation() {
                     📊 Dashboard
                   </Link>
                 )}
-                {session && session.user?.role !== 'ESTABLISHMENT' && (
+                {session?.user?.role === 'ADMIN' && (
+                  <Link
+                    href="/admin"
+                    className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                  >
+                    👑 Admin
+                  </Link>
+                )}
+                {session && session.user?.role === 'CUSTOMER' && (
                   <Link
                     href="/profile"
                     className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center"
