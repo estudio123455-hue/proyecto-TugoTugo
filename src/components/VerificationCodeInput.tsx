@@ -4,7 +4,7 @@ import React, { useState, useRef, useEffect } from 'react'
 
 interface VerificationCodeInputProps {
   length?: number
-  onComplete: (code: string) => void
+  onComplete: (_code: string) => void
   onResend?: () => void
   isLoading?: boolean
   error?: string
@@ -34,6 +34,10 @@ export default function VerificationCodeInput({
       return () => clearTimeout(timer)
     }
   }, [resendTimer])
+
+  useEffect(() => {
+    inputRefs.current[activeIndex]?.focus()
+  }, [activeIndex])
 
   const handleChange = (index: number, value: string) => {
     if (isLoading) return

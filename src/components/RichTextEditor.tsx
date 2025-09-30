@@ -8,7 +8,7 @@ import Link from '@tiptap/extension-link'
 
 interface RichTextEditorProps {
   content?: string
-  onChange?: (content: string) => void
+  onChange?: (_content: string) => void
   placeholder?: string
   className?: string
 }

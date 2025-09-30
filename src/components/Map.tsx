@@ -42,7 +42,7 @@ interface Pack {
 
 interface MapProps {
   establishments: Establishment[]
-  onEstablishmentSelect?: (establishment: Establishment) => void
+  onEstablishmentSelect?: (_establishment: Establishment) => void
 }
 
 export default function Map({
