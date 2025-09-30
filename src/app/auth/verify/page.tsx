@@ -55,20 +55,9 @@ export default function VerifyPage() {
         // Handle different verification types
         switch (type) {
           case 'REGISTRATION':
-            // Auto login after successful registration
-            setTimeout(async () => {
-              const result = await signIn('credentials', {
-                email,
-                password: userData?.password,
-                redirect: false,
-              })
-
-              if (result?.error) {
-                router.push('/auth?message=registration-success')
-              } else {
-                const role = userData?.role
-                window.location.href = role === 'ESTABLISHMENT' ? '/dashboard' : '/welcome'
-              }
+            // Redirect to login after successful registration
+            setTimeout(() => {
+              window.location.href = '/auth?message=Registro exitoso. Por favor inicia sesión.'
             }, 1500)
             break
 

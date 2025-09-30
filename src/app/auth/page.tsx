@@ -22,11 +22,22 @@ export default function AuthPage() {
   // Estados de UI
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   // const [enableExtraSecurity, setEnableExtraSecurity] = useState(false) // Not needed - always require verification
 
   useEffect(() => {
     setMounted(true)
+    
+    // Check for success message in URL
+    const urlParams = new URLSearchParams(window.location.search)
+    const message = urlParams.get('message')
+    if (message) {
+      setSuccess(message)
+      setActiveTab('signin')
+      // Clean URL
+      window.history.replaceState({}, '', '/auth')
+    }
   }, [])
 
   const handleInputChange = (field: string, value: string) => {
@@ -309,6 +320,13 @@ export default function AuthPage() {
                       </p>
                     )}
                   </div>
+
+                  {/* Mensaje de Éxito */}
+                  {success && (
+                    <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+                      <p className="text-green-700 text-sm text-center">{success}</p>
+                    </div>
+                  )}
 
                   {/* Mensaje de Error */}
                   {error && (
