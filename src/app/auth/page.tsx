@@ -3,7 +3,7 @@
 import { signIn, getSession, signOut } from 'next-auth/react'
 import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { shouldRequireVerificationSimple } from '@/lib/security'
+// import { shouldRequireVerificationSimple } from '@/lib/security' // Not needed - always require verification
 
 export default function AuthPage() {
   // Estado principal
@@ -23,7 +23,7 @@ export default function AuthPage() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [showPassword, setShowPassword] = useState(false)
-  const [enableExtraSecurity, setEnableExtraSecurity] = useState(false)
+  // const [enableExtraSecurity, setEnableExtraSecurity] = useState(false) // Not needed - always require verification
 
   useEffect(() => {
     setMounted(true)
@@ -71,10 +71,8 @@ export default function AuthPage() {
         return
       }
 
-      // Check if additional email verification is required
-      const isNewAccount = false // You can implement logic to check account age
-      const automaticVerification = shouldRequireVerificationSimple(userRole, isNewAccount)
-      const shouldVerifyEmail = automaticVerification || enableExtraSecurity
+      // ALWAYS require email verification for login (as requested)
+      const shouldVerifyEmail = true // Always require verification
 
       if (shouldVerifyEmail) {
         // For login verification, we'll show a message and require re-login
@@ -96,17 +94,37 @@ export default function AuthPage() {
         })
 
         if (verificationResponse.ok) {
-          // Show message that code was sent
-          setTimeout(() => {
-            const params = new URLSearchParams({
+          // Create a verified session token for seamless login after verification
+          const tokenResponse = await fetch('/api/auth/create-login-token', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
               email: formData.email,
-              type: 'LOGIN',
               role: userRole,
               accountType: accountType,
-            })
+            }),
+          })
 
-            window.location.href = `/auth/verify-login?${params.toString()}`
-          }, 2000)
+          if (tokenResponse.ok) {
+            const tokenData = await tokenResponse.json()
+            
+            // Show message that code was sent
+            setTimeout(() => {
+              const params = new URLSearchParams({
+                email: formData.email,
+                type: 'LOGIN',
+                role: userRole,
+                accountType: accountType,
+                sessionToken: tokenData.token,
+              })
+
+              window.location.href = `/auth/verify-login?${params.toString()}`
+            }, 2000)
+          } else {
+            setError('Error al crear sesión de verificación.')
+          }
         } else {
           setError('Error al enviar código de verificación. Inténtalo de nuevo.')
         }
@@ -380,21 +398,16 @@ export default function AuthPage() {
                       </div>
                     </div>
 
-                    {/* Seguridad Extra (solo para login) */}
+                    {/* Información de Seguridad (siempre activa) */}
                     {activeTab === 'signin' && (
-                      <div className="flex items-center gap-3 p-4 bg-blue-50 rounded-xl border border-blue-200">
-                        <input
-                          type="checkbox"
-                          id="extra-security"
-                          checked={enableExtraSecurity}
-                          onChange={(e) => setEnableExtraSecurity(e.target.checked)}
-                          className="w-4 h-4 text-purple-600 border-gray-300 rounded focus:ring-purple-500"
-                        />
-                        <label htmlFor="extra-security" className="flex-1 text-sm">
-                          <span className="font-semibold text-blue-800">🔒 Seguridad Extra</span>
-                          <br />
-                          <span className="text-blue-600">Recibir código de verificación por email</span>
-                        </label>
+                      <div className="p-4 bg-blue-50 rounded-xl border border-blue-200">
+                        <div className="flex items-center gap-2 mb-2">
+                          <span className="text-blue-600">🔒</span>
+                          <span className="font-semibold text-blue-800">Verificación de Seguridad</span>
+                        </div>
+                        <p className="text-blue-600 text-sm">
+                          Por tu seguridad, te enviaremos un código de verificación por email después de validar tus credenciales.
+                        </p>
                       </div>
                     )}
 

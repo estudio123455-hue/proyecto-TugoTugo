@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { generateLoginToken } from '@/lib/temp-tokens'
+import { createVerifiedSession } from '@/lib/verified-sessions'
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,8 +12,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Generate a secure temporary token
-    const token = generateLoginToken(email, role, accountType)
+    // Generate a secure verified session token
+    const token = createVerifiedSession(email, role, accountType)
 
     return NextResponse.json({
       success: true,

@@ -20,6 +20,7 @@ export default function VerifyLoginPage() {
   const email = searchParams.get('email') || ''
   const expectedRole = searchParams.get('role') || ''
   const accountType = searchParams.get('accountType') || ''
+  const sessionToken = searchParams.get('sessionToken') || ''
 
   useEffect(() => {
     setMounted(true)
@@ -64,26 +65,46 @@ export default function VerifyLoginPage() {
       if (response.ok && data.success) {
         setSuccess('✅ Código verificado correctamente')
 
-        // Now sign in the user
+        // Now complete the verified login with the session token
         setTimeout(async () => {
-          // We need to get the user's password or use a different approach
-          // Since we can't store passwords, we'll redirect to a special login endpoint
-          const loginResponse = await fetch('/api/auth/verify-login-session', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-              email,
-              verificationId: data.verificationId || 'verified',
-            }),
-          })
+          if (sessionToken) {
+            const completeLoginResponse = await fetch('/api/auth/complete-verified-login', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({
+                sessionToken,
+              }),
+            })
 
-          if (loginResponse.ok) {
-            // Force a session refresh and redirect
-            window.location.href = expectedRole === 'ESTABLISHMENT' ? '/dashboard' : '/packs'
+            if (completeLoginResponse.ok) {
+              const loginData = await completeLoginResponse.json()
+              
+              // Create NextAuth session using the verified user data
+              const result = await signIn('credentials', {
+                email: loginData.user.email,
+                verified: 'true', // Special flag to bypass password check
+                redirect: false,
+              })
+
+              if (result?.error) {
+                setError('Error al establecer sesión. Inicia sesión nuevamente.')
+                setTimeout(() => {
+                  router.push('/auth')
+                }, 2000)
+              } else {
+                // Direct access granted - redirect to appropriate dashboard
+                window.location.href = loginData.redirectUrl
+              }
+            } else {
+              setError('Sesión de verificación expirada. Inicia sesión nuevamente.')
+              setTimeout(() => {
+                router.push('/auth')
+              }, 2000)
+            }
           } else {
-            setError('Error al establecer sesión. Inicia sesión nuevamente.')
+            setError('Error en el token de sesión. Inicia sesión nuevamente.')
             setTimeout(() => {
               router.push('/auth')
             }, 2000)

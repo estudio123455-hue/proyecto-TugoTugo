@@ -21,9 +21,33 @@ export const authOptions: NextAuthOptions = {
       credentials: {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
+        verified: { label: 'Verified', type: 'text' },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
+        if (!credentials?.email) {
+          return null
+        }
+
+        // Check if this is a verified login (bypass password check)
+        if (credentials.verified === 'true') {
+          const user = await prisma.user.findUnique({
+            where: { email: credentials.email },
+          })
+
+          if (!user) {
+            return null
+          }
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          }
+        }
+
+        // Normal password verification
+        if (!credentials?.password) {
           return null
         }
 
