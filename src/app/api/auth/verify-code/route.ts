@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { verifyCode } from '@/lib/verification'
-import { verifyCodeFallback } from '@/lib/verification-fallback'
+import { verifyCodePersistent } from '@/lib/verification-persistent'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 
@@ -23,19 +22,8 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Verify the code - try main function first, fallback if table doesn't exist
-    let result
-    try {
-      result = await verifyCode(email, code, type)
-    } catch (error: any) {
-      // If table doesn't exist, use fallback
-      if (error.code === 'P2021' || error.message?.includes('does not exist')) {
-        console.log('EmailVerification table not found, using fallback method')
-        result = await verifyCodeFallback(email, code, type)
-      } else {
-        throw error
-      }
-    }
+    // Verify the code using persistent method (VerificationToken table)
+    const result = await verifyCodePersistent(email, code, type)
 
     if (!result.success) {
       return NextResponse.json(
