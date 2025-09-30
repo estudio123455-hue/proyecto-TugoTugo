@@ -19,7 +19,6 @@ export default function VerifyLoginPage() {
   // Get params from URL
   const email = searchParams.get('email') || ''
   const expectedRole = searchParams.get('role') || ''
-  const accountType = searchParams.get('accountType') || ''
 
   useEffect(() => {
     setMounted(true)
@@ -190,7 +189,7 @@ export default function VerifyLoginPage() {
                     </p>
                     <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
                       <p className="text-blue-700 dark:text-blue-300 text-sm font-medium">
-                        🔒 <strong>Verificación requerida</strong> para cuenta {accountType === 'restaurant' ? 'de restaurante' : 'de cliente'}
+                        🔒 <strong>Verificación requerida</strong> para tu cuenta
                       </p>
                     </div>
                   </div>

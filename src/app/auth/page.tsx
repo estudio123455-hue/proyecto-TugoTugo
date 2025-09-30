@@ -8,7 +8,6 @@ import Link from 'next/link'
 export default function AuthPage() {
   // Estado principal
   const [activeTab, setActiveTab] = useState<'signin' | 'signup'>('signin')
-  const [accountType, setAccountType] = useState<'customer' | 'restaurant'>('customer')
   const [mounted, setMounted] = useState(false)
   
   // Estados del formulario
@@ -58,21 +57,10 @@ export default function AuthPage() {
       }
 
       const session = await getSession()
-
-      // Verificar que el tipo de cuenta coincida con el rol del usuario
       const userRole = session?.user?.role
-      const expectedRole = accountType === 'restaurant' ? 'ESTABLISHMENT' : 'CUSTOMER'
 
-      if (userRole !== expectedRole) {
-        const typeText = accountType === 'restaurant' ? 'restaurante' : 'cliente'
-        const oppositeText = accountType === 'restaurant' ? 'cliente' : 'restaurante'
-        setError(`Esta cuenta no es de ${typeText}. Usa el login de ${oppositeText}.`)
-        setIsLoading(false)
-        return
-      }
-
-      // ALWAYS require email verification for login (as requested)
-      const shouldVerifyEmail = true // Always require verification
+      // ALWAYS require email verification for login
+      const shouldVerifyEmail = true
 
       if (shouldVerifyEmail) {
         // Sign out first to prevent auto-login
@@ -90,7 +78,6 @@ export default function AuthPage() {
             type: 'LOGIN',
             userData: {
               role: userRole,
-              accountType: accountType,
             },
           }),
         })
@@ -102,8 +89,7 @@ export default function AuthPage() {
           const params = new URLSearchParams({
             email: formData.email,
             type: 'LOGIN',
-            role: userRole,
-            accountType: accountType,
+            role: userRole || 'CUSTOMER',
           })
 
           window.location.href = `/auth/verify-login?${params.toString()}`
@@ -146,7 +132,7 @@ export default function AuthPage() {
     }
 
     try {
-      const role = accountType === 'restaurant' ? 'ESTABLISHMENT' : 'CUSTOMER'
+      const role = 'CUSTOMER' // Solo clientes
       
       // Send verification code using simple reliable system
       const response = await fetch('/api/auth/simple-verify', {
@@ -285,37 +271,6 @@ export default function AuthPage() {
                     >
                       Crear Cuenta
                     </button>
-                  </div>
-
-                  {/* Selector de Tipo de Cuenta */}
-                  <div className="mb-6">
-                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                      Tipo de cuenta
-                    </label>
-                    <div className="flex bg-gray-100 dark:bg-gray-800 rounded-xl p-1">
-                      <button
-                        type="button"
-                        onClick={() => setAccountType('customer')}
-                        className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
-                          accountType === 'customer'
-                            ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-400 shadow-sm'
-                            : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
-                        }`}
-                      >
-                        🛒 Cliente
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setAccountType('restaurant')}
-                        className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
-                          accountType === 'restaurant'
-                            ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-400 shadow-sm'
-                            : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
-                        }`}
-                      >
-                        🏪 Restaurante
-                      </button>
-                    </div>
                   </div>
 
                   {/* Mensaje de Error */}
