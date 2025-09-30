@@ -60,52 +60,52 @@ export default function AuthPage() {
       const session = await getSession()
       const userRole = session?.user?.role
 
-      // ALWAYS require email verification for login
-      const shouldVerifyEmail = true
-
-      if (shouldVerifyEmail) {
-        // Sign out first to prevent auto-login
+      // Verificar que el tipo de cuenta coincida
+      const expectedRole = accountType === 'restaurant' ? 'ESTABLISHMENT' : 'CUSTOMER'
+      
+      if (userRole !== expectedRole) {
         await signOut({ redirect: false })
-        
-        // Send verification code using simple system
-        const verificationResponse = await fetch('/api/auth/simple-verify', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
+        const typeText = accountType === 'restaurant' ? 'restaurante' : 'cliente'
+        const oppositeText = accountType === 'restaurant' ? 'cliente' : 'restaurante'
+        setError(`Esta cuenta no es de ${typeText}. Usa el login de ${oppositeText}.`)
+        setIsLoading(false)
+        return
+      }
+
+      // ALWAYS require email verification for login
+      await signOut({ redirect: false })
+      
+      // Send verification code using simple system
+      const verificationResponse = await fetch('/api/auth/simple-verify', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'send',
+          email: formData.email,
+          type: 'LOGIN',
+          userData: {
+            role: userRole,
+            accountType: accountType,
           },
-          body: JSON.stringify({
-            action: 'send',
-            email: formData.email,
-            type: 'LOGIN',
-            userData: {
-              role: userRole,
-            },
-          }),
+        }),
+      })
+
+      const verificationData = await verificationResponse.json()
+
+      if (verificationResponse.ok) {
+        // Redirect to verification page
+        const params = new URLSearchParams({
+          email: formData.email,
+          type: 'LOGIN',
+          role: userRole,
+          accountType: accountType,
         })
 
-        const verificationData = await verificationResponse.json()
-
-        if (verificationResponse.ok) {
-          // Redirect to verification page
-          const params = new URLSearchParams({
-            email: formData.email,
-            type: 'LOGIN',
-            role: userRole || 'CUSTOMER',
-          })
-
-          window.location.href = `/auth/verify-login?${params.toString()}`
-        } else {
-          setError(verificationData.message || 'Error al enviar código de verificación. Inténtalo de nuevo.')
-        }
+        window.location.href = `/auth/verify-login?${params.toString()}`
       } else {
-        // Normal login flow
-        setTimeout(() => {
-          if (userRole === 'ESTABLISHMENT') {
-            window.location.href = '/dashboard'
-          } else {
-            window.location.href = '/packs'
-          }
-        }, 800)
+        setError(verificationData.message || 'Error al enviar código de verificación. Inténtalo de nuevo.')
       }
     } catch (error) {
       setError('Ocurrió un error. Inténtalo de nuevo.')
