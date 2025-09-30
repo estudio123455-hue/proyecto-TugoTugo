@@ -100,6 +100,23 @@ export const authOptions: NextAuthOptions = {
       }
       return session
     },
+    async redirect({ url, baseUrl }) {
+      // Handle redirects after authentication
+      console.log('NextAuth redirect:', { url, baseUrl })
+      
+      // If it's a relative URL, make it absolute
+      if (url.startsWith('/')) {
+        return `${baseUrl}${url}`
+      }
+      
+      // If it's the same origin, allow it
+      if (new URL(url).origin === baseUrl) {
+        return url
+      }
+      
+      // Default redirect based on context
+      return `${baseUrl}/`
+    },
     async signIn({ user, account, profile }) {
       if (account?.provider === 'google') {
         // Create or update user in database for Google OAuth

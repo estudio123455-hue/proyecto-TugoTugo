@@ -20,11 +20,8 @@ export default function OAuthCallback() {
       const userRole = session.user?.role || 'CUSTOMER'
       
       setTimeout(() => {
-        if (userRole === 'ESTABLISHMENT') {
-          router.push('/dashboard')
-        } else {
-          router.push('/welcome')
-        }
+        // Redirect to home page with session established
+        window.location.href = '/'
       }, 1000) // Small delay to ensure session is fully loaded
     }
 
@@ -65,7 +62,7 @@ export default function OAuthCallback() {
           </p>
           <div className="bg-green-50 border border-green-200 rounded-lg p-4">
             <p className="text-green-700 text-sm">
-              Redirigiendo a tu dashboard...
+              Redirigiendo a la página principal...
             </p>
           </div>
         </div>
