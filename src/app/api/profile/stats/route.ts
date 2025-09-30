@@ -15,7 +15,7 @@ export async function GET() {
     }
 
     // Get user statistics
-    const [orders, totalSpent, completedOrders] = await Promise.all([
+    const [orders, , completedOrders] = await Promise.all([
       // All orders
       prisma.order.findMany({
         where: {

@@ -19,8 +19,6 @@ export default function RichTextEditor({
   placeholder = 'Escribe tu descripción...',
   className = ''
 }: RichTextEditorProps) {
-  const [isLinkModalOpen, setIsLinkModalOpen] = useState(false)
-  const [linkUrl, setLinkUrl] = useState('')
 
   const editor = useEditor({
     extensions: [

@@ -89,7 +89,7 @@ export async function POST(request: NextRequest) {
     }
 
     const data = await request.json()
-    const { startTime, endTime, packCount, price, date, establishmentId } = data
+    const { startTime, endTime, packCount, price, date } = data
 
     // Get establishment
     const establishment = await prisma.establishment.findUnique({

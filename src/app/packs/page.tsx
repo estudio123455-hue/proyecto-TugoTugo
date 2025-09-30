@@ -68,7 +68,7 @@ export default function PacksExplorer() {
 
   useEffect(() => {
     filterPacks()
-  }, [packs, selectedCategory, searchQuery])
+  }, [packs, selectedCategory, searchQuery, filterPacks])
 
   const fetchPacks = async () => {
     console.log('🔄 Fetching packs from API...')

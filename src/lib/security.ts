@@ -8,8 +8,8 @@ export interface SecurityCheckResult {
 // Determine if login requires email verification
 export async function shouldRequireEmailVerification(
   email: string,
-  userAgent?: string,
-  ip?: string
+  // userAgent?: string,
+  // ip?: string
 ): Promise<SecurityCheckResult> {
   try {
     // Get user's last login info

@@ -112,8 +112,8 @@ export const validateEstablishmentData = (data: any) => {
 
   // Phone validation (optional)
   if (data.phone && typeof data.phone === 'string') {
-    const phoneRegex = /^[\+]?[1-9][\d]{0,15}$/
-    if (!phoneRegex.test(data.phone.replace(/[\s\-\(\)]/g, ''))) {
+    const phoneRegex = /^[+]?[1-9][\d]{0,15}$/
+    if (!phoneRegex.test(data.phone.replace(/[\s\-()]/g, ''))) {
       errors.push('Phone number format is invalid')
     }
   }

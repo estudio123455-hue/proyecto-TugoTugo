@@ -36,7 +36,7 @@ export default function OrderSuccess() {
     if (orderId) {
       fetchOrder()
     }
-  }, [orderId])
+  }, [orderId, fetchOrder])
 
   const fetchOrder = async () => {
     try {

@@ -24,13 +24,13 @@ class WebSocketManager {
       console.log('🔌 WebSocket disconnected')
     })
 
-    this.socket.on('connect_error', (error) => {
-      console.error('🔌 WebSocket connection error:', error)
+    this.socket.on('connect_error', () => {
+      console.error('🔌 WebSocket connection error')
       this.handleReconnect()
     })
 
-    this.socket.on('reconnect', (attemptNumber) => {
-      console.log(`🔌 WebSocket reconnected after ${attemptNumber} attempts`)
+    this.socket.on('reconnect', () => {
+      console.log('🔌 WebSocket reconnected')
     })
   }
 

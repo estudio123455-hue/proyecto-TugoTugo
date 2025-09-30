@@ -1,4 +1,4 @@
-import useSWR, { mutate } from 'swr'
+import useSWR from 'swr'
 import { useEffect } from 'react'
 import { useWebSocket } from '@/lib/websocket'
 

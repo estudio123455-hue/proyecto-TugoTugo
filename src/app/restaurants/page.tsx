@@ -53,7 +53,6 @@ const categories = [
 ]
 
 export default function RestaurantsPage() {
-  const { data: session } = useSession()
   const [filteredRestaurants, setFilteredRestaurants] = useState<Restaurant[]>([])
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
@@ -62,16 +61,14 @@ export default function RestaurantsPage() {
   // Use the new hook with real-time updates
   const { 
     restaurants, 
-    total, 
     lastUpdate, 
     isLoading, 
-    error, 
     isConnected 
   } = useRestaurantsFeed(selectedCategory === 'all' ? undefined : selectedCategory)
 
   useEffect(() => {
     filterRestaurants()
-  }, [restaurants, selectedCategory, searchQuery, sortBy])
+  }, [restaurants, selectedCategory, searchQuery, sortBy, filterRestaurants])
 
   const filterRestaurants = () => {
     let filtered = [...restaurants]

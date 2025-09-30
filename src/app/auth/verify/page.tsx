@@ -19,7 +19,7 @@ export default function VerifyPage() {
   const type = searchParams.get('type') as 'REGISTRATION' | 'LOGIN' | 'PASSWORD_RESET' || 'REGISTRATION'
   const userData = searchParams.get('userData') ? JSON.parse(decodeURIComponent(searchParams.get('userData')!)) : null
   const userRole = searchParams.get('role') || null
-  const accountType = searchParams.get('accountType') || null
+  // const accountType = searchParams.get('accountType') || null
 
   useEffect(() => {
     if (!email) {

@@ -18,7 +18,7 @@ export default function NotificationSystem() {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [isVisible, setIsVisible] = useState(false)
   const { data: session } = useSession()
-  const { connect, subscribe, unsubscribe, isConnected } = useWebSocket()
+  const { connect, subscribe, unsubscribe } = useWebSocket()
 
   useEffect(() => {
     if (!session) return

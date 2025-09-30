@@ -7,14 +7,9 @@ import FloatingSupport from '@/components/FloatingSupport'
 
 export default function Home() {
   const [mounted, setMounted] = useState(false)
-  const [currentTestimonial, setCurrentTestimonial] = useState(0)
 
   useEffect(() => {
     setMounted(true)
-    const interval = setInterval(() => {
-      setCurrentTestimonial(prev => (prev + 1) % 3)
-    }, 5000)
-    return () => clearInterval(interval)
   }, [])
 
   const testimonials = [
