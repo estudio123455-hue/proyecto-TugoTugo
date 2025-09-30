@@ -93,6 +93,7 @@ model Establishment {
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   packs Pack[]
+  posts Post[]
 }
 
 model Pack {
@@ -131,6 +132,25 @@ model Order {
 
   packId String
   pack   Pack   @relation(fields: [packId], references: [id], onDelete: Cascade)
+}
+
+model Post {
+  id          String   @id @default(cuid())
+  title       String
+  content     String   // Descripción del platillo o promoción
+  images      String[] // Array de URLs de imágenes
+  price       Float?   // Precio opcional
+  isActive    Boolean  @default(true)
+  likes       Int      @default(0)
+  views       Int      @default(0)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  establishmentId String
+  establishment   Establishment @relation(fields: [establishmentId], references: [id], onDelete: Cascade)
+
+  @@index([establishmentId])
+  @@index([createdAt])
 }
 
 // Removed enums for SQLite compatibility
