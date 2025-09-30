@@ -5,6 +5,22 @@ import { useState, useEffect, useCallback } from 'react'
 import Navigation from '@/components/Navigation'
 import FloatingSupport from '@/components/FloatingSupport'
 
+interface Pack {
+  id: string
+  title: string
+  discountedPrice: number
+  originalPrice: number
+  quantity: number
+}
+
+interface Restaurant {
+  id: string
+  name: string
+  description: string
+  image?: string
+  packs?: Pack[]
+}
+
 export default function Home() {
   const [mounted, setMounted] = useState(false)
 
@@ -36,12 +52,8 @@ export default function Home() {
     },
   ]
 
-  const [restaurants, setRestaurants] = useState([])
+  const [restaurants, setRestaurants] = useState<Restaurant[]>([])
   const [isLoadingRestaurants, setIsLoadingRestaurants] = useState(true)
-
-  useEffect(() => {
-    fetchRestaurants()
-  }, [fetchRestaurants])
 
   const fetchRestaurants = useCallback(async () => {
     try {
@@ -56,6 +68,10 @@ export default function Home() {
       setIsLoadingRestaurants(false)
     }
   }, [])
+
+  useEffect(() => {
+    fetchRestaurants()
+  }, [fetchRestaurants])
 
   if (!mounted) return null
 
