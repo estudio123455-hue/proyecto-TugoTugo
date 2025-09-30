@@ -42,59 +42,81 @@ export async function sendOrderConfirmationEmail(
   const mailOptions = {
     from: process.env.SMTP_USER,
     to: data.to,
-    subject: `Order Confirmed - ${data.packTitle}`,
+    subject: `✅ Pedido Confirmado - ${data.packTitle}`,
     html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <div style="background-color: #10b981; color: white; padding: 20px; text-align: center;">
-          <h1>🎉 Order Confirmed!</h1>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+        <div style="background: linear-gradient(135deg, #10b981 0%, #059669 100%); color: white; padding: 30px; text-align: center; border-radius: 12px 12px 0 0;">
+          <h1 style="margin: 0; font-size: 28px; font-weight: bold;">🎉 ¡Pedido Confirmado!</h1>
+          <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">Tu pack sorpresa te está esperando</p>
         </div>
         
-        <div style="padding: 20px;">
-          <p>Hi ${data.userName},</p>
+        <div style="padding: 30px;">
+          <p style="font-size: 16px; color: #374151; margin-bottom: 20px;">¡Hola ${data.userName}!</p>
           
-          <p>Great news! Your surprise pack has been confirmed and is waiting for you.</p>
+          <p style="font-size: 16px; color: #374151; line-height: 1.6; margin-bottom: 25px;">
+            ¡Excelentes noticias! Tu pack sorpresa ha sido confirmado y pagado exitosamente. 
+            Ya puedes planificar tu visita al restaurante para recogerlo.
+          </p>
           
-          <div style="background-color: #f3f4f6; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h2 style="margin-top: 0; color: #374151;">Order Details</h2>
-            <p><strong>Order ID:</strong> #${data.orderId.slice(-8).toUpperCase()}</p>
-            <p><strong>Pack:</strong> ${data.packTitle}</p>
-            <p><strong>Quantity:</strong> ${data.quantity}</p>
-            <p><strong>Total:</strong> $${data.totalAmount.toFixed(2)}</p>
+          <div style="background-color: #f8fafc; border: 2px solid #e2e8f0; padding: 25px; border-radius: 12px; margin: 25px 0;">
+            <h2 style="margin-top: 0; color: #1e293b; font-size: 18px; border-bottom: 2px solid #10b981; padding-bottom: 10px;">📦 Detalles del Pedido</h2>
+            <div style="display: grid; gap: 10px; margin-top: 15px;">
+              <p style="margin: 5px 0;"><strong style="color: #374151;">ID del Pedido:</strong> <span style="background: #10b981; color: white; padding: 4px 8px; border-radius: 4px; font-family: monospace;">#${data.orderId.slice(-8).toUpperCase()}</span></p>
+              <p style="margin: 5px 0;"><strong style="color: #374151;">Pack:</strong> ${data.packTitle}</p>
+              <p style="margin: 5px 0;"><strong style="color: #374151;">Cantidad:</strong> ${data.quantity} ${data.quantity === 1 ? 'pack' : 'packs'}</p>
+              <p style="margin: 5px 0;"><strong style="color: #374151;">Total Pagado:</strong> <span style="font-size: 18px; color: #10b981; font-weight: bold;">$${data.totalAmount.toLocaleString('es-CO')}</span></p>
+            </div>
           </div>
           
-          <div style="background-color: #fef3c7; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h2 style="margin-top: 0; color: #92400e;">📍 Pickup Information</h2>
-            <p><strong>${data.establishmentName}</strong></p>
-            <p>${data.establishmentAddress}</p>
-            <p><strong>Date:</strong> ${new Date(
-              data.pickupDate
-            ).toLocaleDateString('en-US', {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            })}</p>
-            <p><strong>Time:</strong> ${data.pickupTimeStart} - ${data.pickupTimeEnd}</p>
+          <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; padding: 25px; border-radius: 12px; margin: 25px 0;">
+            <h2 style="margin-top: 0; color: #92400e; font-size: 18px;">📍 Información de Recogida</h2>
+            <div style="background: white; padding: 15px; border-radius: 8px; margin-top: 15px;">
+              <p style="margin: 5px 0; font-size: 18px;"><strong style="color: #92400e;">🏪 ${data.establishmentName}</strong></p>
+              <p style="margin: 5px 0; color: #374151;">📍 ${data.establishmentAddress}</p>
+              <p style="margin: 15px 0 5px 0;"><strong style="color: #92400e;">📅 Fecha:</strong> ${new Date(
+                data.pickupDate
+              ).toLocaleDateString('es-CO', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}</p>
+              <p style="margin: 5px 0;"><strong style="color: #92400e;">⏰ Horario:</strong> ${data.pickupTimeStart} - ${data.pickupTimeEnd}</p>
+            </div>
           </div>
           
-          <div style="background-color: #dbeafe; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h2 style="margin-top: 0; color: #1e40af;">Important Reminders</h2>
-            <ul style="margin: 0; padding-left: 20px;">
-              <li>Please arrive during the specified pickup window</li>
-              <li>Bring a valid ID and show this confirmation</li>
-              <li>The pack contents are a surprise - enjoy discovering what's inside!</li>
-              <li>If you can't make it, please contact the establishment</li>
+          <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border: 2px solid #3b82f6; padding: 25px; border-radius: 12px; margin: 25px 0;">
+            <h2 style="margin-top: 0; color: #1e40af; font-size: 18px;">⚠️ Recordatorios Importantes</h2>
+            <ul style="margin: 15px 0; padding-left: 25px; color: #374151; line-height: 1.8;">
+              <li style="margin: 8px 0;">🕐 <strong>Llega puntual</strong> durante el horario especificado</li>
+              <li style="margin: 8px 0;">🆔 <strong>Trae tu cédula</strong> y muestra este email de confirmación</li>
+              <li style="margin: 8px 0;">🎁 <strong>El contenido es sorpresa</strong> - ¡disfruta descubriendo qué hay dentro!</li>
+              <li style="margin: 8px 0;">📞 <strong>Si no puedes ir</strong>, contacta al restaurante con anticipación</li>
+              <li style="margin: 8px 0;">💝 <strong>Trae tu propia bolsa</strong> para ser más eco-friendly</li>
             </ul>
           </div>
+
+          <div style="background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%); border: 2px solid #10b981; padding: 20px; border-radius: 12px; margin: 25px 0; text-align: center;">
+            <h3 style="margin: 0 0 10px 0; color: #065f46; font-size: 16px;">🌱 ¡Gracias por ayudar al planeta!</h3>
+            <p style="margin: 0; color: #374151; font-size: 14px;">
+              Con tu compra estás reduciendo el desperdicio alimentario y apoyando restaurantes locales
+            </p>
+          </div>
           
-          <p>Thank you for helping reduce food waste and supporting local businesses! 🌱</p>
+          <p style="font-size: 16px; color: #374151; line-height: 1.6; margin-top: 30px;">
+            Te enviaremos un recordatorio antes de la hora de recogida. ¡Esperamos que disfrutes tu pack sorpresa! 🎁
+          </p>
           
-          <p>Best regards,<br>The FoodSave Team</p>
+          <p style="font-size: 16px; color: #374151; margin-top: 20px;">
+            Saludos cordiales,<br>
+            <strong style="color: #10b981;">El Equipo de FoodSave</strong> 🍃
+          </p>
         </div>
         
-        <div style="background-color: #f9fafb; padding: 20px; text-align: center; font-size: 12px; color: #6b7280;">
-          <p>This email was sent to ${data.to}</p>
-          <p>FoodSave - Reducing food waste, one pack at a time</p>
+        <div style="background-color: #f8fafc; padding: 20px; text-align: center; font-size: 12px; color: #6b7280; border-radius: 0 0 12px 12px;">
+          <p style="margin: 5px 0;">Este email fue enviado a ${data.to}</p>
+          <p style="margin: 5px 0; font-weight: bold; color: #10b981;">🍃 FoodSave - Salvando comida, un pack a la vez</p>
+          <p style="margin: 10px 0 5px 0;">¿Necesitas ayuda? Visita nuestro <a href="#" style="color: #10b981;">centro de ayuda</a></p>
         </div>
       </div>
     `,
@@ -113,56 +135,80 @@ export async function sendPickupReminderEmail(data: PickupReminderEmailData) {
   const mailOptions = {
     from: process.env.SMTP_USER,
     to: data.to,
-    subject: `Pickup Reminder - ${data.packTitle}`,
+    subject: `🔔 Recordatorio: Tu pack está listo - ${data.packTitle}`,
     html: `
-      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
-        <div style="background-color: #f59e0b; color: white; padding: 20px; text-align: center;">
-          <h1>🔔 Pickup Reminder</h1>
+      <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff;">
+        <div style="background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); color: white; padding: 30px; text-align: center; border-radius: 12px 12px 0 0;">
+          <h1 style="margin: 0; font-size: 28px; font-weight: bold;">🔔 ¡Es hora de recoger!</h1>
+          <p style="margin: 10px 0 0 0; font-size: 16px; opacity: 0.9;">Tu pack sorpresa te está esperando</p>
         </div>
         
-        <div style="padding: 20px;">
-          <p>Hi ${data.userName},</p>
+        <div style="padding: 30px;">
+          <p style="font-size: 16px; color: #374151; margin-bottom: 20px;">¡Hola ${data.userName}!</p>
           
-          <p>This is a friendly reminder that your surprise pack is ready for pickup!</p>
+          <p style="font-size: 16px; color: #374151; line-height: 1.6; margin-bottom: 25px;">
+            Este es un recordatorio amigable de que <strong>tu pack sorpresa está listo para recoger</strong>. 
+            ¡No olvides pasar por el restaurante durante el horario indicado!
+          </p>
           
-          <div style="background-color: #fef3c7; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h2 style="margin-top: 0; color: #92400e;">📦 Your Pack</h2>
-            <p><strong>${data.packTitle}</strong></p>
-            <p>from ${data.establishmentName}</p>
+          <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; padding: 25px; border-radius: 12px; margin: 25px 0;">
+            <h2 style="margin-top: 0; color: #92400e; font-size: 18px;">📦 Tu Pack Sorpresa</h2>
+            <div style="background: white; padding: 15px; border-radius: 8px; margin-top: 15px;">
+              <p style="margin: 5px 0; font-size: 18px; color: #92400e;"><strong>🎁 ${data.packTitle}</strong></p>
+              <p style="margin: 5px 0; color: #374151;">de <strong>${data.establishmentName}</strong></p>
+            </div>
           </div>
           
-          <div style="background-color: #dcfce7; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h2 style="margin-top: 0; color: #166534;">📍 Pickup Details</h2>
-            <p><strong>Location:</strong> ${data.establishmentAddress}</p>
-            <p><strong>Date:</strong> ${new Date(
-              data.pickupDate
-            ).toLocaleDateString('en-US', {
-              weekday: 'long',
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            })}</p>
-            <p><strong>Time:</strong> ${data.pickupTimeStart} - ${data.pickupTimeEnd}</p>
-            ${data.establishmentPhone ? `<p><strong>Phone:</strong> ${data.establishmentPhone}</p>` : ''}
+          <div style="background: linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%); border: 2px solid #10b981; padding: 25px; border-radius: 12px; margin: 25px 0;">
+            <h2 style="margin-top: 0; color: #065f46; font-size: 18px;">📍 Detalles de Recogida</h2>
+            <div style="background: white; padding: 15px; border-radius: 8px; margin-top: 15px;">
+              <p style="margin: 10px 0; color: #374151;"><strong style="color: #065f46;">📍 Ubicación:</strong><br>${data.establishmentAddress}</p>
+              <p style="margin: 10px 0; color: #374151;"><strong style="color: #065f46;">📅 Fecha:</strong><br>${new Date(
+                data.pickupDate
+              ).toLocaleDateString('es-CO', {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}</p>
+              <p style="margin: 10px 0; color: #374151;"><strong style="color: #065f46;">⏰ Horario:</strong><br><span style="font-size: 20px; color: #f59e0b; font-weight: bold;">${data.pickupTimeStart} - ${data.pickupTimeEnd}</span></p>
+              ${data.establishmentPhone ? `<p style="margin: 10px 0; color: #374151;"><strong style="color: #065f46;">📞 Teléfono:</strong><br><a href="tel:${data.establishmentPhone}" style="color: #10b981; text-decoration: none;">${data.establishmentPhone}</a></p>` : ''}
+            </div>
           </div>
           
-          <div style="background-color: #fee2e2; padding: 20px; border-radius: 8px; margin: 20px 0;">
-            <h2 style="margin-top: 0; color: #dc2626;">⚠️ Don't Forget</h2>
-            <ul style="margin: 0; padding-left: 20px;">
-              <li>Bring a valid ID</li>
-              <li>Show this email or your order confirmation</li>
-              <li>Arrive during the pickup window</li>
+          <div style="background: linear-gradient(135deg, #fef2f2 0%, #fecaca 100%); border: 2px solid #ef4444; padding: 25px; border-radius: 12px; margin: 25px 0;">
+            <h2 style="margin-top: 0; color: #dc2626; font-size: 18px;">⚠️ No Olvides Llevar</h2>
+            <ul style="margin: 15px 0; padding-left: 25px; color: #374151; line-height: 1.8;">
+              <li style="margin: 8px 0;">🆔 <strong>Tu cédula o documento de identidad</strong></li>
+              <li style="margin: 8px 0;">📧 <strong>Este email</strong> o tu confirmación de pedido</li>
+              <li style="margin: 8px 0;">🕐 <strong>Llega puntual</strong> durante el horario de recogida</li>
+              <li style="margin: 8px 0;">🛍️ <strong>Tu propia bolsa</strong> para ser eco-friendly</li>
             </ul>
           </div>
+
+          <div style="background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); border: 2px solid #6366f1; padding: 20px; border-radius: 12px; margin: 25px 0; text-align: center;">
+            <h3 style="margin: 0 0 10px 0; color: #3730a3; font-size: 16px;">💡 Consejo FoodSave</h3>
+            <p style="margin: 0; color: #374151; font-size: 14px;">
+              Si tienes algún problema para llegar, contacta al restaurante lo antes posible. 
+              ¡Ellos estarán encantados de ayudarte!
+            </p>
+          </div>
           
-          <p>We can't wait for you to discover what's in your surprise pack! 🎁</p>
+          <p style="font-size: 16px; color: #374151; line-height: 1.6; margin-top: 30px;">
+            ¡Estamos emocionados de que descubras qué hay en tu pack sorpresa! 🎁 
+            Gracias por ser parte de la solución contra el desperdicio alimentario.
+          </p>
           
-          <p>Best regards,<br>The FoodSave Team</p>
+          <p style="font-size: 16px; color: #374151; margin-top: 20px;">
+            ¡Que disfrutes tu pack!<br>
+            <strong style="color: #f59e0b;">El Equipo de FoodSave</strong> 🍃
+          </p>
         </div>
         
-        <div style="background-color: #f9fafb; padding: 20px; text-align: center; font-size: 12px; color: #6b7280;">
-          <p>This email was sent to ${data.to}</p>
-          <p>FoodSave - Reducing food waste, one pack at a time</p>
+        <div style="background-color: #f8fafc; padding: 20px; text-align: center; font-size: 12px; color: #6b7280; border-radius: 0 0 12px 12px;">
+          <p style="margin: 5px 0;">Este recordatorio fue enviado a ${data.to}</p>
+          <p style="margin: 5px 0; font-weight: bold; color: #f59e0b;">🍃 FoodSave - Salvando comida, un pack a la vez</p>
+          <p style="margin: 10px 0 5px 0;">¿Tienes preguntas? Visita nuestro <a href="#" style="color: #f59e0b;">centro de ayuda</a></p>
         </div>
       </div>
     `,
