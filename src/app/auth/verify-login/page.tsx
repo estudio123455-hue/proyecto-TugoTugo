@@ -184,33 +184,33 @@ export default function VerifyLoginPage() {
             </div>
 
             {/* Content */}
-            <div className="bg-white p-6">
+            <div className="bg-white dark:bg-gray-900 p-6">
               {success ? (
                 <div className="text-center">
                   <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
                     <span className="text-2xl">✅</span>
                   </div>
-                  <h2 className="text-xl font-bold text-gray-900 mb-2">
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                     ¡Verificación Exitosa!
                   </h2>
-                  <p className="text-green-600 mb-4">{success}</p>
-                  <div className="flex items-center justify-center gap-2 text-gray-500">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-500"></div>
+                  <p className="text-green-600 dark:text-green-400 mb-4 font-medium">{success}</p>
+                  <div className="flex items-center justify-center gap-2 text-gray-500 dark:text-gray-400">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-500 dark:border-green-400"></div>
                     <span className="text-sm">Iniciando sesión...</span>
                   </div>
                 </div>
               ) : (
                 <div>
                   <div className="text-center mb-6">
-                    <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                    <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
                       Código de Verificación
                     </h2>
-                    <p className="text-gray-600">
+                    <p className="text-gray-600 dark:text-gray-400">
                       Enviamos un código de seguridad a<br />
-                      <span className="font-semibold text-purple-600">{email}</span>
+                      <span className="font-semibold text-purple-600 dark:text-purple-400">{email}</span>
                     </p>
-                    <div className="mt-3 p-3 bg-blue-50 rounded-lg">
-                      <p className="text-blue-700 text-sm">
+                    <div className="mt-3 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+                      <p className="text-blue-700 dark:text-blue-300 text-sm font-medium">
                         🔒 <strong>Verificación requerida</strong> para cuenta {accountType === 'restaurant' ? 'de restaurante' : 'de cliente'}
                       </p>
                     </div>

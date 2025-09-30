@@ -117,13 +117,13 @@ export default function VerificationCodeInput({
     <div className="w-full max-w-md mx-auto">
       {/* Header */}
       <div className="text-center mb-6">
-        <h2 className="text-2xl font-bold text-gray-900 mb-2">
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-gray-100 mb-2">
           Ingresa el código de verificación
         </h2>
         {email && (
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Enviamos un código de 6 dígitos a<br />
-            <span className="font-semibold text-purple-600">{email}</span>
+            <span className="font-semibold text-purple-600 dark:text-purple-400">{email}</span>
           </p>
         )}
       </div>
@@ -148,17 +148,18 @@ export default function VerificationCodeInput({
             className={`
               w-12 h-12 text-center text-xl font-bold border-2 rounded-lg
               transition-all duration-200
+              text-gray-900 dark:text-gray-100
               ${activeIndex === index 
-                ? 'border-purple-500 ring-2 ring-purple-200 bg-white' 
-                : 'border-gray-300 bg-gray-50'
+                ? 'border-purple-500 ring-2 ring-purple-200 dark:ring-purple-800 bg-white dark:bg-gray-700' 
+                : 'border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-800'
               }
               ${error 
-                ? 'border-red-500 bg-red-50' 
+                ? 'border-red-500 bg-red-50 dark:bg-red-900/20 dark:border-red-400' 
                 : ''
               }
               ${isLoading 
                 ? 'opacity-50 cursor-not-allowed' 
-                : 'hover:border-purple-400 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200'
+                : 'hover:border-purple-400 dark:hover:border-purple-500 focus:outline-none focus:border-purple-500 focus:ring-2 focus:ring-purple-200 dark:focus:ring-purple-800'
               }
             `}
           />
@@ -167,17 +168,17 @@ export default function VerificationCodeInput({
 
       {/* Error Message */}
       {error && (
-        <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg">
-          <p className="text-red-700 text-sm text-center">{error}</p>
+        <div className="mb-4 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+          <p className="text-red-700 dark:text-red-400 text-sm text-center font-medium">{error}</p>
         </div>
       )}
 
       {/* Loading State */}
       {isLoading && (
         <div className="text-center mb-4">
-          <div className="inline-flex items-center gap-2 text-purple-600">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-purple-600"></div>
-            <span className="text-sm">Verificando código...</span>
+          <div className="inline-flex items-center gap-2 text-purple-600 dark:text-purple-400">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-purple-600 dark:border-purple-400"></div>
+            <span className="text-sm font-medium">Verificando código...</span>
           </div>
         </div>
       )}
@@ -186,21 +187,21 @@ export default function VerificationCodeInput({
       {canResend && onResend && (
         <div className="text-center">
           {resendTimer > 0 ? (
-            <p className="text-gray-500 text-sm">
+            <p className="text-gray-500 dark:text-gray-400 text-sm">
               Podrás solicitar un nuevo código en{' '}
-              <span className="font-semibold text-purple-600">
+              <span className="font-semibold text-purple-600 dark:text-purple-400">
                 {formatTime(resendTimer)}
               </span>
             </p>
           ) : (
             <div>
-              <p className="text-gray-600 text-sm mb-2">
+              <p className="text-gray-600 dark:text-gray-400 text-sm mb-2">
                 ¿No recibiste el código?
               </p>
               <button
                 onClick={handleResend}
                 disabled={isLoading}
-                className="text-purple-600 hover:text-purple-700 font-semibold text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 font-semibold text-sm transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 Reenviar código
               </button>
@@ -210,9 +211,9 @@ export default function VerificationCodeInput({
       )}
 
       {/* Tips */}
-      <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-        <h3 className="text-blue-800 font-semibold text-sm mb-2">💡 Consejos:</h3>
-        <ul className="text-blue-700 text-xs space-y-1">
+      <div className="mt-6 p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg">
+        <h3 className="text-blue-800 dark:text-blue-400 font-semibold text-sm mb-2">💡 Consejos:</h3>
+        <ul className="text-blue-700 dark:text-blue-300 text-xs space-y-1">
           <li>• Revisa tu bandeja de entrada y carpeta de spam</li>
           <li>• El código expira en 15 minutos</li>
           <li>• Puedes pegar el código completo en cualquier casilla</li>
