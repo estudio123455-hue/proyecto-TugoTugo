@@ -279,17 +279,17 @@ export default function AuthPage() {
               </div>
 
               {/* Lado Derecho - Formulario */}
-              <div className="lg:w-1/2 bg-white p-8 lg:p-12 flex flex-col justify-center">
+              <div className="lg:w-1/2 bg-white dark:bg-gray-900 p-8 lg:p-12 flex flex-col justify-center">
                 <div className="max-w-md mx-auto w-full">
                   
                   {/* Selector de Pestañas */}
-                  <div className="flex bg-gray-100 rounded-xl p-1 mb-8">
+                  <div className="flex bg-gray-100 dark:bg-gray-800 rounded-xl p-1 mb-8">
                     <button
                       onClick={() => setActiveTab('signin')}
                       className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all ${
                         activeTab === 'signin'
-                          ? 'bg-white text-purple-600 shadow-sm'
-                          : 'text-gray-600 hover:text-gray-900'
+                          ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-400 shadow-sm'
+                          : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
                       }`}
                     >
                       Iniciar Sesión
@@ -298,8 +298,8 @@ export default function AuthPage() {
                       onClick={() => setActiveTab('signup')}
                       className={`flex-1 py-3 px-4 rounded-lg font-semibold transition-all ${
                         activeTab === 'signup'
-                          ? 'bg-white text-purple-600 shadow-sm'
-                          : 'text-gray-600 hover:text-gray-900'
+                          ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-400 shadow-sm'
+                          : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
                       }`}
                     >
                       Crear Cuenta
@@ -308,17 +308,17 @@ export default function AuthPage() {
 
                   {/* Selector de Tipo de Cuenta */}
                   <div className="mb-6">
-                    <label className="block text-sm font-semibold text-gray-700 mb-2">
+                    <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                       Tipo de cuenta
                     </label>
-                    <div className="flex bg-gray-100 rounded-xl p-1">
+                    <div className="flex bg-gray-100 dark:bg-gray-800 rounded-xl p-1">
                       <button
                         type="button"
                         onClick={() => setAccountType('customer')}
                         className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
                           accountType === 'customer'
-                            ? 'bg-white text-purple-600 shadow-sm'
-                            : 'text-gray-600 hover:text-gray-900'
+                            ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-400 shadow-sm'
+                            : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
                         }`}
                       >
                         🛒 Cliente
@@ -328,8 +328,8 @@ export default function AuthPage() {
                         onClick={() => setAccountType('restaurant')}
                         className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
                           accountType === 'restaurant'
-                            ? 'bg-white text-purple-600 shadow-sm'
-                            : 'text-gray-600 hover:text-gray-900'
+                            ? 'bg-white dark:bg-gray-700 text-purple-600 dark:text-purple-400 shadow-sm'
+                            : 'text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-gray-100'
                         }`}
                       >
                         🏪 Restaurante
@@ -350,14 +350,14 @@ export default function AuthPage() {
                     {/* Nombre (solo para registro) */}
                     {activeTab === 'signup' && (
                       <div>
-                        <label className="block text-sm font-semibold text-gray-700 mb-2">
+                        <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                           Nombre completo
                         </label>
                         <input
                           type="text"
                           value={formData.name}
                           onChange={e => handleInputChange('name', e.target.value)}
-                          className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
+                          className="w-full px-4 py-4 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 dark:bg-gray-800 focus:bg-white dark:focus:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                           placeholder="Tu nombre completo"
                           required
                         />
@@ -366,14 +366,14 @@ export default function AuthPage() {
 
                     {/* Email */}
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                         Email
                       </label>
                       <input
                         type="email"
                         value={formData.email}
                         onChange={e => handleInputChange('email', e.target.value)}
-                        className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
+                        className="w-full px-4 py-4 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 dark:bg-gray-800 focus:bg-white dark:focus:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400"
                         placeholder="tu@email.com"
                         required
                       />
@@ -381,7 +381,7 @@ export default function AuthPage() {
 
                     {/* Contraseña */}
                     <div>
-                      <label className="block text-sm font-semibold text-gray-700 mb-2">
+                      <label className="block text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">
                         Contraseña
                       </label>
                       <div className="relative">
@@ -389,7 +389,7 @@ export default function AuthPage() {
                           type={showPassword ? 'text' : 'password'}
                           value={formData.password}
                           onChange={e => handleInputChange('password', e.target.value)}
-                          className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white pr-12"
+                          className="w-full px-4 py-4 border border-gray-200 dark:border-gray-600 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 dark:bg-gray-800 focus:bg-white dark:focus:bg-gray-700 text-gray-900 dark:text-gray-100 placeholder-gray-500 dark:placeholder-gray-400 pr-12"
                           placeholder="••••••••"
                           required
                         />
