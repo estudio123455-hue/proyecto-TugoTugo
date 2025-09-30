@@ -214,7 +214,7 @@ export default function AuthPage() {
 
   const handleGoogleSignIn = () => {
     signIn('google', { 
-      callbackUrl: '/', // Redirect to home page after successful login
+      callbackUrl: '/',
       redirect: true 
     })
   }

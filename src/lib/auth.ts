@@ -101,20 +101,24 @@ export const authOptions: NextAuthOptions = {
       return session
     },
     async redirect({ url, baseUrl }) {
-      // Handle redirects after authentication
       console.log('NextAuth redirect:', { url, baseUrl })
       
-      // If it's a relative URL, make it absolute
+      // If URL is relative, make it absolute
       if (url.startsWith('/')) {
         return `${baseUrl}${url}`
       }
       
-      // If it's the same origin, allow it
-      if (new URL(url).origin === baseUrl) {
+      // If URL is from same origin, allow it
+      if (url.startsWith(baseUrl)) {
         return url
       }
       
-      // Default redirect based on context
+      // For OAuth callbacks, always redirect to home
+      if (url.includes('/api/auth/callback')) {
+        return `${baseUrl}/`
+      }
+      
+      // Default: redirect to home page
       return `${baseUrl}/`
     },
     async signIn({ user, account, profile }) {
@@ -158,6 +162,28 @@ export const authOptions: NextAuthOptions = {
   },
   pages: {
     signIn: '/auth',
-    newUser: '/auth/oauth-callback', // Redirect here after OAuth signup
+    error: '/auth', // Redirect to auth page on error
   },
+  callbacks: {
+    async redirect({ url, baseUrl }) {
+      console.log('NextAuth redirect:', { url, baseUrl })
+      
+      // If URL is relative, make it absolute
+      if (url.startsWith('/')) {
+        return `${baseUrl}${url}`
+      }
+      
+      // If URL is from same origin, allow it
+      if (url.startsWith(baseUrl)) {
+        return url
+      }
+      
+      // For OAuth callbacks, always redirect to home
+      if (url.includes('/api/auth/callback')) {
+        return `${baseUrl}/`
+      }
+      
+      // Default: redirect to home page
+      return `${baseUrl}/`
+    },
 }

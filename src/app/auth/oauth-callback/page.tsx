@@ -1,91 +1,35 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import { getFirstName } from '@/lib/user-utils'
 
 export default function OAuthCallback() {
   const { data: session, status } = useSession()
   const router = useRouter()
-  const [isRedirecting, setIsRedirecting] = useState(false)
 
   useEffect(() => {
-    if (status === 'loading') return // Still loading
-
-    if (status === 'authenticated' && session && !isRedirecting) {
-      setIsRedirecting(true)
-      
-      // Redirect based on user role
-      const userRole = session.user?.role || 'CUSTOMER'
-      
-      setTimeout(() => {
-        // Redirect to home page with session established
-        window.location.href = '/'
-      }, 1000) // Small delay to ensure session is fully loaded
+    if (status === 'loading') {
+      return // Still loading
     }
 
-    if (status === 'unauthenticated') {
-      // Authentication failed, redirect to signin
-      setTimeout(() => {
-        router.push('/auth?error=OAuthError')
-      }, 2000)
+    if (status === 'authenticated' && session) {
+      // User is authenticated, redirect to home
+      console.log('OAuth callback: User authenticated, redirecting to home')
+      router.push('/')
+    } else {
+      // Authentication failed, redirect to auth page
+      console.log('OAuth callback: Authentication failed, redirecting to auth')
+      router.push('/auth')
     }
-  }, [session, status, router, isRedirecting])
-
-  if (status === 'loading' || isRedirecting) {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-green-500 mx-auto mb-6"></div>
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">
-            Completando autenticación...
-          </h1>
-          <p className="text-gray-600">
-            Por favor espera mientras te redirigimos
-          </p>
-        </div>
-      </div>
-    )
-  }
-
-  if (status === 'authenticated') {
-    return (
-      <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center px-4">
-        <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-          <div className="text-6xl mb-6">✅</div>
-          <h1 className="text-3xl font-bold text-green-600 mb-4">
-            ¡Autenticación exitosa!
-          </h1>
-          <p className="text-gray-600 mb-6">
-            Bienvenido, {getFirstName(session.user?.name) || session.user?.email}
-          </p>
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-            <p className="text-green-700 text-sm">
-              Redirigiendo a la página principal...
-            </p>
-          </div>
-        </div>
-      </div>
-    )
-  }
+  }, [session, status, router])
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 to-blue-50 flex items-center justify-center px-4">
-      <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 text-center">
-        <div className="text-6xl mb-6">❌</div>
-        <h1 className="text-2xl font-bold text-red-600 mb-4">
-          Error de autenticación
-        </h1>
-        <p className="text-gray-600 mb-6">
-          Hubo un problema con la autenticación. Por favor intenta de nuevo.
-        </p>
-        <button
-          onClick={() => router.push('/auth')}
-          className="w-full bg-green-500 hover:bg-green-600 text-white px-6 py-3 rounded-lg font-medium transition-colors"
-        >
-          Volver al login
-        </button>
+    <div className="min-h-screen bg-gradient-to-br from-purple-600 via-purple-500 to-orange-400 flex items-center justify-center">
+      <div className="bg-white/10 backdrop-blur-lg rounded-3xl shadow-2xl p-8 text-center text-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+        <h2 className="text-xl font-semibold mb-2">Completando autenticación...</h2>
+        <p className="text-white/80">Por favor espera mientras procesamos tu login.</p>
       </div>
     </div>
   )

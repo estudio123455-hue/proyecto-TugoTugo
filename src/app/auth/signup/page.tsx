@@ -350,7 +350,7 @@ export default function SignUpNew() {
                     <div className="mt-6">
                       <button
                         onClick={() => signIn('google', { 
-                          callbackUrl: '/welcome',
+                          callbackUrl: '/',
                           redirect: true 
                         })}
                         className="w-full bg-white border border-gray-200 hover:border-gray-300 text-gray-700 py-3 px-4 rounded-xl font-medium transition-all hover:shadow-md flex items-center justify-center gap-2"
