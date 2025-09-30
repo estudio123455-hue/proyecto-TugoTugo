@@ -86,19 +86,26 @@ export async function POST(request: NextRequest) {
       if (type === 'REGISTRATION' && userData) {
         const hashedPassword = await bcrypt.hash(userData.password, 12)
 
+        // Check if this is the first user (make them ADMIN)
+        const userCount = await prisma.user.count()
+        const isFirstUser = userCount === 0
+        const finalRole = isFirstUser ? 'ADMIN' : userData.role
+
+        console.log(`SIMPLE-VERIFY: Creating user. Is first user: ${isFirstUser}, Role: ${finalRole}`)
+
         const user = await prisma.user.upsert({
           where: { email },
           update: {
             name: userData.name,
             password: hashedPassword,
-            role: userData.role,
+            role: finalRole,
             emailVerified: new Date(),
           },
           create: {
             name: userData.name,
             email: email,
             password: hashedPassword,
-            role: userData.role,
+            role: finalRole,
             emailVerified: new Date(),
           },
         })
