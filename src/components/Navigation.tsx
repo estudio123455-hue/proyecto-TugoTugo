@@ -48,20 +48,61 @@ export default function Navigation() {
                 >
                   🗺️ Find Packs
                 </Link>
-                <Link
-                  href="/restaurants"
-                  className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium flex items-center"
-                >
-                  🍽️ Restaurants
-                </Link>
-                {/* Feed solo visible para clientes */}
-                {session?.user?.role !== 'ESTABLISHMENT' && (
+                {/* Links según el rol */}
+                {session?.user?.role === 'ADMIN' ? (
+                  // Admin ve: Admin panel
+                  <>
+                    <Link
+                      href="/admin"
+                      className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                    >
+                      👑 Admin Panel
+                    </Link>
+                    <Link
+                      href="/feed"
+                      className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                    >
+                      📱 Feed
+                    </Link>
+                  </>
+                ) : session?.user?.role === 'ESTABLISHMENT' ? (
+                  // Restaurante ve: Dashboard
                   <Link
-                    href="/feed"
-                    className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                    href="/dashboard"
+                    className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center"
                   >
-                    📱 Feed
+                    📊 Dashboard
                   </Link>
+                ) : (
+                  // Cliente ve: Find Packs, Restaurants, Feed
+                  <>
+                    <Link
+                      href="/packs"
+                      className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                    >
+                      🗺️ Find Packs
+                    </Link>
+                    <Link
+                      href="/restaurants"
+                      className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                    >
+                      🍽️ Restaurants
+                    </Link>
+                    <Link
+                      href="/feed"
+                      className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                    >
+                      📱 Feed
+                    </Link>
+                    {session && (
+                      <Link
+                        href="/profile"
+                        className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                      >
+                        📦 My Orders
+                      </Link>
+                    )}
+                  </>
                 )}
                 <Link
                   href="/how-it-works"
@@ -69,30 +110,6 @@ export default function Navigation() {
                 >
                   How it Works
                 </Link>
-                {session?.user?.role === 'ESTABLISHMENT' && (
-                  <Link
-                    href="/dashboard"
-                    className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center"
-                  >
-                    📊 Dashboard
-                  </Link>
-                )}
-                {session?.user?.role === 'ADMIN' && (
-                  <Link
-                    href="/admin"
-                    className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center"
-                  >
-                    👑 Admin
-                  </Link>
-                )}
-                {session && session.user?.role === 'CUSTOMER' && (
-                  <Link
-                    href="/profile"
-                    className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center"
-                  >
-                    📦 My Orders
-                  </Link>
-                )}
               </div>
             </div>
           </div>
