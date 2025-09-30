@@ -27,7 +27,7 @@ interface Pack {
 
 interface PackCardProps {
   pack: Pack
-  onReserve?: () => void
+  onReserve?: (packId: string, quantity: number) => void | Promise<void>
 }
 
 export default function PackCard({ pack, onReserve }: PackCardProps) {
