@@ -68,33 +68,23 @@ export default function VerifyLoginPage() {
 
         // Login with credentials - the user already exists
         setTimeout(async () => {
-          // Get user data from database to login
-          const userResponse = await fetch(`/api/users/by-email?email=${encodeURIComponent(email)}`)
-          
-          if (userResponse.ok) {
-            // Create NextAuth session
-            const result = await signIn('credentials', {
-              email: email,
-              password: 'verified-login', // Special password for verified logins
-              verified: 'true',
-              redirect: false,
-            })
+          // Create NextAuth session with verified flag
+          const result = await signIn('credentials', {
+            email: email,
+            verified: 'true',
+            redirect: false,
+          })
 
-            if (!result?.error) {
-              // Redirect based on role
-              if (expectedRole === 'ESTABLISHMENT') {
-                window.location.href = '/dashboard'
-              } else {
-                window.location.href = '/packs'
-              }
+          if (!result?.error) {
+            // Redirect based on role
+            if (expectedRole === 'ESTABLISHMENT') {
+              window.location.href = '/dashboard'
             } else {
-              setError('Error al iniciar sesión. Por favor intenta nuevamente.')
-              setTimeout(() => {
-                router.push('/auth')
-              }, 2000)
+              window.location.href = '/packs'
             }
           } else {
-            setError('Usuario no encontrado. Inicia sesión nuevamente.')
+            console.error('SignIn error:', result?.error)
+            setError('Error al iniciar sesión. Por favor intenta nuevamente.')
             setTimeout(() => {
               router.push('/auth')
             }, 2000)
