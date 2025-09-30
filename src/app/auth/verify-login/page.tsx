@@ -2,30 +2,43 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { signIn } from 'next-auth/react'
+import { signIn, useSession } from 'next-auth/react'
 import Link from 'next/link'
 import VerificationCodeInput from '@/components/VerificationCodeInput'
 
-export default function VerifyPage() {
+export default function VerifyLoginPage() {
   const router = useRouter()
   const searchParams = useSearchParams()
+  const { data: session } = useSession()
   
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [mounted, setMounted] = useState(false)
   
   // Get params from URL
   const email = searchParams.get('email') || ''
-  const type = searchParams.get('type') as 'REGISTRATION' | 'LOGIN' | 'PASSWORD_RESET' || 'REGISTRATION'
-  const userData = searchParams.get('userData') ? JSON.parse(decodeURIComponent(searchParams.get('userData')!)) : null
-  const userRole = searchParams.get('role') || null
-  const accountType = searchParams.get('accountType') || null
+  const expectedRole = searchParams.get('role') || ''
+  const accountType = searchParams.get('accountType') || ''
 
   useEffect(() => {
-    if (!email) {
-      router.push('/auth')
+    setMounted(true)
+  }, [])
+
+  useEffect(() => {
+    if (!email || !mounted) return
+
+    // If user is already logged in and has the correct role, redirect immediately
+    if (session?.user?.email === email && session?.user?.role === expectedRole) {
+      setTimeout(() => {
+        if (expectedRole === 'ESTABLISHMENT') {
+          window.location.href = '/dashboard'
+        } else {
+          window.location.href = '/packs'
+        }
+      }, 1000)
     }
-  }, [email, router])
+  }, [session, email, expectedRole, mounted])
 
   const handleCodeComplete = async (code: string) => {
     setIsLoading(true)
@@ -33,6 +46,7 @@ export default function VerifyPage() {
     setSuccess('')
 
     try {
+      // Verify the code
       const response = await fetch('/api/auth/verify-code', {
         method: 'POST',
         headers: {
@@ -41,54 +55,40 @@ export default function VerifyPage() {
         body: JSON.stringify({
           email,
           code,
-          type,
-          userData,
+          type: 'LOGIN',
         }),
       })
 
       const data = await response.json()
 
       if (response.ok && data.success) {
-        setSuccess(data.message)
+        setSuccess('✅ Código verificado correctamente')
 
-        // Handle different verification types
-        switch (type) {
-          case 'REGISTRATION':
-            // Auto login after successful registration
-            setTimeout(async () => {
-              const result = await signIn('credentials', {
-                email,
-                password: userData?.password,
-                redirect: false,
-              })
+        // Now sign in the user
+        setTimeout(async () => {
+          // We need to get the user's password or use a different approach
+          // Since we can't store passwords, we'll redirect to a special login endpoint
+          const loginResponse = await fetch('/api/auth/verify-login-session', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+              email,
+              verificationId: data.verificationId || 'verified',
+            }),
+          })
 
-              if (result?.error) {
-                router.push('/auth?message=registration-success')
-              } else {
-                const role = userData?.role
-                window.location.href = role === 'ESTABLISHMENT' ? '/dashboard' : '/welcome'
-              }
-            }, 1500)
-            break
-
-          case 'LOGIN':
-            // After successful verification, redirect based on role
+          if (loginResponse.ok) {
+            // Force a session refresh and redirect
+            window.location.href = expectedRole === 'ESTABLISHMENT' ? '/dashboard' : '/packs'
+          } else {
+            setError('Error al establecer sesión. Inicia sesión nuevamente.')
             setTimeout(() => {
-              if (userRole === 'ESTABLISHMENT') {
-                window.location.href = '/dashboard'
-              } else {
-                window.location.href = '/packs'
-              }
-            }, 1500)
-            break
-
-          case 'PASSWORD_RESET':
-            // Redirect to password reset page
-            setTimeout(() => {
-              router.push(`/auth/reset-password?email=${email}&verified=true`)
-            }, 1500)
-            break
-        }
+              router.push('/auth')
+            }, 2000)
+          }
+        }, 1500)
       } else {
         setError(data.message || 'Error al verificar el código')
       }
@@ -110,7 +110,7 @@ export default function VerifyPage() {
         },
         body: JSON.stringify({
           email,
-          type,
+          type: 'LOGIN',
         }),
       })
 
@@ -127,33 +127,10 @@ export default function VerifyPage() {
     }
   }
 
-  const getPageTitle = () => {
-    switch (type) {
-      case 'REGISTRATION':
-        return 'Verifica tu cuenta'
-      case 'LOGIN':
-        return 'Verificación de acceso'
-      case 'PASSWORD_RESET':
-        return 'Restablecer contraseña'
-      default:
-        return 'Verificación'
-    }
-  }
-
-  const getPageDescription = () => {
-    switch (type) {
-      case 'REGISTRATION':
-        return 'Completa tu registro verificando tu email'
-      case 'LOGIN':
-        return 'Confirma tu identidad para acceder'
-      case 'PASSWORD_RESET':
-        return 'Verifica tu identidad para cambiar tu contraseña'
-      default:
-        return 'Verifica tu email para continuar'
-    }
-  }
+  if (!mounted) return null
 
   if (!email) {
+    router.push('/auth')
     return null
   }
 
@@ -173,14 +150,14 @@ export default function VerifyPage() {
             {/* Header */}
             <div className="bg-white/20 p-6 text-center">
               <div className="flex items-center justify-center gap-3 mb-4">
-                <span className="text-3xl">🔐</span>
+                <span className="text-3xl">🔒</span>
                 <span className="text-2xl font-bold text-white">FoodSave</span>
               </div>
               <h1 className="text-xl font-bold text-white mb-2">
-                {getPageTitle()}
+                Verificación de Seguridad
               </h1>
               <p className="text-white/90 text-sm">
-                {getPageDescription()}
+                Confirma tu identidad para acceder de forma segura
               </p>
             </div>
 
@@ -197,19 +174,36 @@ export default function VerifyPage() {
                   <p className="text-green-600 mb-4">{success}</p>
                   <div className="flex items-center justify-center gap-2 text-gray-500">
                     <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-green-500"></div>
-                    <span className="text-sm">Redirigiendo...</span>
+                    <span className="text-sm">Iniciando sesión...</span>
                   </div>
                 </div>
               ) : (
-                <VerificationCodeInput
-                  onComplete={handleCodeComplete}
-                  onResend={handleResendCode}
-                  isLoading={isLoading}
-                  error={error}
-                  email={email}
-                  canResend={true}
-                  resendCooldown={120}
-                />
+                <div>
+                  <div className="text-center mb-6">
+                    <h2 className="text-2xl font-bold text-gray-900 mb-2">
+                      Código de Verificación
+                    </h2>
+                    <p className="text-gray-600">
+                      Enviamos un código de seguridad a<br />
+                      <span className="font-semibold text-purple-600">{email}</span>
+                    </p>
+                    <div className="mt-3 p-3 bg-blue-50 rounded-lg">
+                      <p className="text-blue-700 text-sm">
+                        🔒 <strong>Verificación requerida</strong> para cuenta {accountType === 'restaurant' ? 'de restaurante' : 'de cliente'}
+                      </p>
+                    </div>
+                  </div>
+
+                  <VerificationCodeInput
+                    onComplete={handleCodeComplete}
+                    onResend={handleResendCode}
+                    isLoading={isLoading}
+                    error={error}
+                    email={email}
+                    canResend={true}
+                    resendCooldown={120}
+                  />
+                </div>
               )}
             </div>
 
@@ -219,7 +213,7 @@ export default function VerifyPage() {
                 href="/auth"
                 className="text-white/80 hover:text-white text-sm transition-colors"
               >
-                ← Volver al inicio de sesión
+                ← Cancelar e ir al inicio de sesión
               </Link>
             </div>
           </div>

@@ -13,12 +13,15 @@ interface AuthGuardProps {
 const publicRoutes = [
   '/',
   '/auth',
+  '/auth/verify',
+  '/auth/verify-login',
   '/auth/callback',
   '/auth/confirm-email',
   '/auth/oauth-callback',
   '/privacy',
   '/terms',
-  '/faq'
+  '/faq',
+  '/how-it-works'
 ]
 
 export default function AuthGuard({ children }: AuthGuardProps) {

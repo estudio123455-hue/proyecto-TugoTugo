@@ -77,7 +77,13 @@ export default function AuthPage() {
       const shouldVerifyEmail = automaticVerification || enableExtraSecurity
 
       if (shouldVerifyEmail) {
-        // Send verification code for login
+        // For login verification, we'll show a message and require re-login
+        setError('🔒 Verificación de seguridad requerida. Te enviaremos un código por email.')
+        
+        // Sign out first
+        await signOut({ redirect: false })
+        
+        // Send verification code
         const verificationResponse = await fetch('/api/auth/send-verification', {
           method: 'POST',
           headers: {
@@ -90,19 +96,17 @@ export default function AuthPage() {
         })
 
         if (verificationResponse.ok) {
-          // Sign out temporarily and redirect to verification
-          await signOut({ redirect: false })
-          
-          const params = new URLSearchParams({
-            email: formData.email,
-            type: 'LOGIN',
-            userData: encodeURIComponent(JSON.stringify({
+          // Show message that code was sent
+          setTimeout(() => {
+            const params = new URLSearchParams({
+              email: formData.email,
+              type: 'LOGIN',
               role: userRole,
               accountType: accountType,
-            })),
-          })
+            })
 
-          window.location.href = `/auth/verify?${params.toString()}`
+            window.location.href = `/auth/verify-login?${params.toString()}`
+          }, 2000)
         } else {
           setError('Error al enviar código de verificación. Inténtalo de nuevo.')
         }
