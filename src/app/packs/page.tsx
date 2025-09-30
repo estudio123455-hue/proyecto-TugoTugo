@@ -2,9 +2,11 @@
 
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
+import Head from 'next/head'
 import Navigation from '@/components/Navigation'
 // import PackCard from '@/components/PackCard' // TODO: Use this component
 import EmptyState from '@/components/EmptyState'
+import PackSkeleton from '@/components/PackSkeleton'
 
 interface Pack {
   id: string
@@ -197,12 +199,27 @@ export default function PacksExplorer() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <Navigation />
+    <>
+      <Head>
+        <title>Packs Sorpresa Disponibles - FoodSave Bogotá | Reduce el Desperdicio de Comida</title>
+        <meta 
+          name="description" 
+          content="Descubre packs sorpresa con hasta 70% de descuento en restaurantes de Bogotá. Salva comida, ahorra dinero y ayuda al planeta. ¡Más de 2,847 kg salvados este mes!" 
+        />
+        <meta name="keywords" content="comida, descuento, bogotá, restaurantes, sostenibilidad, desperdicio alimentario" />
+        <meta property="og:title" content="Packs Sorpresa - FoodSave Bogotá" />
+        <meta property="og:description" content="Comida deliciosa con hasta 70% de descuento. Ayuda a reducir el desperdicio alimentario en Bogotá." />
+        <meta property="og:type" content="website" />
+        <meta name="twitter:card" content="summary_large_image" />
+        <link rel="canonical" href="https://app-rho-sandy.vercel.app/packs" />
+      </Head>
+      
+      <div className="min-h-screen bg-gray-50">
+        <Navigation />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" role="main">
         {/* Hero Section with Impact - Brand Identity */}
-        <div className="text-center mb-8 sm:mb-12">
+        <header className="text-center mb-8 sm:mb-12" role="banner">
           {/* Slogan de impacto */}
           <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white py-3 px-4 rounded-2xl mb-6 shadow-lg">
             <p className="text-sm sm:text-base font-semibold">
@@ -238,7 +255,7 @@ export default function PacksExplorer() {
               🌍 Este mes hemos salvado <span className="text-green-600 font-bold">2,847 kg</span> de comida en Bogotá
             </p>
           </div>
-        </div>
+        </header>
 
         {/* Search Bar - Full Width */}
         <div className="max-w-2xl mx-auto mb-10">
@@ -249,6 +266,8 @@ export default function PacksExplorer() {
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               className="w-full px-6 py-5 pl-16 pr-6 text-lg text-gray-700 bg-white border-2 border-gray-200 rounded-2xl focus:outline-none focus:border-green-500 focus:ring-4 focus:ring-green-100 shadow-lg transition-all"
+              aria-label="Buscar packs sorpresa por restaurante o tipo de comida"
+              role="searchbox"
             />
             <div className="absolute inset-y-0 left-0 pl-5 flex items-center pointer-events-none">
               <svg
@@ -306,10 +325,12 @@ export default function PacksExplorer() {
           ))}
         </div>
 
-        {/* Loading State */}
+        {/* Loading State with Skeletons */}
         {isLoading && (
-          <div className="flex items-center justify-center h-64">
-            <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-green-500"></div>
+          <div className="grid gap-6 grid-cols-1 lg:grid-cols-2 px-2 sm:px-0">
+            {[1, 2, 3, 4].map(i => (
+              <PackSkeleton key={i} />
+            ))}
           </div>
         )}
 
@@ -439,10 +460,12 @@ export default function PacksExplorer() {
                               {/* CTA Button */}
                               <button
                                 onClick={() => handleReservePack(pack.id, 1)}
-                                className="w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition-all transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                                className="group w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition-all transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 active:scale-95 focus:ring-4 focus:ring-green-200"
                               >
-                                <span>🛒</span>
-                                Reservar Pack Sorpresa
+                                <span className="group-hover:animate-bounce">🛒</span>
+                                <span className="group-hover:tracking-wide transition-all">
+                                  Reservar Pack Sorpresa
+                                </span>
                               </button>
                             </div>
                           ))}
@@ -520,7 +543,8 @@ export default function PacksExplorer() {
             totalPacks={packs.length}
           />
         )}
+      </main>
       </div>
-    </div>
+    </>
   )
 }
