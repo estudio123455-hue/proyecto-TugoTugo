@@ -19,41 +19,87 @@ export async function DELETE(request: NextRequest) {
     // Borrar en orden correcto (respetando relaciones)
     console.log('🗑️ Borrando datos...')
 
-    // 1. Borrar órdenes
-    const deletedOrders = await prisma.order.deleteMany({})
-    console.log(`✅ ${deletedOrders.count} órdenes eliminadas`)
+    let deletedOrders = { count: 0 }
+    let deletedPosts = { count: 0 }
+    let deletedPacks = { count: 0 }
+    let deletedEstablishments = { count: 0 }
+    let deletedSessions = { count: 0 }
+    let deletedAccounts = { count: 0 }
+    let deletedTokens = { count: 0 }
+    let deletedEmailVerifications = { count: 0 }
+    let deletedUsers = { count: 0 }
 
-    // 2. Borrar posts
-    const deletedPosts = await prisma.post.deleteMany({})
-    console.log(`✅ ${deletedPosts.count} posts eliminados`)
+    try {
+      // 1. Borrar órdenes
+      deletedOrders = await prisma.order.deleteMany({})
+      console.log(`✅ ${deletedOrders.count} órdenes eliminadas`)
+    } catch (e) {
+      console.log('⚠️ No hay órdenes para borrar')
+    }
 
-    // 3. Borrar packs
-    const deletedPacks = await prisma.pack.deleteMany({})
-    console.log(`✅ ${deletedPacks.count} packs eliminados`)
+    try {
+      // 2. Borrar posts
+      deletedPosts = await prisma.post.deleteMany({})
+      console.log(`✅ ${deletedPosts.count} posts eliminados`)
+    } catch (e) {
+      console.log('⚠️ No hay posts para borrar')
+    }
 
-    // 4. Borrar establishments
-    const deletedEstablishments = await prisma.establishment.deleteMany({})
-    console.log(`✅ ${deletedEstablishments.count} establecimientos eliminados`)
+    try {
+      // 3. Borrar packs
+      deletedPacks = await prisma.pack.deleteMany({})
+      console.log(`✅ ${deletedPacks.count} packs eliminados`)
+    } catch (e) {
+      console.log('⚠️ No hay packs para borrar')
+    }
 
-    // 5. Borrar sessions
-    const deletedSessions = await prisma.session.deleteMany({})
-    console.log(`✅ ${deletedSessions.count} sesiones eliminadas`)
+    try {
+      // 4. Borrar establishments
+      deletedEstablishments = await prisma.establishment.deleteMany({})
+      console.log(`✅ ${deletedEstablishments.count} establecimientos eliminados`)
+    } catch (e) {
+      console.log('⚠️ No hay establecimientos para borrar')
+    }
 
-    // 6. Borrar accounts
-    const deletedAccounts = await prisma.account.deleteMany({})
-    console.log(`✅ ${deletedAccounts.count} cuentas eliminadas`)
+    try {
+      // 5. Borrar sessions
+      deletedSessions = await prisma.session.deleteMany({})
+      console.log(`✅ ${deletedSessions.count} sesiones eliminadas`)
+    } catch (e) {
+      console.log('⚠️ No hay sesiones para borrar')
+    }
 
-    // 7. Borrar verification tokens
-    const deletedTokens = await prisma.verificationToken.deleteMany({})
-    console.log(`✅ ${deletedTokens.count} tokens eliminados`)
+    try {
+      // 6. Borrar accounts
+      deletedAccounts = await prisma.account.deleteMany({})
+      console.log(`✅ ${deletedAccounts.count} cuentas eliminadas`)
+    } catch (e) {
+      console.log('⚠️ No hay cuentas para borrar')
+    }
 
-    // 8. Borrar email verifications
-    const deletedEmailVerifications = await prisma.emailVerification.deleteMany({})
-    console.log(`✅ ${deletedEmailVerifications.count} verificaciones eliminadas`)
+    try {
+      // 7. Borrar verification tokens
+      deletedTokens = await prisma.verificationToken.deleteMany({})
+      console.log(`✅ ${deletedTokens.count} tokens eliminados`)
+    } catch (e) {
+      console.log('⚠️ No hay tokens para borrar')
+    }
 
-    // 9. Finalmente, borrar usuarios
-    const deletedUsers = await prisma.user.deleteMany({})
-    console.log(`✅ ${deletedUsers.count} usuarios eliminados`)
+    try {
+      // 8. Borrar email verifications
+      deletedEmailVerifications = await prisma.emailVerification.deleteMany({})
+      console.log(`✅ ${deletedEmailVerifications.count} verificaciones eliminadas`)
+    } catch (e) {
+      console.log('⚠️ No hay verificaciones para borrar')
+    }
+
+    try {
+      // 9. Finalmente, borrar usuarios
+      deletedUsers = await prisma.user.deleteMany({})
+      console.log(`✅ ${deletedUsers.count} usuarios eliminados`)
+    } catch (e) {
+      console.log('⚠️ No hay usuarios para borrar')
+    }
 
     return NextResponse.json({
       success: true,
