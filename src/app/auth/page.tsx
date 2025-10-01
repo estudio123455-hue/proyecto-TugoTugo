@@ -71,18 +71,6 @@ export default function AuthPage() {
       const session = await getSession()
       const userRole = session?.user?.role
 
-      // Verificar que el tipo de cuenta coincida
-      const expectedRole = accountType === 'restaurant' ? 'ESTABLISHMENT' : 'CUSTOMER'
-      
-      if (userRole !== expectedRole) {
-        await signOut({ redirect: false })
-        const typeText = accountType === 'restaurant' ? 'restaurante' : 'cliente'
-        const oppositeText = accountType === 'restaurant' ? 'cliente' : 'restaurante'
-        setError(`Esta cuenta no es de ${typeText}. Usa el login de ${oppositeText}.`)
-        setIsLoading(false)
-        return
-      }
-
       // ALWAYS require email verification for login
       await signOut({ redirect: false })
       
@@ -107,12 +95,11 @@ export default function AuthPage() {
 
       if (verificationResponse.ok) {
         // Redirect to verification page
-        const params = new URLSearchParams({
-          email: formData.email,
-          type: 'LOGIN',
-          role: userRole,
-          accountType: accountType,
-        })
+        const params = new URLSearchParams()
+        params.append('email', formData.email)
+        params.append('type', 'LOGIN')
+        params.append('role', userRole || 'CUSTOMER')
+        params.append('accountType', accountType)
 
         window.location.href = `/auth/verify-login?${params.toString()}`
       } else {
