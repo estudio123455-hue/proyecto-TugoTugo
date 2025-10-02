@@ -133,19 +133,28 @@ export default function SecretManagePage() {
     }
 
     try {
+      console.log('Deleting user:', id)
       const response = await fetch(`/api/users/${id}`, {
         method: 'DELETE',
       })
 
+      console.log('Delete response:', response.status)
+      const data = await response.json()
+      console.log('Delete data:', data)
+
       if (response.ok) {
+        // Actualizar la lista inmediatamente sin esperar fetchData
+        setUsers(users.filter(u => u.id !== id))
+        setEstablishments(establishments.filter(e => e.user.email !== email))
         alert(`✅ Usuario "${email}" eliminado exitosamente`)
-        fetchData()
+        // Recargar todo para asegurar consistencia
+        await fetchData()
       } else {
-        alert('❌ Error al eliminar usuario')
+        alert(`❌ Error al eliminar usuario: ${data.message || data.error || 'Error desconocido'}`)
       }
     } catch (error) {
       console.error('Error:', error)
-      alert('❌ Error al eliminar usuario')
+      alert(`❌ Error al eliminar usuario: ${error instanceof Error ? error.message : 'Error desconocido'}`)
     }
   }
 
