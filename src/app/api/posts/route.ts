@@ -125,6 +125,7 @@ export async function POST(request: NextRequest) {
             image: true,
             category: true,
           },
+        },
       },
     })
 
