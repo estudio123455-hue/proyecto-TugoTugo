@@ -10,23 +10,9 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '20')
     const category = searchParams.get('category')
 
-    // Base query conditions for active establishments with packs
+    // Base query conditions for active establishments (with or without packs)
     const where: any = {
       isActive: true,
-      packs: {
-        some: {
-          isActive: true,
-          quantity: {
-            gt: 0,
-          },
-          availableFrom: {
-            lte: new Date(),
-          },
-          availableUntil: {
-            gte: new Date(),
-          },
-        },
-      },
     }
 
     // Filter by category if provided
