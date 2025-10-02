@@ -1,4 +1,4 @@
-# ✅ Solución: Error al Publicar Restaurantes
+# ✅ Solución COMPLETA: Error al Publicar Restaurantes
 
 ## 🔴 Problema Original
 ```
@@ -6,13 +6,24 @@ Internal server error: Invalid `prisma.establishment.findUnique()` invocation:
 The column `Establishment.isApproved` does not exist in the current database.
 ```
 
+## ⚠️ Actualización: El error persistía porque había MÚLTIPLES archivos usando `isApproved`
+
 ## 🔍 Causa Raíz
 El schema de Prisma define la columna `isApproved` pero **no existe en la base de datos de producción**. Esto ocurre cuando:
 - El schema se actualiza pero no se ejecuta la migración
 - La base de datos se creó antes de que se agregara el campo
 - Las migraciones no están sincronizadas entre desarrollo y producción
 
-## ✅ Solución Aplicada (Inmediata)
+## ✅ Solución Aplicada (COMPLETA)
+
+### Archivos Modificados (Total: 6 archivos)
+
+1. **`prisma/schema.prisma`** - Campo `isApproved` marcado como opcional
+2. **`src/app/api/establishment/setup/route.ts`** - Removido `isApproved` de creación
+3. **`src/app/api/posts/route.ts`** - Comentado filtro y validación de `isApproved`
+4. **`src/app/api/admin/establishments/route.ts`** - Comentado filtro por `isApproved`
+5. **`src/app/api/admin/establishments/[id]/approve/route.ts`** - Solo usa `isActive`
+6. **`src/app/api/admin/establishments/[id]/reject/route.ts`** - Solo usa `isActive`
 
 ### 1. Schema de Prisma
 **Antes:**
