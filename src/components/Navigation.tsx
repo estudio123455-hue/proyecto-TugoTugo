@@ -17,8 +17,6 @@ export default function Navigation() {
         return '🛒 Cliente'
       case 'ESTABLISHMENT':
         return '🏪 Restaurante'
-      case 'ADMIN':
-        return '👑 Administrador'
       default:
         return '👤 Usuario'
     }
@@ -44,23 +42,7 @@ export default function Navigation() {
                   Home
                 </Link>
                 {/* Links según el rol */}
-                {session?.user?.role === 'ADMIN' ? (
-                  // Admin ve: Admin panel
-                  <>
-                    <Link
-                      href="/admin"
-                      className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center"
-                    >
-                      👑 Admin Panel
-                    </Link>
-                    <Link
-                      href="/feed"
-                      className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium flex items-center"
-                    >
-                      📱 Feed
-                    </Link>
-                  </>
-                ) : session?.user?.role === 'ESTABLISHMENT' ? (
+                {session?.user?.role === 'ESTABLISHMENT' ? (
                   // Restaurante ve: Dashboard
                   <Link
                     href="/dashboard"
