@@ -88,7 +88,7 @@ export async function POST(request: NextRequest) {
         ADD COLUMN IF NOT EXISTS "legalDocument" TEXT,
         ADD COLUMN IF NOT EXISTS "businessType" TEXT,
         ADD COLUMN IF NOT EXISTS "taxId" TEXT,
-        ADD COLUMN IF NOT EXISTS "verificationStatus" TEXT DEFAULT 'APPROVED',
+        ADD COLUMN IF NOT EXISTS "verificationStatus" TEXT DEFAULT 'PENDING',
         ADD COLUMN IF NOT EXISTS "verificationNotes" TEXT,
         ADD COLUMN IF NOT EXISTS "approvedAt" TIMESTAMP,
         ADD COLUMN IF NOT EXISTS "approvedBy" TEXT
