@@ -8,6 +8,7 @@ export async function POST(request: NextRequest) {
     const results: any = {
       emailVerification: { exists: false, created: false },
       post: { exists: false, created: false },
+      verificationFields: { exists: false, created: false },
     }
 
     // Create EmailVerification table
@@ -75,6 +76,32 @@ export async function POST(request: NextRequest) {
         console.log('ℹ️ [Migration] Post table already exists')
       } else {
         throw error
+      }
+    }
+
+    // Add verification fields to Establishment table
+    try {
+      await prisma.$executeRaw`
+        ALTER TABLE "Establishment" 
+        ADD COLUMN IF NOT EXISTS "openingHours" TEXT,
+        ADD COLUMN IF NOT EXISTS "images" TEXT[] DEFAULT ARRAY[]::TEXT[],
+        ADD COLUMN IF NOT EXISTS "legalDocument" TEXT,
+        ADD COLUMN IF NOT EXISTS "businessType" TEXT,
+        ADD COLUMN IF NOT EXISTS "taxId" TEXT,
+        ADD COLUMN IF NOT EXISTS "verificationStatus" TEXT DEFAULT 'APPROVED',
+        ADD COLUMN IF NOT EXISTS "verificationNotes" TEXT,
+        ADD COLUMN IF NOT EXISTS "approvedAt" TIMESTAMP,
+        ADD COLUMN IF NOT EXISTS "approvedBy" TEXT
+      `
+      results.verificationFields.created = true
+      console.log('✅ [Migration] Verification fields added to Establishment')
+    } catch (error: any) {
+      if (error.message?.includes('already exists') || error.message?.includes('duplicate column')) {
+        results.verificationFields.exists = true
+        console.log('ℹ️ [Migration] Verification fields already exist')
+      } else {
+        console.error('⚠️ [Migration] Error adding verification fields:', error.message)
+        // Don't throw - continue with migration
       }
     }
 
