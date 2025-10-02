@@ -55,6 +55,8 @@ export default function AuthPage() {
     setError('')
 
     try {
+      console.log('🔐 [SignIn] Starting login process for:', formData.email)
+      
       // First verify credentials
       const result = await signIn('credentials', {
         email: formData.email,
@@ -62,7 +64,10 @@ export default function AuthPage() {
         redirect: false,
       })
 
+      console.log('🔐 [SignIn] Credentials result:', result)
+
       if (result?.error) {
+        console.error('❌ [SignIn] Invalid credentials')
         setError('Email o contraseña incorrectos')
         setIsLoading(false)
         return
@@ -70,9 +75,13 @@ export default function AuthPage() {
 
       const session = await getSession()
       const userRole = session?.user?.role
+      console.log('👤 [SignIn] User role:', userRole)
 
       // ALWAYS require email verification for login
+      console.log('🔓 [SignIn] Signing out temporarily to send verification code')
       await signOut({ redirect: false })
+      
+      console.log('📧 [SignIn] Sending verification code to:', formData.email)
       
       // Send verification code using simple system
       const verificationResponse = await fetch('/api/auth/simple-verify', {
@@ -91,9 +100,13 @@ export default function AuthPage() {
         }),
       })
 
+      console.log('📡 [SignIn] Verification response status:', verificationResponse.status)
       const verificationData = await verificationResponse.json()
+      console.log('📦 [SignIn] Verification data:', verificationData)
 
       if (verificationResponse.ok) {
+        console.log('✅ [SignIn] Code sent successfully, redirecting to verification page')
+        
         // Redirect to verification page
         const params = new URLSearchParams()
         params.append('email', formData.email)
@@ -101,11 +114,16 @@ export default function AuthPage() {
         params.append('role', userRole || 'CUSTOMER')
         params.append('accountType', accountType)
 
-        window.location.href = `/auth/verify-login?${params.toString()}`
+        const redirectUrl = `/auth/verify-login?${params.toString()}`
+        console.log('🔄 [SignIn] Redirecting to:', redirectUrl)
+        
+        window.location.href = redirectUrl
       } else {
+        console.error('❌ [SignIn] Error sending verification code:', verificationData.message)
         setError(verificationData.message || 'Error al enviar código de verificación. Inténtalo de nuevo.')
       }
     } catch (error) {
+      console.error('❌ [SignIn] Exception:', error)
       setError('Ocurrió un error. Inténtalo de nuevo.')
     } finally {
       setIsLoading(false)
