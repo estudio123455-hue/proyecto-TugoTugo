@@ -38,7 +38,7 @@ async function testConnection() {
           select: {
             id: true,
             name: true,
-            isApproved: true,
+            isActive: true,
           },
         },
       },
@@ -48,7 +48,7 @@ async function testConnection() {
     establishmentUsers.forEach((user) => {
       console.log(`  - ${user.email} (${user.name})`)
       if (user.establishment) {
-        console.log(`    ✅ Has establishment: ${user.establishment.name} (Approved: ${user.establishment.isApproved})`)
+        console.log(`    ✅ Has establishment: ${user.establishment.name} (Active: ${user.establishment.isActive})`)
       } else {
         console.log(`    ⚠️ No establishment created yet`)
       }
