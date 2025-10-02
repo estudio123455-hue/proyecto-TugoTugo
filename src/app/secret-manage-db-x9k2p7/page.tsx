@@ -51,6 +51,13 @@ export default function SecretManagePage() {
 
   useEffect(() => {
     fetchData()
+
+    // Auto-refresh every 5 seconds
+    const interval = setInterval(() => {
+      fetchData()
+    }, 5000)
+
+    return () => clearInterval(interval)
   }, [])
 
   const fetchData = async () => {
@@ -171,8 +178,14 @@ export default function SecretManagePage() {
           <p className="text-gray-600">
             Gestiona restaurantes y publicaciones desde aquí
           </p>
-          <div className="mt-2 text-sm text-red-600 font-semibold">
-            ⚠️ Esta página es privada - No compartas esta URL
+          <div className="mt-2 flex items-center justify-between">
+            <div className="text-sm text-red-600 font-semibold">
+              ⚠️ Esta página es privada - No compartas esta URL
+            </div>
+            <div className="text-sm text-green-600 font-semibold flex items-center">
+              <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
+              Actualización automática cada 5s
+            </div>
           </div>
         </div>
 
