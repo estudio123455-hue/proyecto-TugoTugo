@@ -18,20 +18,12 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const status = searchParams.get('status') // 'pending', 'approved', 'all'
 
-    let where = {}
-    // Temporalmente deshabilitado hasta que exista la columna isApproved
-    // if (status === 'pending') {
-    //   where = { isApproved: false, isActive: true }
-    // } else if (status === 'approved') {
-    //   where = { isApproved: true }
-    // }
-    // Por ahora, mostrar todos los establecimientos activos
-    if (status === 'pending' || status === 'approved') {
-      where = { isActive: true }
-    }
+    console.log('🔍 [Admin] Fetching establishments with status:', status)
 
+    // Sin sistema de aprobación, mostrar todos los establecimientos
+    // Los filtros ahora solo afectan la visualización en el frontend
     const establishments = await prisma.establishment.findMany({
-      where,
+      where: {}, // Sin filtro - mostrar todos
       include: {
         user: {
           select: {
@@ -50,6 +42,8 @@ export async function GET(request: NextRequest) {
         createdAt: 'desc',
       },
     })
+
+    console.log(`✅ [Admin] Found ${establishments.length} establishments`)
 
     return NextResponse.json({
       success: true,

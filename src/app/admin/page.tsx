@@ -30,7 +30,7 @@ export default function AdminPage() {
   const router = useRouter()
   const [establishments, setEstablishments] = useState<Establishment[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [filter, setFilter] = useState<'pending' | 'approved' | 'all'>('pending')
+  const [filter, setFilter] = useState<'pending' | 'approved' | 'all'>('all')
   const [actionLoading, setActionLoading] = useState<string | null>(null)
 
   useEffect(() => {
@@ -54,13 +54,12 @@ export default function AdminPage() {
       }
     } catch (error) {
       console.error('Error fetching establishments:', error)
-    } finally {
       setIsLoading(false)
     }
   }
 
   const handleApprove = async (id: string, name: string) => {
-    if (!confirm(`¿Aprobar el restaurante "${name}"?`)) return
+    if (!confirm(`¿Activar el restaurante "${name}"?`)) return
 
     setActionLoading(id)
     try {
@@ -69,40 +68,39 @@ export default function AdminPage() {
       })
 
       if (response.ok) {
-        alert(`✅ Restaurante "${name}" aprobado exitosamente`)
+        alert(`✅ Restaurante "${name}" activado exitosamente`)
         fetchEstablishments()
       } else {
-        alert('Error al aprobar restaurante')
+        alert('Error al activar restaurante')
       }
     } catch (error) {
-      console.error('Error approving:', error)
-      alert('Error al aprobar restaurante')
+      console.error('Error activating:', error)
+      alert('Error al activar restaurante')
     } finally {
       setActionLoading(null)
     }
   }
 
   const handleReject = async (id: string, name: string) => {
-    const reason = prompt(`¿Por qué rechazar "${name}"? (opcional)`)
-    if (reason === null) return // Cancelado
+    if (!confirm(`¿Desactivar el restaurante "${name}"?`)) return
 
     setActionLoading(id)
     try {
       const response = await fetch(`/api/admin/establishments/${id}/reject`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ reason }),
+        body: JSON.stringify({ reason: 'Desactivado por administrador' }),
       })
 
       if (response.ok) {
-        alert(`❌ Restaurante "${name}" rechazado`)
+        alert(`🔴 Restaurante "${name}" desactivado`)
         fetchEstablishments()
       } else {
-        alert('Error al rechazar restaurante')
+        alert('Error al desactivar restaurante')
       }
     } catch (error) {
-      console.error('Error rejecting:', error)
-      alert('Error al rechazar restaurante')
+      console.error('Error deactivating:', error)
+      alert('Error al desactivar restaurante')
     } finally {
       setActionLoading(null)
     }
@@ -142,39 +140,14 @@ export default function AdminPage() {
           </p>
         </div>
 
-        {/* Filters */}
+        {/* Stats */}
         <div className="bg-white rounded-lg shadow p-4 mb-6">
-          <div className="flex space-x-4">
-            <button
-              onClick={() => setFilter('pending')}
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                filter === 'pending'
-                  ? 'bg-yellow-500 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              ⏳ Pendientes
-            </button>
-            <button
-              onClick={() => setFilter('approved')}
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                filter === 'approved'
-                  ? 'bg-green-500 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              ✅ Aprobados
-            </button>
-            <button
-              onClick={() => setFilter('all')}
-              className={`px-4 py-2 rounded-lg font-medium transition-all ${
-                filter === 'all'
-                  ? 'bg-blue-500 text-white'
-                  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-              }`}
-            >
-              📋 Todos
-            </button>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm text-gray-600">Total de Restaurantes</p>
+              <p className="text-2xl font-bold text-gray-900">{establishments.length}</p>
+            </div>
+            <div className="text-4xl">🏪</div>
           </div>
         </div>
 
@@ -183,8 +156,11 @@ export default function AdminPage() {
           <div className="bg-white rounded-lg shadow p-12 text-center">
             <div className="text-6xl mb-4">📭</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
-              No hay restaurantes {filter === 'pending' ? 'pendientes' : filter === 'approved' ? 'aprobados' : ''}
+              No hay restaurantes registrados
             </h3>
+            <p className="text-gray-600">
+              Los restaurantes aparecerán aquí cuando se registren
+            </p>
           </div>
         ) : (
           <div className="space-y-4">
@@ -240,24 +216,25 @@ export default function AdminPage() {
                   </div>
 
                   {/* Actions */}
-                  {est.isActive && (
-                    <div className="flex flex-col space-y-2 ml-4">
-                      <button
-                        onClick={() => handleApprove(est.id, est.name)}
-                        disabled={actionLoading === est.id}
-                        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium disabled:opacity-50"
-                      >
-                        {actionLoading === est.id ? '...' : '✅ Aprobar'}
-                      </button>
+                  <div className="flex flex-col space-y-2 ml-4">
+                    {est.isActive ? (
                       <button
                         onClick={() => handleReject(est.id, est.name)}
                         disabled={actionLoading === est.id}
                         className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg font-medium disabled:opacity-50"
                       >
-                        {actionLoading === est.id ? '...' : '❌ Rechazar'}
+                        {actionLoading === est.id ? '...' : '🔴 Desactivar'}
                       </button>
-                    </div>
-                  )}
+                    ) : (
+                      <button
+                        onClick={() => handleApprove(est.id, est.name)}
+                        disabled={actionLoading === est.id}
+                        className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg font-medium disabled:opacity-50"
+                      >
+                        {actionLoading === est.id ? '...' : '🟢 Activar'}
+                      </button>
+                    )}
+                  </div>
                 </div>
               </div>
             ))}
