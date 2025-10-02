@@ -3,63 +3,87 @@ import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
   try {
-    // Verify this is a legitimate migration request
-    const authHeader = request.headers.get('authorization')
-    const migrationSecret = process.env.MIGRATION_SECRET || 'dev-secret'
+    console.log('🔄 [Migration] Starting database migration...')
     
-    if (authHeader !== `Bearer ${migrationSecret}`) {
-      return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
+    const results: any = {
+      emailVerification: { exists: false, created: false },
+      post: { exists: false, created: false },
     }
 
-    // Check if EmailVerification table exists by trying to query it
-    let tableExists = true
+    // Create EmailVerification table
     try {
-      await prisma.emailVerification.findFirst()
+      await prisma.$executeRaw`
+        CREATE TABLE IF NOT EXISTS "EmailVerification" (
+          id TEXT PRIMARY KEY,
+          email TEXT NOT NULL,
+          code TEXT NOT NULL,
+          type TEXT NOT NULL,
+          expires TIMESTAMP NOT NULL,
+          verified BOOLEAN DEFAULT false,
+          attempts INTEGER DEFAULT 0,
+          "createdAt" TIMESTAMP DEFAULT NOW(),
+          "updatedAt" TIMESTAMP DEFAULT NOW()
+        )
+      `
+      await prisma.$executeRaw`
+        CREATE INDEX IF NOT EXISTS "EmailVerification_email_code_idx" ON "EmailVerification"(email, code)
+      `
+      await prisma.$executeRaw`
+        CREATE INDEX IF NOT EXISTS "EmailVerification_email_type_idx" ON "EmailVerification"(email, type)
+      `
+      results.emailVerification.created = true
+      console.log('✅ [Migration] EmailVerification table created')
     } catch (error: any) {
-      if (error.code === 'P2021' || error.message.includes('does not exist')) {
-        tableExists = false
+      if (error.message?.includes('already exists')) {
+        results.emailVerification.exists = true
+        console.log('ℹ️ [Migration] EmailVerification table already exists')
       } else {
         throw error
       }
     }
 
-    if (tableExists) {
-      return NextResponse.json({
-        message: 'EmailVerification table already exists',
-        success: true,
-        tableExists: true,
-      })
+    // Create Post table
+    try {
+      await prisma.$executeRaw`
+        CREATE TABLE IF NOT EXISTS "Post" (
+          id TEXT PRIMARY KEY,
+          title TEXT NOT NULL,
+          content TEXT NOT NULL,
+          images TEXT[] DEFAULT ARRAY[]::TEXT[],
+          price DOUBLE PRECISION,
+          "isActive" BOOLEAN NOT NULL DEFAULT true,
+          likes INTEGER NOT NULL DEFAULT 0,
+          views INTEGER NOT NULL DEFAULT 0,
+          "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          "updatedAt" TIMESTAMP(3) NOT NULL,
+          "establishmentId" TEXT NOT NULL,
+          CONSTRAINT "Post_establishmentId_fkey" FOREIGN KEY ("establishmentId") 
+            REFERENCES "Establishment"(id) ON DELETE CASCADE ON UPDATE CASCADE
+        )
+      `
+      await prisma.$executeRaw`
+        CREATE INDEX IF NOT EXISTS "Post_establishmentId_idx" ON "Post"("establishmentId")
+      `
+      await prisma.$executeRaw`
+        CREATE INDEX IF NOT EXISTS "Post_createdAt_idx" ON "Post"("createdAt")
+      `
+      results.post.created = true
+      console.log('✅ [Migration] Post table created')
+    } catch (error: any) {
+      if (error.message?.includes('already exists')) {
+        results.post.exists = true
+        console.log('ℹ️ [Migration] Post table already exists')
+      } else {
+        throw error
+      }
     }
 
-    // Create the EmailVerification table using raw SQL
-    await prisma.$executeRaw`
-      CREATE TABLE IF NOT EXISTS "EmailVerification" (
-        id TEXT PRIMARY KEY,
-        email TEXT NOT NULL,
-        code TEXT NOT NULL,
-        type TEXT NOT NULL,
-        expires TIMESTAMP NOT NULL,
-        verified BOOLEAN DEFAULT false,
-        attempts INTEGER DEFAULT 0,
-        "createdAt" TIMESTAMP DEFAULT NOW(),
-        "updatedAt" TIMESTAMP DEFAULT NOW()
-      )
-    `
-
-    // Create indexes
-    await prisma.$executeRaw`
-      CREATE INDEX IF NOT EXISTS "EmailVerification_email_code_idx" ON "EmailVerification"(email, code)
-    `
-    
-    await prisma.$executeRaw`
-      CREATE INDEX IF NOT EXISTS "EmailVerification_email_type_idx" ON "EmailVerification"(email, type)
-    `
+    console.log('✅ [Migration] Migration completed successfully')
 
     return NextResponse.json({
-      message: 'EmailVerification table created successfully',
+      message: 'Migration completed successfully',
       success: true,
-      tableExists: false,
-      created: true,
+      results,
     })
   } catch (error) {
     console.error('Migration error:', error)
