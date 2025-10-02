@@ -19,7 +19,7 @@ interface Post {
     image?: string
     category: string
     address: string
-    isApproved: boolean
+    isApproved?: boolean // Opcional hasta que exista en BD
   }
 }
 

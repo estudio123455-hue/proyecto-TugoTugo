@@ -19,7 +19,7 @@ interface Establishment {
   email?: string
   category: string
   isActive: boolean
-  isApproved: boolean
+  isApproved?: boolean // Opcional hasta que exista en BD
 }
 
 interface DashboardStats {
@@ -267,7 +267,7 @@ export default function Dashboard() {
                 </button>
               </div>
               
-              {!establishment.isApproved ? (
+              {establishment.isApproved === false ? (
                 <div className="text-center py-12">
                   <div className="text-6xl mb-4">⏳</div>
                   <h3 className="text-xl font-semibold text-gray-900 mb-2">
