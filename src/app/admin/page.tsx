@@ -13,7 +13,6 @@ interface Establishment {
   phone?: string
   email?: string
   category: string
-  isApproved?: boolean // Opcional hasta que exista en BD
   isActive: boolean
   createdAt: string
   user: {
@@ -200,14 +199,8 @@ export default function AdminPage() {
                       <h3 className="text-xl font-bold text-gray-900">
                         {est.name}
                       </h3>
-                      <span
-                        className={`px-2 py-1 rounded-full text-xs font-medium ${
-                          est.isApproved === true
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-yellow-100 text-yellow-700'
-                        }`}
-                      >
-                        {est.isApproved === true ? '✅ Aprobado' : '⏳ Pendiente'}
+                      <span className="px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-700">
+                        ✅ Activo
                       </span>
                       <span className="px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
                         {est.category}
@@ -247,7 +240,7 @@ export default function AdminPage() {
                   </div>
 
                   {/* Actions */}
-                  {est.isApproved !== true && est.isActive && (
+                  {est.isActive && (
                     <div className="flex flex-col space-y-2 ml-4">
                       <button
                         onClick={() => handleApprove(est.id, est.name)}

@@ -86,7 +86,7 @@ model Establishment {
   image       String?
   category    String
   isActive    Boolean  @default(true)
-  isApproved  Boolean? @default(false) // Optional until migration runs
+  // isApproved field removed - add back after running migration
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 

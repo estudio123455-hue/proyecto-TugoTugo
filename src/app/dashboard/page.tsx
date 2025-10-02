@@ -19,7 +19,6 @@ interface Establishment {
   email?: string
   category: string
   isActive: boolean
-  isApproved?: boolean // Opcional hasta que exista en BD
 }
 
 interface DashboardStats {
@@ -267,24 +266,7 @@ export default function Dashboard() {
                 </button>
               </div>
               
-              {establishment.isApproved === false ? (
-                <div className="text-center py-12">
-                  <div className="text-6xl mb-4">⏳</div>
-                  <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                    Cuenta Pendiente de Aprobación
-                  </h3>
-                  <p className="text-gray-600 mb-4">
-                    Tu restaurante está siendo revisado por un administrador.
-                    Una vez aprobado, podrás crear publicaciones de tus platillos.
-                  </p>
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4 max-w-md mx-auto">
-                    <p className="text-yellow-800 text-sm">
-                      <strong>Estado:</strong> Pendiente de aprobación
-                    </p>
-                  </div>
-                </div>
-              ) : (
-                <div>
+              <div>
                   <p className="text-gray-600 mb-4">
                     Crea publicaciones para mostrar tus platillos, promociones y menús especiales a los clientes.
                   </p>
@@ -300,8 +282,7 @@ export default function Dashboard() {
                       Crear mi primera publicación
                     </button>
                   </div>
-                </div>
-              )}
+              </div>
             </div>
           )}
 
