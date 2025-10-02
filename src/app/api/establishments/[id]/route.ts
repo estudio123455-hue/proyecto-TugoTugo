@@ -6,22 +6,15 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const { id } = params
-
-    if (!id) {
-      return NextResponse.json({ message: 'ID is required' }, { status: 400 })
-    }
-
     const establishment = await prisma.establishment.findUnique({
-      where: {
-        id: id,
-        isActive: true, // Only return active establishments
-      },
+      where: { id: params.id },
       include: {
-        user: {
-          select: {
-            name: true,
-            email: true,
+        packs: {
+          where: {
+            isActive: true,
+            quantity: {
+              gt: 0,
+            },
           },
         },
       },
@@ -39,6 +32,37 @@ export async function GET(
     console.error('Error fetching establishment:', error)
     return NextResponse.json(
       { message: 'Internal server error' },
+      { status: 500 }
+    )
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: { id: string } }
+) {
+  try {
+    console.log('🗑️ [DELETE] Deleting establishment:', params.id)
+
+    // Delete establishment (cascade will delete posts and packs)
+    await prisma.establishment.delete({
+      where: { id: params.id },
+    })
+
+    console.log('✅ [DELETE] Establishment deleted successfully')
+
+    return NextResponse.json({
+      success: true,
+      message: 'Establishment deleted successfully',
+    })
+  } catch (error) {
+    console.error('❌ [DELETE] Error deleting establishment:', error)
+    return NextResponse.json(
+      { 
+        success: false,
+        message: 'Error deleting establishment',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }
