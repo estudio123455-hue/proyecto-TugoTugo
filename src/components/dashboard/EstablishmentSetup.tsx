@@ -82,6 +82,7 @@ export default function EstablishmentSetup({
     }
 
     try {
+      console.log('🚀 Sending establishment setup request...')
       const response = await fetch('/api/establishment/setup', {
         method: 'POST',
         headers: {
@@ -93,14 +94,23 @@ export default function EstablishmentSetup({
         }),
       })
 
+      console.log('📡 Response status:', response.status)
+      const data = await response.json()
+      console.log('📦 Response data:', data)
+
       if (response.ok) {
+        console.log('✅ Establishment created successfully')
         onSetupComplete()
       } else {
-        const data = await response.json()
-        setError(data.message || 'Failed to create establishment')
+        const errorMsg = data.error 
+          ? `${data.message}: ${data.error}` 
+          : data.message || 'Failed to create establishment'
+        console.error('❌ Setup failed:', errorMsg)
+        setError(errorMsg)
       }
     } catch (error) {
-      setError('An error occurred. Please try again.')
+      console.error('❌ Network error:', error)
+      setError(`An error occurred: ${error instanceof Error ? error.message : 'Please try again.'}`)
     } finally {
       setIsLoading(false)
     }

@@ -5,17 +5,27 @@ import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('🏪 [Setup] Starting establishment setup...')
     const session = await getServerSession(authOptions)
 
     if (!session?.user?.id) {
+      console.log('❌ [Setup] Unauthorized - no session')
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
+    console.log('👤 [Setup] User:', session.user.id, 'Role:', session.user.role)
+
     if (session.user.role !== 'ESTABLISHMENT') {
+      console.log('❌ [Setup] Access denied - wrong role:', session.user.role)
       return NextResponse.json({ message: 'Access denied' }, { status: 403 })
     }
 
     const data = await request.json()
+    console.log('📝 [Setup] Received data:', {
+      name: data.name,
+      category: data.category,
+      address: data.address,
+    })
 
     // Check if establishment already exists
     const existingEstablishment = await prisma.establishment.findUnique({
@@ -25,31 +35,40 @@ export async function POST(request: NextRequest) {
     })
 
     if (existingEstablishment) {
+      console.log('⚠️ [Setup] Establishment already exists for user')
       return NextResponse.json(
         { message: 'Establishment already exists' },
         { status: 400 }
       )
     }
 
+    console.log('💾 [Setup] Creating establishment...')
     const establishment = await prisma.establishment.create({
       data: {
         name: data.name,
-        description: data.description,
+        description: data.description || '',
         address: data.address,
-        latitude: data.latitude,
-        longitude: data.longitude,
-        phone: data.phone,
-        email: data.email,
+        latitude: parseFloat(data.latitude),
+        longitude: parseFloat(data.longitude),
+        phone: data.phone || '',
+        email: data.email || '',
         category: data.category,
         userId: session.user.id,
+        isApproved: true, // Auto-approve for now
       },
     })
 
+    console.log('✅ [Setup] Establishment created:', establishment.id)
     return NextResponse.json(establishment, { status: 201 })
   } catch (error) {
-    console.error('Error setting up establishment:', error)
+    console.error('❌ [Setup] Error setting up establishment:', error)
+    console.error('Error details:', error instanceof Error ? error.message : error)
+    console.error('Stack:', error instanceof Error ? error.stack : 'No stack')
     return NextResponse.json(
-      { message: 'Internal server error' },
+      { 
+        message: 'Internal server error',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }
