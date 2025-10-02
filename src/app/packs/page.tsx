@@ -111,7 +111,54 @@ export default function PacksExplorer() {
     let filteredPacksData = packs
     let filteredPostsData = posts
 
-    // Filter packs by search query
+    // Filter by category
+    if (selectedCategory !== 'all') {
+      filteredPacksData = filteredPacksData.filter(pack => {
+        const category = pack.establishment.category.toLowerCase()
+        switch (selectedCategory) {
+          case 'bakery':
+            return category.includes('bakery') || category.includes('panaderia')
+          case 'lunch':
+            return category.includes('restaurant') || category.includes('restaurante')
+          case 'dessert':
+            return category.includes('bakery') || pack.title.toLowerCase().includes('postre')
+          case 'coffee':
+            return category.includes('cafe') || category.includes('café')
+          case 'healthy':
+            return pack.title.toLowerCase().includes('salud') || pack.title.toLowerCase().includes('healthy')
+          case 'pizza':
+            return category.includes('restaurant') || pack.title.toLowerCase().includes('pizza')
+          case 'asian':
+            return pack.title.toLowerCase().includes('asian') || pack.title.toLowerCase().includes('sushi')
+          default:
+            return true
+        }
+      })
+
+      filteredPostsData = filteredPostsData.filter(post => {
+        const category = post.establishment.category.toLowerCase()
+        switch (selectedCategory) {
+          case 'bakery':
+            return category.includes('bakery') || category.includes('panaderia')
+          case 'lunch':
+            return category.includes('restaurant') || category.includes('restaurante')
+          case 'dessert':
+            return category.includes('bakery') || post.title.toLowerCase().includes('postre')
+          case 'coffee':
+            return category.includes('cafe') || category.includes('café')
+          case 'healthy':
+            return post.title.toLowerCase().includes('salud') || post.content.toLowerCase().includes('healthy')
+          case 'pizza':
+            return category.includes('restaurant') || post.title.toLowerCase().includes('pizza')
+          case 'asian':
+            return post.title.toLowerCase().includes('asian') || post.title.toLowerCase().includes('sushi')
+          default:
+            return true
+        }
+      })
+    }
+
+    // Filter by search query
     if (searchQuery) {
       filteredPacksData = filteredPacksData.filter(
         pack =>
