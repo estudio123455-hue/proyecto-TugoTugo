@@ -3,25 +3,26 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 
-// GET - Obtener posts públicos (solo de restaurantes aprobados)
+// GET - Obtener posts públicos
 export async function GET(request: NextRequest) {
   try {
+    console.log('🔍 [Posts API] Fetching posts...')
     const { searchParams } = new URL(request.url)
     const establishmentId = searchParams.get('establishmentId')
     const limit = parseInt(searchParams.get('limit') || '20')
     const offset = parseInt(searchParams.get('offset') || '0')
 
-    // Solo mostrar posts activos (isApproved temporalmente deshabilitado)
+    // Solo mostrar posts activos
     const where = establishmentId
       ? { 
           establishmentId, 
           isActive: true,
-          // establishment: { isApproved: true } // Deshabilitado hasta migración
         }
       : { 
           isActive: true,
-          // establishment: { isApproved: true } // Deshabilitado hasta migración
         }
+
+    console.log('🔍 [Posts API] Query where:', where)
 
     const posts = await prisma.post.findMany({
       where,
@@ -33,7 +34,6 @@ export async function GET(request: NextRequest) {
             image: true,
             category: true,
             address: true,
-            // isApproved: true, // Deshabilitado hasta migración
           },
         },
       },
@@ -43,6 +43,8 @@ export async function GET(request: NextRequest) {
       take: limit,
       skip: offset,
     })
+
+    console.log(`✅ [Posts API] Found ${posts.length} posts`)
 
     const total = await prisma.post.count({ where })
 

@@ -33,13 +33,20 @@ export default function FeedPage() {
 
   const fetchPosts = async () => {
     try {
+      console.log('📡 Fetching posts...')
       const response = await fetch('/api/posts')
+      console.log('📡 Response status:', response.status)
+      
       if (response.ok) {
         const data = await response.json()
-        setPosts(data.data)
+        console.log('📦 Posts data:', data)
+        console.log('📊 Number of posts:', data.data?.length || 0)
+        setPosts(data.data || [])
+      } else {
+        console.error('❌ Error response:', response.status)
       }
     } catch (error) {
-      console.error('Error fetching posts:', error)
+      console.error('❌ Error fetching posts:', error)
     } finally {
       setIsLoading(false)
     }
