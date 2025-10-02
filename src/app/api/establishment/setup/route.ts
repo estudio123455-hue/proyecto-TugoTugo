@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
         email: data.email || '',
         category: data.category,
         userId: session.user.id,
-        isApproved: true, // Auto-approve for now
+        // isApproved removed temporarily until migration runs
       },
     })
 

@@ -86,7 +86,7 @@ model Establishment {
   image       String?
   category    String
   isActive    Boolean  @default(true)
-  isApproved  Boolean  @default(false) // Requiere aprobación de admin
+  isApproved  Boolean? @default(false) // Optional until migration runs
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
