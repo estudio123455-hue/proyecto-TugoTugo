@@ -28,6 +28,22 @@ interface Pack {
   }
 }
 
+interface Post {
+  id: string
+  title: string
+  content: string
+  price: number | null
+  images: string[]
+  createdAt: string
+  establishment: {
+    id: string
+    name: string
+    address: string
+    category: string
+    image?: string
+  }
+}
+
 const foodCategories = [
   { id: 'all', name: 'Todos', emoji: '🍽️', color: 'bg-gray-100 text-gray-700' },
   { id: 'bakery', name: 'Panadería', emoji: '🥖', color: 'bg-amber-100 text-amber-700' },
@@ -42,10 +58,13 @@ const foodCategories = [
 export default function PacksExplorer() {
   const { data: session } = useSession()
   const [packs, setPacks] = useState<Pack[]>([])
+  const [posts, setPosts] = useState<Post[]>([])
   const [filteredPacks, setFilteredPacks] = useState<Pack[]>([])
+  const [filteredPosts, setFilteredPosts] = useState<Post[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
+  const [showType, setShowType] = useState<'all' | 'packs' | 'posts'>('all')
 
   const getUniqueRestaurants = (packs: Pack[]) => {
     const restaurantMap = new Map()
@@ -58,102 +77,60 @@ export default function PacksExplorer() {
   }
 
   const fetchPacks = async () => {
-    console.log('🔄 Fetching packs from API...')
+    console.log('🔄 Fetching packs and posts from API...')
     try {
-      const response = await fetch('/api/packs/public')
-      if (response.ok) {
-        const packs = await response.json()
-        console.log('📊 Public packs received:', packs.length)
-        console.log('📦 Raw packs data:', packs)
+      // Fetch packs
+      const packsResponse = await fetch('/api/packs/public')
+      if (packsResponse.ok) {
+        const packsData = await packsResponse.json()
+        console.log('📊 Public packs received:', packsData.length)
         
-        // Filter packs that have quantity > 0
-        const availablePacks = packs.filter((pack: any) => {
-          const isAvailable = pack.quantity > 0 && pack.isActive
-          console.log(
-            `📦 Pack ${pack.title}: quantity=${pack.quantity}, isActive=${pack.isActive}, available=${isAvailable}`
-          )
-          return isAvailable
+        const availablePacks = packsData.filter((pack: any) => {
+          return pack.quantity > 0 && pack.isActive
         })
 
         console.log('✅ Total available packs:', availablePacks.length)
         setPacks(availablePacks)
-      } else {
-        console.error('❌ API response not OK:', response.status)
-        const errorText = await response.text()
-        console.error('❌ Error response:', errorText)
+      }
+
+      // Fetch posts
+      const postsResponse = await fetch('/api/posts')
+      if (postsResponse.ok) {
+        const postsData = await postsResponse.json()
+        console.log('📱 Posts received:', postsData.data?.length || 0)
+        setPosts(postsData.data || [])
       }
     } catch (error) {
-      console.error('❌ Error fetching packs:', error)
+      console.error('❌ Error fetching data:', error)
     } finally {
       setIsLoading(false)
     }
   }
 
   const filterPacks = useCallback(() => {
-    let filtered = packs
+    let filteredPacksData = packs
+    let filteredPostsData = posts
 
-    // Filter by category
-    if (selectedCategory !== 'all') {
-      filtered = filtered.filter(pack => {
-        const category = pack.establishment.category.toLowerCase()
-        switch (selectedCategory) {
-          case 'pizza':
-            return (
-              category.includes('restaurant') ||
-              pack.title.toLowerCase().includes('pizza')
-            )
-          case 'healthy':
-            return (
-              pack.title.toLowerCase().includes('healthy') ||
-              pack.title.toLowerCase().includes('salad')
-            )
-          case 'sushi':
-            return (
-              pack.title.toLowerCase().includes('sushi') ||
-              category.includes('restaurant')
-            )
-          case 'burger':
-            return (
-              pack.title.toLowerCase().includes('burger') ||
-              pack.title.toLowerCase().includes('hamburger')
-            )
-          case 'dessert':
-            return (
-              category.includes('bakery') ||
-              pack.title.toLowerCase().includes('dessert')
-            )
-          case 'coffee':
-            return category.includes('cafe') || category.includes('bakery')
-          case 'asian':
-            return (
-              pack.title.toLowerCase().includes('asian') ||
-              pack.title.toLowerCase().includes('chinese')
-            )
-          case 'mexican':
-            return (
-              pack.title.toLowerCase().includes('mexican') ||
-              pack.title.toLowerCase().includes('taco')
-            )
-          default:
-            return true
-        }
-      })
-    }
-
-    // Filter by search query
+    // Filter packs by search query
     if (searchQuery) {
-      filtered = filtered.filter(
+      filteredPacksData = filteredPacksData.filter(
         pack =>
           pack.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          pack.establishment.name
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase()) ||
+          pack.establishment.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
           pack.description.toLowerCase().includes(searchQuery.toLowerCase())
+      )
+      
+      filteredPostsData = filteredPostsData.filter(
+        post =>
+          post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.establishment.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+          post.content.toLowerCase().includes(searchQuery.toLowerCase())
       )
     }
 
-    setFilteredPacks(filtered)
-  }, [packs, selectedCategory, searchQuery])
+    setFilteredPacks(filteredPacksData)
+    setFilteredPosts(filteredPostsData)
+  }, [packs, posts, selectedCategory, searchQuery])
 
   useEffect(() => {
     fetchPacks()
@@ -538,8 +515,48 @@ export default function PacksExplorer() {
           </>
         )}
 
+        {/* Posts Section */}
+        {!isLoading && filteredPosts.length > 0 && (
+          <div className="mt-12 px-2 sm:px-0">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-6 text-center">
+              📱 Publicaciones Recientes
+            </h2>
+            <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+              {filteredPosts.map(post => (
+                <div key={post.id} className="bg-white rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow">
+                  <div className="mb-3">
+                    <h3 className="text-xl font-bold text-gray-900 mb-2">
+                      {post.title}
+                    </h3>
+                    <p className="text-sm text-gray-600 mb-2">
+                      🏪 {post.establishment.name}
+                    </p>
+                  </div>
+                  <p className="text-gray-700 mb-4 line-clamp-3">
+                    {post.content}
+                  </p>
+                  {post.price && (
+                    <div className="text-green-600 font-bold text-lg mb-3">
+                      💰 ${post.price.toFixed(2)}
+                    </div>
+                  )}
+                  <div className="flex justify-between items-center text-sm text-gray-500">
+                    <span>{new Date(post.createdAt).toLocaleDateString('es-ES')}</span>
+                    <a
+                      href={`/establecimiento/${post.establishment.id}`}
+                      className="text-green-600 hover:text-green-700 font-semibold"
+                    >
+                      Ver restaurante →
+                    </a>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Empty State */}
-        {!isLoading && filteredPacks.length === 0 && (
+        {!isLoading && filteredPacks.length === 0 && filteredPosts.length === 0 && (
           <EmptyState
             searchQuery={searchQuery}
             selectedCategory={selectedCategory}
