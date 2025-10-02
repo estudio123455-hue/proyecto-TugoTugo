@@ -10,9 +10,9 @@ export async function GET() {
         email: true,
         role: true,
         createdAt: true,
-        _count: {
+        establishment: {
           select: {
-            establishments: true,
+            id: true,
           },
         },
       },
@@ -21,7 +21,15 @@ export async function GET() {
       },
     })
 
-    return NextResponse.json(users)
+    // Transform to include count
+    const usersWithCount = users.map(user => ({
+      ...user,
+      _count: {
+        establishments: user.establishment ? 1 : 0,
+      },
+    }))
+
+    return NextResponse.json(usersWithCount)
   } catch (error) {
     console.error('Error fetching users:', error)
     return NextResponse.json(
