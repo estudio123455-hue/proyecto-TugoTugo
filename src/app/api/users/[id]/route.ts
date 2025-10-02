@@ -8,7 +8,22 @@ export async function DELETE(
   try {
     console.log('🗑️ [DELETE] Deleting user:', params.id)
 
-    // Delete user (cascade will delete establishments, posts, and packs)
+    // First, delete the user's establishment if exists (this will cascade delete posts and packs)
+    const userWithEstablishment = await prisma.user.findUnique({
+      where: { id: params.id },
+      include: {
+        establishment: true,
+      },
+    })
+
+    if (userWithEstablishment?.establishment) {
+      console.log('🗑️ [DELETE] Deleting user establishment first')
+      await prisma.establishment.delete({
+        where: { id: userWithEstablishment.establishment.id },
+      })
+    }
+
+    // Then delete the user
     await prisma.user.delete({
       where: { id: params.id },
     })
