@@ -37,10 +37,16 @@ export async function POST(
       )
     }
 
-    // Aprobar restaurante
+    // Aprobar restaurante (temporalmente deshabilitado - columna no existe)
+    // const updated = await prisma.establishment.update({
+    //   where: { id: params.id },
+    //   data: { isApproved: true },
+    // })
+    
+    // Por ahora, solo activar el restaurante
     const updated = await prisma.establishment.update({
       where: { id: params.id },
-      data: { isApproved: true },
+      data: { isActive: true },
     })
 
     // TODO: Enviar email de notificación al restaurante

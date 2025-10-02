@@ -43,7 +43,7 @@ export async function POST(
     const updated = await prisma.establishment.update({
       where: { id: params.id },
       data: { 
-        isApproved: false,
+        // isApproved: false, // Temporalmente deshabilitado - columna no existe
         isActive: false, // Desactivar completamente
       },
     })

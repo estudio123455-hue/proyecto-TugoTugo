@@ -11,16 +11,16 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '20')
     const offset = parseInt(searchParams.get('offset') || '0')
 
-    // Solo mostrar posts de restaurantes aprobados
+    // Solo mostrar posts activos (isApproved temporalmente deshabilitado)
     const where = establishmentId
       ? { 
           establishmentId, 
           isActive: true,
-          establishment: { isApproved: true }
+          // establishment: { isApproved: true } // Deshabilitado hasta migración
         }
       : { 
           isActive: true,
-          establishment: { isApproved: true }
+          // establishment: { isApproved: true } // Deshabilitado hasta migración
         }
 
     const posts = await prisma.post.findMany({
@@ -33,7 +33,7 @@ export async function GET(request: NextRequest) {
             image: true,
             category: true,
             address: true,
-            isApproved: true,
+            // isApproved: true, // Deshabilitado hasta migración
           },
         },
       },
@@ -85,16 +85,16 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Verificar que el restaurante esté aprobado
-    if (!establishment.isApproved) {
-      return NextResponse.json(
-        { 
-          success: false, 
-          message: 'Tu cuenta está pendiente de aprobación. Un administrador debe aprobar tu restaurante antes de que puedas publicar.' 
-        },
-        { status: 403 }
-      )
-    }
+    // Verificar que el restaurante esté aprobado (temporalmente deshabilitado)
+    // if (!establishment.isApproved) {
+    //   return NextResponse.json(
+    //     { 
+    //       success: false, 
+    //       message: 'Tu cuenta está pendiente de aprobación. Un administrador debe aprobar tu restaurante antes de que puedas publicar.' 
+    //     },
+    //     { status: 403 }
+    //   )
+    // }
 
     const body = await request.json()
     const { title, content, images, price } = body

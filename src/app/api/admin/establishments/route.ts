@@ -19,10 +19,15 @@ export async function GET(request: NextRequest) {
     const status = searchParams.get('status') // 'pending', 'approved', 'all'
 
     let where = {}
-    if (status === 'pending') {
-      where = { isApproved: false, isActive: true }
-    } else if (status === 'approved') {
-      where = { isApproved: true }
+    // Temporalmente deshabilitado hasta que exista la columna isApproved
+    // if (status === 'pending') {
+    //   where = { isApproved: false, isActive: true }
+    // } else if (status === 'approved') {
+    //   where = { isApproved: true }
+    // }
+    // Por ahora, mostrar todos los establecimientos activos
+    if (status === 'pending' || status === 'approved') {
+      where = { isActive: true }
     }
 
     const establishments = await prisma.establishment.findMany({
