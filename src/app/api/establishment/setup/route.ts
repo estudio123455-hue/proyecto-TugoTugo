@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { sendRestaurantConfirmation } from '@/lib/email/restaurant-verification'
 
 export async function POST(request: NextRequest) {
   try {
@@ -53,13 +54,23 @@ export async function POST(request: NextRequest) {
     })
 
     // Update user role to ESTABLISHMENT
-    await prisma.user.update({
+    const updatedUser = await prisma.user.update({
       where: { id: session.user.id },
       data: { role: 'ESTABLISHMENT' },
     })
 
     console.log('✅ [Setup] Establishment created:', establishment.id)
     console.log('✅ [Setup] User role updated to ESTABLISHMENT')
+
+    // Send confirmation email
+    try {
+      await sendRestaurantConfirmation(establishment as any, updatedUser as any)
+      console.log('📧 [Setup] Confirmation email sent')
+    } catch (emailError) {
+      console.error('⚠️ [Setup] Failed to send email, but establishment was created:', emailError)
+      // Don't fail the request if email fails
+    }
+
     return NextResponse.json(establishment, { status: 201 })
   } catch (error) {
     console.error('❌ [Setup] Error setting up establishment:', error)

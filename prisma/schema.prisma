@@ -86,7 +86,18 @@ model Establishment {
   image       String?
   category    String
   isActive    Boolean  @default(true)
-  // isApproved field removed - add back after running migration
+  
+  // Nuevos campos de verificación
+  openingHours       String?   // JSON con horarios
+  images             String[]  @default([]) // Array de URLs de fotos
+  legalDocument      String?   // URL del documento legal
+  businessType       String?   // Tipo de negocio
+  taxId              String?   // NIT o RUT
+  verificationStatus String    @default("APPROVED") // PENDING, APPROVED, REJECTED
+  verificationNotes  String?   // Notas del admin
+  approvedAt         DateTime? // Fecha de aprobación
+  approvedBy         String?   // ID del admin que aprobó
+  
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
