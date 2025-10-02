@@ -29,6 +29,12 @@ export default function NewPostPage() {
     }
 
     try {
+      console.log('📤 Sending post data:', {
+        title: formData.title,
+        content: formData.content,
+        price: formData.price,
+      })
+
       const response = await fetch('/api/posts', {
         method: 'POST',
         headers: {
@@ -42,17 +48,23 @@ export default function NewPostPage() {
         }),
       })
 
+      console.log('📡 Response status:', response.status)
       const data = await response.json()
+      console.log('📦 Response data:', data)
 
       if (response.ok) {
         alert('✅ Publicación creada exitosamente')
         router.push('/dashboard')
       } else {
-        setError(data.message || 'Error al crear publicación')
+        const errorMsg = data.error 
+          ? `${data.message}: ${data.error}` 
+          : data.message || 'Error al crear publicación'
+        console.error('❌ Error from server:', errorMsg)
+        setError(errorMsg)
       }
     } catch (error) {
-      console.error('Error creating post:', error)
-      setError('Error al crear publicación')
+      console.error('❌ Network error:', error)
+      setError(`Error de red: ${error instanceof Error ? error.message : 'Intenta de nuevo'}`)
     } finally {
       setIsLoading(false)
     }

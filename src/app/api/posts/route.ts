@@ -64,49 +64,50 @@ export async function GET(request: NextRequest) {
   }
 }
 
-// POST - Crear post (solo restaurantes aprobados)
+// POST - Crear post
 export async function POST(request: NextRequest) {
   try {
+    console.log('📝 [Posts API] Creating new post...')
     const session = await getServerSession(authOptions)
 
     if (!session || session.user.role !== 'ESTABLISHMENT') {
+      console.log('❌ [Posts API] Unauthorized')
       return NextResponse.json(
         { success: false, message: 'No autorizado' },
         { status: 401 }
       )
     }
 
+    console.log('👤 [Posts API] User:', session.user.id)
+
     const establishment = await prisma.establishment.findUnique({
       where: { userId: session.user.id },
     })
 
     if (!establishment) {
+      console.log('❌ [Posts API] Establishment not found')
       return NextResponse.json(
         { success: false, message: 'Restaurante no encontrado' },
         { status: 404 }
       )
     }
 
-    // Verificar que el restaurante esté aprobado (temporalmente deshabilitado)
-    // if (!establishment.isApproved) {
-    //   return NextResponse.json(
-    //     { 
-    //       success: false, 
-    //       message: 'Tu cuenta está pendiente de aprobación. Un administrador debe aprobar tu restaurante antes de que puedas publicar.' 
-    //     },
-    //     { status: 403 }
-    //   )
-    // }
+    console.log('🏪 [Posts API] Establishment:', establishment.id)
 
     const body = await request.json()
     const { title, content, images, price } = body
 
+    console.log('📦 [Posts API] Data:', { title, content, price, images })
+
     if (!title || !content) {
+      console.log('❌ [Posts API] Missing required fields')
       return NextResponse.json(
         { success: false, message: 'Título y contenido son requeridos' },
         { status: 400 }
       )
     }
+
+    console.log('💾 [Posts API] Creating post in database...')
 
     const post = await prisma.post.create({
       data: {
@@ -128,15 +129,23 @@ export async function POST(request: NextRequest) {
       },
     })
 
+    console.log('✅ [Posts API] Post created:', post.id)
+
     return NextResponse.json({
       success: true,
       data: post,
       message: 'Publicación creada exitosamente',
     })
   } catch (error) {
-    console.error('Error creating post:', error)
+    console.error('❌ [Posts API] Error creating post:', error)
+    console.error('Error details:', error instanceof Error ? error.message : error)
+    console.error('Stack:', error instanceof Error ? error.stack : 'No stack')
     return NextResponse.json(
-      { success: false, message: 'Error al crear publicación' },
+      { 
+        success: false, 
+        message: 'Error al crear publicación',
+        error: error instanceof Error ? error.message : 'Unknown error'
+      },
       { status: 500 }
     )
   }
