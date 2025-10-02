@@ -35,10 +35,21 @@ interface Pack {
   establishment: Establishment
 }
 
+interface Post {
+  id: string
+  title: string
+  content: string
+  price: number | null
+  images: string[]
+  createdAt: string
+  establishment: Establishment
+}
+
 export default function EstablishmentProfile() {
   const params = useParams()
   const [establishment, setEstablishment] = useState<Establishment | null>(null)
   const [packs, setPacks] = useState<Pack[]>([])
+  const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -67,6 +78,13 @@ export default function EstablishmentProfile() {
       if (packsResponse.ok) {
         const packsData = await packsResponse.json()
         setPacks(packsData)
+      }
+
+      // Fetch posts from this establishment
+      const postsResponse = await fetch(`/api/posts?establishmentId=${id}`)
+      if (postsResponse.ok) {
+        const postsData = await postsResponse.json()
+        setPosts(postsData.data || [])
       }
     } catch (err) {
       setError(
@@ -232,12 +250,59 @@ export default function EstablishmentProfile() {
         </div>
       </section>
 
+      {/* Posts Section */}
+      <section className="py-12 bg-white">
+        <div className="max-w-6xl mx-auto px-6">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-3xl font-bold text-gray-900">
+              📱 Publicaciones
+            </h2>
+            <span className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+              {posts.length} publicaciones
+            </span>
+          </div>
+
+          {posts.length > 0 ? (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {posts.map(post => (
+                <div key={post.id} className="bg-gray-50 rounded-lg p-6 hover:shadow-lg transition-shadow">
+                  <h3 className="text-xl font-bold text-gray-900 mb-3">
+                    {post.title}
+                  </h3>
+                  <p className="text-gray-600 mb-4 line-clamp-3">
+                    {post.content}
+                  </p>
+                  {post.price && (
+                    <div className="flex items-center text-green-600 font-bold text-lg mb-3">
+                      💰 ${post.price.toFixed(2)}
+                    </div>
+                  )}
+                  <div className="text-sm text-gray-500">
+                    {new Date(post.createdAt).toLocaleDateString('es-ES')}
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-16">
+              <div className="text-6xl mb-4">📱</div>
+              <h3 className="text-xl font-semibold text-gray-900 mb-2">
+                No hay publicaciones
+              </h3>
+              <p className="text-gray-600">
+                Este establecimiento no tiene publicaciones en este momento
+              </p>
+            </div>
+          )}
+        </div>
+      </section>
+
       {/* Packs Section */}
       <section className="py-12">
         <div className="max-w-6xl mx-auto px-6">
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-3xl font-bold text-gray-900">
-              Packs disponibles
+              📦 Packs disponibles
             </h2>
             <span className="bg-fresh-100 text-fresh-800 px-3 py-1 rounded-full text-sm font-medium">
               {packs.filter(pack => pack.isActive).length} disponibles
