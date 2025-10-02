@@ -1,5 +1,11 @@
 import nodemailer from 'nodemailer'
 
+// Log SMTP configuration (without password)
+console.log('📧 [Email Config] SMTP Host:', process.env.SMTP_HOST || 'smtp.gmail.com')
+console.log('📧 [Email Config] SMTP Port:', process.env.SMTP_PORT || '587')
+console.log('📧 [Email Config] SMTP User:', process.env.SMTP_USER ? '✅ Configured' : '❌ Missing')
+console.log('📧 [Email Config] SMTP Password:', process.env.SMTP_PASSWORD ? '✅ Configured' : '❌ Missing')
+
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.gmail.com',
   port: parseInt(process.env.SMTP_PORT || '587'),
@@ -134,17 +140,23 @@ Equipo FoodSave
   `
 
   try {
-    await transporter.sendMail({
+    console.log('📧 [Restaurant Confirmation] Attempting to send email to:', user.email)
+    console.log('📧 [Restaurant Confirmation] From:', process.env.SMTP_USER)
+    
+    const result = await transporter.sendMail({
       from: `"FoodSave" <${process.env.SMTP_USER}>`,
       to: user.email,
       subject: `✅ Solicitud de Restaurante Recibida - ${establishment.name}`,
       text: textContent,
       html: htmlContent,
     })
-    console.log('✅ Email de confirmación enviado a:', user.email)
+    
+    console.log('✅ [Restaurant Confirmation] Email sent successfully to:', user.email)
+    console.log('✅ [Restaurant Confirmation] Message ID:', result.messageId)
     return { success: true }
   } catch (error) {
-    console.error('❌ Error enviando email de confirmación:', error)
+    console.error('❌ [Restaurant Confirmation] Error sending email:', error)
+    console.error('❌ [Restaurant Confirmation] Error details:', error instanceof Error ? error.message : error)
     return { success: false, error }
   }
 }
