@@ -46,13 +46,13 @@ class WebSocketManager {
     }
   }
 
-  subscribe(event: string, callback: (data: any) => void) {
+  subscribe(event: string, callback: (_data: any) => void) {
     if (this.socket) {
       this.socket.on(event, callback)
     }
   }
 
-  unsubscribe(event: string, callback?: (data: any) => void) {
+  unsubscribe(event: string, callback?: (_data: any) => void) {
     if (this.socket) {
       this.socket.off(event, callback)
     }

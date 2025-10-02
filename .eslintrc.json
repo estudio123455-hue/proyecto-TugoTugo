@@ -21,5 +21,13 @@
     "browser": true,
     "es2021": true,
     "node": true
-  }
+  },
+  "overrides": [
+    {
+      "files": ["**/__tests__/**/*.[jt]s?(x)", "**/?(*.)+(spec|test).[jt]s?(x)"],
+      "env": {
+        "jest": true
+      }
+    }
+  ]
 }

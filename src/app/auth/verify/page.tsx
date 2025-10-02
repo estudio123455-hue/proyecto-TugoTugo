@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter, useSearchParams } from 'next/navigation'
-import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import VerificationCodeInput from '@/components/VerificationCodeInput'
 

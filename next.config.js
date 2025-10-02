@@ -3,6 +3,10 @@ const nextConfig = {
   images: {
     domains: ['lh3.googleusercontent.com', 'platform-lookaside.fbsbx.com'],
   },
+  eslint: {
+    ignoreDuringBuilds: false,
+    dirs: ['src/app', 'src/components', 'src/lib', 'src/utils', 'src/contexts', 'src/hooks'],
+  },
   webpack: (config, { isServer }) => {
     // Ignore optional dependencies for WebSocket in browser builds
     if (!isServer) {
