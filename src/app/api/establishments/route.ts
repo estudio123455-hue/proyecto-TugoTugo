@@ -10,6 +10,12 @@ export async function GET() {
         isActive: true,
       },
       include: {
+        user: {
+          select: {
+            name: true,
+            email: true,
+          },
+        },
         packs: {
           where: {
             isActive: true,
@@ -22,6 +28,12 @@ export async function GET() {
           },
           orderBy: {
             createdAt: 'desc',
+          },
+        },
+        _count: {
+          select: {
+            posts: true,
+            packs: true,
           },
         },
       },
