@@ -65,6 +65,13 @@ export async function POST(request: NextRequest) {
     // Email removed - restaurant is auto-approved
     console.log('✅ [Setup] Restaurant auto-approved and ready to use')
 
+    // Emit WebSocket event for real-time updates
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('ws:establishment:created', { 
+        detail: { establishmentId: establishment.id, name: establishment.name }
+      }))
+    }
+
     return NextResponse.json(establishment, { status: 201 })
   } catch (error) {
     console.error('❌ [Setup] Error setting up establishment:', error)

@@ -52,12 +52,37 @@ export default function SecretManagePage() {
   useEffect(() => {
     fetchData()
 
-    // Auto-refresh every 5 seconds
+    // Listen for real-time updates via custom events
+    const handleUserCreated = () => {
+      console.log('🎉 New user detected!')
+      fetchData()
+    }
+
+    const handleEstablishmentCreated = () => {
+      console.log('🎉 New establishment detected!')
+      fetchData()
+    }
+
+    const handlePostCreated = () => {
+      console.log('🎉 New post detected!')
+      fetchData()
+    }
+
+    window.addEventListener('ws:user:created', handleUserCreated)
+    window.addEventListener('ws:establishment:created', handleEstablishmentCreated)
+    window.addEventListener('ws:post:created', handlePostCreated)
+
+    // Fallback: Auto-refresh every 10 seconds (reduced from 5)
     const interval = setInterval(() => {
       fetchData()
-    }, 5000)
+    }, 10000)
 
-    return () => clearInterval(interval)
+    return () => {
+      window.removeEventListener('ws:user:created', handleUserCreated)
+      window.removeEventListener('ws:establishment:created', handleEstablishmentCreated)
+      window.removeEventListener('ws:post:created', handlePostCreated)
+      clearInterval(interval)
+    }
   }, [])
 
   const fetchData = async () => {
@@ -184,7 +209,7 @@ export default function SecretManagePage() {
             </div>
             <div className="text-sm text-green-600 font-semibold flex items-center">
               <span className="inline-block w-2 h-2 bg-green-500 rounded-full mr-2 animate-pulse"></span>
-              Actualización automática cada 5s
+              ⚡ Actualización en tiempo real
             </div>
           </div>
         </div>

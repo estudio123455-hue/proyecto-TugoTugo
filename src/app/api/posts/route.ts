@@ -125,20 +125,25 @@ export async function POST(request: NextRequest) {
             image: true,
             category: true,
           },
-        },
       },
     })
 
     console.log('✅ [Posts API] Post created:', post.id)
 
+    // Emit WebSocket event for real-time updates
+    if (typeof window !== 'undefined') {
+      window.dispatchEvent(new CustomEvent('ws:post:created', { 
+        detail: { postId: post.id, title: post.title }
+      }))
+    }
+
     return NextResponse.json({
       success: true,
       data: post,
       message: 'Publicación creada exitosamente',
-    })
+    }, { status: 201 })
   } catch (error) {
     console.error('❌ [Posts API] Error creating post:', error)
-    console.error('Error details:', error instanceof Error ? error.message : error)
     console.error('Stack:', error instanceof Error ? error.stack : 'No stack')
     return NextResponse.json(
       { 
