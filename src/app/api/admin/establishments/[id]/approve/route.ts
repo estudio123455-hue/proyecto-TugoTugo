@@ -46,10 +46,13 @@ export async function POST(
     const updated = await prisma.establishment.update({
       where: { id: params.id },
       data: { 
-        verificationStatus: 'APPROVED',
         isActive: true,
-        approvedAt: new Date(),
-        approvedBy: session.user.id,
+        // verificationStatus, approvedAt, approvedBy will be added after migration
+        ...(establishment.verificationStatus !== undefined && {
+          verificationStatus: 'APPROVED',
+          approvedAt: new Date(),
+          approvedBy: session.user.id,
+        }),
       },
     })
 

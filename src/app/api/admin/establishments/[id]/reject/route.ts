@@ -42,16 +42,19 @@ export async function POST(
       )
     }
 
-    const { reason } = await request.json()
-    const rejectionReason = reason || 'No se proporcionó una razón específica'
+    const body = await request.json().catch(() => ({}))
+    const rejectionReason = body.reason || 'No se proporcionó una razón específica'
 
     // Rechazar restaurante
     const updated = await prisma.establishment.update({
       where: { id: params.id },
       data: { 
-        verificationStatus: 'REJECTED',
         isActive: false,
-        verificationNotes: rejectionReason,
+        // verificationStatus and verificationNotes will be added after migration
+        ...(establishment.verificationStatus !== undefined && {
+          verificationStatus: 'REJECTED',
+          verificationNotes: rejectionReason,
+        }),
       },
     })
 
