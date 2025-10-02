@@ -47,13 +47,17 @@ export default function AdminPage() {
 
   const fetchEstablishments = async () => {
     try {
+      setIsLoading(true)
       const response = await fetch(`/api/admin/establishments?status=${filter}`)
       if (response.ok) {
         const data = await response.json()
         setEstablishments(data.data)
+      } else {
+        console.error('Error response:', response.status)
       }
     } catch (error) {
       console.error('Error fetching establishments:', error)
+    } finally {
       setIsLoading(false)
     }
   }
