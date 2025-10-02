@@ -30,7 +30,6 @@ export default function AdminPage() {
   const router = useRouter()
   const [establishments, setEstablishments] = useState<Establishment[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [filter, setFilter] = useState<'pending' | 'approved' | 'all'>('all')
   const [actionLoading, setActionLoading] = useState<string | null>(null)
 
   useEffect(() => {
@@ -43,12 +42,12 @@ export default function AdminPage() {
 
     fetchEstablishments()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [session, status, router, filter])
+  }, [session, status, router])
 
   const fetchEstablishments = async () => {
     try {
       setIsLoading(true)
-      const response = await fetch(`/api/admin/establishments?status=${filter}`)
+      const response = await fetch('/api/admin/establishments?status=all')
       if (response.ok) {
         const data = await response.json()
         setEstablishments(data.data)
