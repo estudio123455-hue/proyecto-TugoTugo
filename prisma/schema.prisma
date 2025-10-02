@@ -93,7 +93,7 @@ model Establishment {
   legalDocument      String?   // URL del documento legal
   businessType       String?   // Tipo de negocio
   taxId              String?   // NIT o RUT
-  verificationStatus String    @default("PENDING") // PENDING, APPROVED, REJECTED
+  verificationStatus String    @default("APPROVED") // PENDING, APPROVED, REJECTED
   verificationNotes  String?   // Notas del admin
   approvedAt         DateTime? // Fecha de aprobación
   approvedBy         String?   // ID del admin que aprobó

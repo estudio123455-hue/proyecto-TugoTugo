@@ -62,14 +62,8 @@ export async function POST(request: NextRequest) {
     console.log('✅ [Setup] Establishment created:', establishment.id)
     console.log('✅ [Setup] User role updated to ESTABLISHMENT')
 
-    // Send confirmation email
-    try {
-      await sendRestaurantConfirmation(establishment as any, updatedUser as any)
-      console.log('📧 [Setup] Confirmation email sent')
-    } catch (emailError) {
-      console.error('⚠️ [Setup] Failed to send email, but establishment was created:', emailError)
-      // Don't fail the request if email fails
-    }
+    // Email removed - restaurant is auto-approved
+    console.log('✅ [Setup] Restaurant auto-approved and ready to use')
 
     return NextResponse.json(establishment, { status: 201 })
   } catch (error) {
