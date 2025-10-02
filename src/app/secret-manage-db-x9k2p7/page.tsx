@@ -31,11 +31,23 @@ interface Post {
   }
 }
 
+interface User {
+  id: string
+  name: string | null
+  email: string
+  role: string
+  createdAt: string
+  _count: {
+    establishments: number
+  }
+}
+
 export default function SecretManagePage() {
   const [establishments, setEstablishments] = useState<Establishment[]>([])
   const [posts, setPosts] = useState<Post[]>([])
+  const [users, setUsers] = useState<User[]>([])
   const [isLoading, setIsLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState<'restaurants' | 'posts'>('restaurants')
+  const [activeTab, setActiveTab] = useState<'restaurants' | 'posts' | 'users'>('restaurants')
 
   useEffect(() => {
     fetchData()
@@ -56,6 +68,13 @@ export default function SecretManagePage() {
       if (postsResponse.ok) {
         const postsData = await postsResponse.json()
         setPosts(postsData.data || [])
+      }
+
+      // Fetch users
+      const usersResponse = await fetch('/api/users')
+      if (usersResponse.ok) {
+        const usersData = await usersResponse.json()
+        setUsers(usersData)
       }
     } catch (error) {
       console.error('Error fetching data:', error)
@@ -108,6 +127,28 @@ export default function SecretManagePage() {
     }
   }
 
+  const deleteUser = async (id: string, email: string) => {
+    if (!confirm(`¿Estás seguro de eliminar el usuario "${email}"?\n\nEsto también eliminará su restaurante y todas sus publicaciones.`)) {
+      return
+    }
+
+    try {
+      const response = await fetch(`/api/users/${id}`, {
+        method: 'DELETE',
+      })
+
+      if (response.ok) {
+        alert(`✅ Usuario "${email}" eliminado exitosamente`)
+        fetchData()
+      } else {
+        alert('❌ Error al eliminar usuario')
+      }
+    } catch (error) {
+      console.error('Error:', error)
+      alert('❌ Error al eliminar usuario')
+    }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <Navigation />
@@ -148,6 +189,16 @@ export default function SecretManagePage() {
               }`}
             >
               📱 Publicaciones ({posts.length})
+            </button>
+            <button
+              onClick={() => setActiveTab('users')}
+              className={`pb-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'users'
+                  ? 'border-green-500 text-green-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              👥 Usuarios ({users.length})
             </button>
           </div>
         </div>
@@ -293,6 +344,78 @@ export default function SecretManagePage() {
             {posts.length === 0 && (
               <div className="text-center py-12">
                 <p className="text-gray-500">No hay publicaciones</p>
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* Users Tab */}
+        {!isLoading && activeTab === 'users' && (
+          <div className="bg-white rounded-lg shadow overflow-hidden">
+            <table className="min-w-full divide-y divide-gray-200">
+              <thead className="bg-gray-50">
+                <tr>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Usuario
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Email
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Rol
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Restaurantes
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Fecha de Registro
+                  </th>
+                  <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Acciones
+                  </th>
+                </tr>
+              </thead>
+              <tbody className="bg-white divide-y divide-gray-200">
+                {users.map((user) => (
+                  <tr key={user.id} className="hover:bg-gray-50">
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm font-medium text-gray-900">
+                        {user.name || 'Sin nombre'}
+                      </div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <div className="text-sm text-gray-900">{user.email}</div>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap">
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
+                        user.role === 'ESTABLISHMENT' 
+                          ? 'bg-green-100 text-green-800' 
+                          : 'bg-blue-100 text-blue-800'
+                      }`}>
+                        {user.role === 'ESTABLISHMENT' ? '🏪 Restaurante' : '👤 Cliente'}
+                      </span>
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {user._count.establishments}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {new Date(user.createdAt).toLocaleDateString('es-ES')}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <button
+                        onClick={() => deleteUser(user.id, user.email)}
+                        className="text-red-600 hover:text-red-900 font-semibold"
+                      >
+                        🗑️ Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            {users.length === 0 && (
+              <div className="text-center py-12">
+                <p className="text-gray-500">No hay usuarios</p>
               </div>
             )}
           </div>
