@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { sendRestaurantApproval } from '@/lib/email/restaurant-verification'
 
 // POST - Aprobar restaurante (solo admin)
 export async function POST(
@@ -9,9 +10,11 @@ export async function POST(
   { params }: { params: { id: string } }
 ) {
   try {
+    console.log('✅ [Admin] Approving establishment:', params.id)
     const session = await getServerSession(authOptions)
 
     if (!session || session.user.role !== 'ADMIN') {
+      console.log('❌ [Admin] Unauthorized access attempt')
       return NextResponse.json(
         { success: false, message: 'No autorizado' },
         { status: 401 }
@@ -23,6 +26,7 @@ export async function POST(
       include: {
         user: {
           select: {
+            id: true,
             email: true,
             name: true,
           },
@@ -31,27 +35,34 @@ export async function POST(
     })
 
     if (!establishment) {
+      console.log('❌ [Admin] Establishment not found')
       return NextResponse.json(
         { success: false, message: 'Restaurante no encontrado' },
         { status: 404 }
       )
     }
 
-    // Aprobar restaurante (temporalmente deshabilitado - columna no existe)
-    // const updated = await prisma.establishment.update({
-    //   where: { id: params.id },
-    //   data: { isApproved: true },
-    // })
-    
-    // Por ahora, solo activar el restaurante
+    // Aprobar restaurante
     const updated = await prisma.establishment.update({
       where: { id: params.id },
-      data: { isActive: true },
+      data: { 
+        verificationStatus: 'APPROVED',
+        isActive: true,
+        approvedAt: new Date(),
+        approvedBy: session.user.id,
+      },
     })
 
-    // TODO: Enviar email de notificación al restaurante
-    console.log(`✅ Restaurante aprobado: ${establishment.name}`)
-    console.log(`📧 Enviar email a: ${establishment.user.email}`)
+    console.log(`✅ [Admin] Establishment approved: ${establishment.name}`)
+
+    // Enviar email de aprobación
+    try {
+      await sendRestaurantApproval(updated as any, establishment.user as any)
+      console.log('📧 [Admin] Approval email sent')
+    } catch (emailError) {
+      console.error('⚠️ [Admin] Failed to send email:', emailError)
+      // Don't fail the request if email fails
+    }
 
     return NextResponse.json({
       success: true,
@@ -59,7 +70,7 @@ export async function POST(
       message: `Restaurante "${establishment.name}" aprobado exitosamente`,
     })
   } catch (error) {
-    console.error('Error approving establishment:', error)
+    console.error('❌ [Admin] Error approving establishment:', error)
     return NextResponse.json(
       { success: false, message: 'Error al aprobar restaurante' },
       { status: 500 }

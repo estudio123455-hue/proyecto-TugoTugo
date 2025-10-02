@@ -16,14 +16,42 @@ export async function GET(request: NextRequest) {
     }
 
     const { searchParams } = new URL(request.url)
-    const status = searchParams.get('status') // 'pending', 'approved', 'all'
+    const status = searchParams.get('status') // 'pending', 'approved', 'rejected', 'all'
+    const search = searchParams.get('search') // Búsqueda por nombre
+    const category = searchParams.get('category') // Filtro por categoría
 
-    console.log('🔍 [Admin] Fetching establishments with status:', status)
+    console.log('🔍 [Admin] Fetching establishments:', { status, search, category })
 
-    // Sin sistema de aprobación, mostrar todos los establecimientos
-    // Los filtros ahora solo afectan la visualización en el frontend
+    // Construir filtros dinámicos
+    const where: any = {}
+    
+    // Filtro por estado de verificación
+    if (status === 'pending') {
+      where.verificationStatus = 'PENDING'
+    } else if (status === 'approved') {
+      where.verificationStatus = 'APPROVED'
+    } else if (status === 'rejected') {
+      where.verificationStatus = 'REJECTED'
+    }
+    // Si status === 'all', no filtrar por estado
+    
+    // Búsqueda por nombre
+    if (search) {
+      where.name = {
+        contains: search,
+        mode: 'insensitive'
+      }
+    }
+    
+    // Filtro por categoría
+    if (category && category !== 'all') {
+      where.category = category
+    }
+
+    console.log('🔍 [Admin] Query where:', where)
+
     const establishments = await prisma.establishment.findMany({
-      where: {}, // Sin filtro - mostrar todos
+      where,
       include: {
         user: {
           select: {
