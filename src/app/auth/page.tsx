@@ -133,6 +133,8 @@ export default function AuthPage() {
     try {
       const role = accountType === 'restaurant' ? 'ESTABLISHMENT' : 'CUSTOMER'
       
+      console.log('📧 [SignUp] Sending verification code to:', formData.email)
+      
       // Send verification code using simple reliable system
       const response = await fetch('/api/auth/simple-verify', {
         method: 'POST',
@@ -151,9 +153,13 @@ export default function AuthPage() {
         }),
       })
 
+      console.log('📡 [SignUp] Response status:', response.status)
       const data = await response.json()
+      console.log('📦 [SignUp] Response data:', data)
 
       if (response.ok) {
+        console.log('✅ [SignUp] Code sent successfully, redirecting to verification page')
+        
         // Redirect to verification page with user data
         const userData = {
           name: formData.name,
@@ -169,9 +175,11 @@ export default function AuthPage() {
 
         window.location.href = `/auth/verify?${params.toString()}`
       } else {
+        console.error('❌ [SignUp] Error sending code:', data.message)
         setError(data.message || 'Error al enviar código de verificación')
       }
     } catch (error) {
+      console.error('❌ [SignUp] Exception:', error)
       setError('Ocurrió un error. Por favor intenta de nuevo.')
     } finally {
       setIsLoading(false)
