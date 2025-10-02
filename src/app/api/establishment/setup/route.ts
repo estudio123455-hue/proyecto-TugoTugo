@@ -15,11 +15,6 @@ export async function POST(request: NextRequest) {
 
     console.log('👤 [Setup] User:', session.user.id, 'Role:', session.user.role)
 
-    if (session.user.role !== 'ESTABLISHMENT') {
-      console.log('❌ [Setup] Access denied - wrong role:', session.user.role)
-      return NextResponse.json({ message: 'Access denied' }, { status: 403 })
-    }
-
     const data = await request.json()
     console.log('📝 [Setup] Received data:', {
       name: data.name,
@@ -54,11 +49,17 @@ export async function POST(request: NextRequest) {
         email: data.email || '',
         category: data.category,
         userId: session.user.id,
-        // isApproved removed temporarily until migration runs
       },
     })
 
+    // Update user role to ESTABLISHMENT
+    await prisma.user.update({
+      where: { id: session.user.id },
+      data: { role: 'ESTABLISHMENT' },
+    })
+
     console.log('✅ [Setup] Establishment created:', establishment.id)
+    console.log('✅ [Setup] User role updated to ESTABLISHMENT')
     return NextResponse.json(establishment, { status: 201 })
   } catch (error) {
     console.error('❌ [Setup] Error setting up establishment:', error)

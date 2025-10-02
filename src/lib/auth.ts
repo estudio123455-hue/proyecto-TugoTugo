@@ -125,6 +125,8 @@ export const authOptions: NextAuthOptions = {
       if (account?.provider === 'google') {
         // Create or update user in database for Google OAuth
         try {
+          console.log('🔐 [Google OAuth] User signing in:', user.email)
+          
           const existingUser = await prisma.user.findUnique({
             where: { email: user.email! },
           })
@@ -133,15 +135,23 @@ export const authOptions: NextAuthOptions = {
             // Clean name from any verification codes
             const cleanName = (user.name || profile?.name || '').replace(/^VERIFY:\d+:\d+:/, '')
             
+            // Default role is CUSTOMER
+            // Note: Account type will be set to ESTABLISHMENT later if user creates a restaurant
+            console.log('✨ [Google OAuth] Creating new user:', cleanName)
+            
             await prisma.user.create({
               data: {
                 email: user.email!,
                 name: cleanName,
-                role: 'CUSTOMER',
+                role: 'CUSTOMER', // Always start as CUSTOMER
                 image: user.image,
               },
             })
+            
+            console.log('✅ [Google OAuth] User created successfully')
           } else {
+            console.log('ℹ️ [Google OAuth] User already exists')
+            
             // If user exists but has verification codes in name, clean it
             if (existingUser.name?.startsWith('VERIFY:')) {
               const cleanName = existingUser.name.replace(/^VERIFY:\d+:\d+:/, '')
@@ -153,7 +163,7 @@ export const authOptions: NextAuthOptions = {
           }
           return true
         } catch (error) {
-          console.error('Error creating Google user:', error)
+          console.error('❌ [Google OAuth] Error:', error)
           return false
         }
       }

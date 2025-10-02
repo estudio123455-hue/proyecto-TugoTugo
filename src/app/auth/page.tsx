@@ -179,6 +179,11 @@ export default function AuthPage() {
   }
 
   const handleGoogleSignIn = () => {
+    // Store account type in localStorage before OAuth redirect
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('pendingAccountType', accountType)
+    }
+    
     signIn('google', { 
       callbackUrl: '/',
       redirect: true 
