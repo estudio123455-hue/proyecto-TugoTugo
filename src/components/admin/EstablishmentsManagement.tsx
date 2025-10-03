@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import CreateEstablishmentModal from './CreateEstablishmentModal'
 
 interface Establishment {
   id: string
@@ -27,6 +28,7 @@ export default function EstablishmentsManagement() {
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<string>('')
   const [searchTerm, setSearchTerm] = useState('')
+  const [showCreateModal, setShowCreateModal] = useState(false)
 
   useEffect(() => {
     fetchEstablishments()
@@ -129,32 +131,46 @@ export default function EstablishmentsManagement() {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow">
-      {/* Header */}
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <h2 className="text-xl font-semibold">Gestión de Restaurantes</h2>
-            <p className="text-sm text-gray-600 mt-1">Total: {establishments.length} establecimientos</p>
-          </div>
-          
-          <div className="flex gap-3">
-            <input
-              type="text"
-              placeholder="Buscar..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            />
+    <>
+      <CreateEstablishmentModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSuccess={fetchEstablishments}
+      />
+      
+      <div className="bg-white rounded-lg shadow">
+        {/* Header */}
+        <div className="p-6 border-b border-gray-200">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-semibold">Gestión de Restaurantes</h2>
+              <p className="text-sm text-gray-600 mt-1">Total: {establishments.length} establecimientos</p>
+            </div>
             
-            <select
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            >
-              <option value="">Todos</option>
-              <option value="PENDING">Pendientes</option>
-              <option value="APPROVED">Aprobados</option>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2"
+              >
+                <span>+</span> Crear Restaurante
+              </button>
+              
+              <input
+                type="text"
+                placeholder="Buscar..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              />
+              
+              <select
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              >
+                <option value="">Todos</option>
+                <option value="PENDING">Pendientes</option>
+                <option value="APPROVED">Aprobados</option>
               <option value="REJECTED">Rechazados</option>
             </select>
           </div>
@@ -253,6 +269,7 @@ export default function EstablishmentsManagement() {
           No se encontraron establecimientos
         </div>
       )}
-    </div>
+      </div>
+    </>
   )
 }

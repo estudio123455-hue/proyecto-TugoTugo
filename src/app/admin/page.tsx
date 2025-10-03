@@ -8,6 +8,8 @@ import EstablishmentsManagement from '@/components/admin/EstablishmentsManagemen
 import PostsManagement from '@/components/admin/PostsManagement'
 import PacksManagement from '@/components/admin/PacksManagement'
 import OrdersManagement from '@/components/admin/OrdersManagement'
+import ReportsTab from '@/components/admin/ReportsTab'
+import AuditLogsTab from '@/components/admin/AuditLogsTab'
 
 export default function AdminDashboard() {
   const { data: session, status } = useSession()
@@ -66,6 +68,8 @@ export default function AdminDashboard() {
     { id: 'posts', name: 'Posts', icon: '📝' },
     { id: 'packs', name: 'Packs', icon: '📦' },
     { id: 'orders', name: 'Órdenes', icon: '🛒' },
+    { id: 'reports', name: 'Reportes', icon: '📈' },
+    { id: 'audit', name: 'Auditoría', icon: '🔍' },
   ]
 
   return (
@@ -116,6 +120,8 @@ export default function AdminDashboard() {
           {activeTab === 'posts' && <PostsTab />}
           {activeTab === 'packs' && <PacksTab />}
           {activeTab === 'orders' && <OrdersTab />}
+          {activeTab === 'reports' && <ReportsTab />}
+          {activeTab === 'audit' && <AuditLogsTab />}
         </div>
       </div>
     </div>

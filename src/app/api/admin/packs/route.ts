@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import { createAuditLog } from '@/lib/auditLog'
 
 // GET - Obtener todos los packs
 export async function GET(request: NextRequest) {
@@ -93,6 +94,16 @@ export async function DELETE(request: NextRequest) {
       where: { id: packId },
     })
 
+    // Audit log
+    await createAuditLog({
+      action: 'DELETE',
+      entityType: 'PACK',
+      entityId: packId,
+      userId: session.user.id,
+      userName: session.user.name || session.user.email,
+      metadata: { title: pack?.title },
+    })
+
     return NextResponse.json({
       success: true,
       message: 'Pack eliminado exitosamente',
@@ -101,6 +112,111 @@ export async function DELETE(request: NextRequest) {
     console.error('Error deleting pack:', error)
     return NextResponse.json(
       { success: false, message: 'Error al eliminar pack' },
+      { status: 500 }
+    )
+  }
+}
+
+// POST - Crear nuevo pack
+export async function POST(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions)
+
+    if (!session || session.user.role !== 'ADMIN') {
+      return NextResponse.json(
+        { success: false, message: 'No autorizado' },
+        { status: 401 }
+      )
+    }
+
+    const body = await request.json()
+    const {
+      title,
+      description,
+      originalPrice,
+      discountedPrice,
+      quantity,
+      availableFrom,
+      availableUntil,
+      pickupTimeStart,
+      pickupTimeEnd,
+      establishmentId,
+      isActive,
+    } = body
+
+    if (
+      !title ||
+      !description ||
+      !originalPrice ||
+      !discountedPrice ||
+      !quantity ||
+      !availableFrom ||
+      !availableUntil ||
+      !pickupTimeStart ||
+      !pickupTimeEnd ||
+      !establishmentId
+    ) {
+      return NextResponse.json(
+        { success: false, message: 'Todos los campos son requeridos' },
+        { status: 400 }
+      )
+    }
+
+    // Verificar que el establecimiento exista
+    const establishment = await prisma.establishment.findUnique({
+      where: { id: establishmentId },
+    })
+
+    if (!establishment) {
+      return NextResponse.json(
+        { success: false, message: 'Establecimiento no encontrado' },
+        { status: 404 }
+      )
+    }
+
+    const pack = await prisma.pack.create({
+      data: {
+        title,
+        description,
+        originalPrice: parseFloat(originalPrice),
+        discountedPrice: parseFloat(discountedPrice),
+        quantity: parseInt(quantity),
+        availableFrom: new Date(availableFrom),
+        availableUntil: new Date(availableUntil),
+        pickupTimeStart,
+        pickupTimeEnd,
+        establishmentId,
+        isActive: isActive !== undefined ? isActive : true,
+      },
+      include: {
+        establishment: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    })
+
+    // Audit log
+    await createAuditLog({
+      action: 'CREATE',
+      entityType: 'PACK',
+      entityId: pack.id,
+      userId: session.user.id,
+      userName: session.user.name || session.user.email,
+      metadata: { title: pack.title, establishmentName: establishment.name },
+    })
+
+    return NextResponse.json({
+      success: true,
+      data: pack,
+      message: 'Pack creado exitosamente',
+    })
+  } catch (error) {
+    console.error('Error creating pack:', error)
+    return NextResponse.json(
+      { success: false, message: 'Error al crear pack' },
       { status: 500 }
     )
   }
@@ -131,6 +247,16 @@ export async function PATCH(request: NextRequest) {
     const pack = await prisma.pack.update({
       where: { id: packId },
       data: { isActive },
+    })
+
+    // Audit log
+    await createAuditLog({
+      action: 'UPDATE',
+      entityType: 'PACK',
+      entityId: packId,
+      userId: session.user.id,
+      userName: session.user.name || session.user.email,
+      changes: { isActive },
     })
 
     return NextResponse.json({

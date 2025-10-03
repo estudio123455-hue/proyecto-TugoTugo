@@ -165,6 +165,24 @@ model Post {
   @@index([createdAt])
 }
 
+model AuditLog {
+  id          String   @id @default(cuid())
+  action      String   // CREATE, UPDATE, DELETE, APPROVE, REJECT
+  entityType  String   // USER, ESTABLISHMENT, POST, PACK, ORDER
+  entityId    String
+  userId      String   // Admin who performed the action
+  userName    String?  // Cached user name
+  changes     String?  // JSON string of changes
+  metadata    String?  // Additional metadata
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime @default(now())
+
+  @@index([entityType, entityId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
 // Removed enums for SQLite compatibility
 // UserRole: CUSTOMER, ESTABLISHMENT, ADMIN
 // EstablishmentCategory: RESTAURANT, CAFE, BAKERY, SUPERMARKET, GROCERY, OTHER  

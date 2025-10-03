@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import CreatePostModal from './CreatePostModal'
 
 interface Post {
   id: string
@@ -22,6 +23,7 @@ export default function PostsManagement() {
   const [posts, setPosts] = useState<Post[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
+  const [showCreateModal, setShowCreateModal] = useState(false)
 
   useEffect(() => {
     fetchPosts()
@@ -98,24 +100,40 @@ export default function PostsManagement() {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow">
-      {/* Header */}
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <h2 className="text-xl font-semibold">Gestión de Posts</h2>
-            <p className="text-sm text-gray-600 mt-1">Total: {posts.length} posts</p>
+    <>
+      <CreatePostModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSuccess={fetchPosts}
+      />
+      
+      <div className="bg-white rounded-lg shadow">
+        {/* Header */}
+        <div className="p-6 border-b border-gray-200">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-semibold">Gestión de Posts</h2>
+              <p className="text-sm text-gray-600 mt-1">Total: {posts.length} posts</p>
+            </div>
+            
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2"
+              >
+                <span>+</span> Crear Post
+              </button>
+              
+              <input
+                type="text"
+                placeholder="Buscar por título o restaurante..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              />
+            </div>
           </div>
-          
-          <input
-            type="text"
-            placeholder="Buscar por título o restaurante..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          />
         </div>
-      </div>
 
       {/* Table */}
       <div className="overflow-x-auto">
@@ -203,6 +221,7 @@ export default function PostsManagement() {
           No se encontraron posts
         </div>
       )}
-    </div>
+      </div>
+    </>
   )
 }

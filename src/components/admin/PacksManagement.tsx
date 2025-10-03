@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import CreatePackModal from './CreatePackModal'
 
 interface Pack {
   id: string
@@ -29,6 +30,7 @@ export default function PacksManagement() {
   const [packs, setPacks] = useState<Pack[]>([])
   const [loading, setLoading] = useState(true)
   const [searchTerm, setSearchTerm] = useState('')
+  const [showCreateModal, setShowCreateModal] = useState(false)
 
   useEffect(() => {
     fetchPacks()
@@ -105,24 +107,40 @@ export default function PacksManagement() {
   }
 
   return (
-    <div className="bg-white rounded-lg shadow">
-      {/* Header */}
-      <div className="p-6 border-b border-gray-200">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <div>
-            <h2 className="text-xl font-semibold">Gestión de Packs</h2>
-            <p className="text-sm text-gray-600 mt-1">Total: {packs.length} packs</p>
+    <>
+      <CreatePackModal
+        isOpen={showCreateModal}
+        onClose={() => setShowCreateModal(false)}
+        onSuccess={fetchPacks}
+      />
+      
+      <div className="bg-white rounded-lg shadow">
+        {/* Header */}
+        <div className="p-6 border-b border-gray-200">
+          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+              <h2 className="text-xl font-semibold">Gestión de Packs</h2>
+              <p className="text-sm text-gray-600 mt-1">Total: {packs.length} packs</p>
+            </div>
+            
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowCreateModal(true)}
+                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 flex items-center gap-2"
+              >
+                <span>+</span> Crear Pack
+              </button>
+              
+              <input
+                type="text"
+                placeholder="Buscar por título o restaurante..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              />
+            </div>
           </div>
-          
-          <input
-            type="text"
-            placeholder="Buscar por título o restaurante..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-          />
         </div>
-      </div>
 
       {/* Table */}
       <div className="overflow-x-auto">
@@ -231,6 +249,7 @@ export default function PacksManagement() {
           No se encontraron packs
         </div>
       )}
-    </div>
+      </div>
+    </>
   )
 }
