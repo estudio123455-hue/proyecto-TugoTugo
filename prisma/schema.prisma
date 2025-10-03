@@ -83,21 +83,40 @@ model Establishment {
   longitude   Float
   phone       String?
   email       String?
-  image       String?
+  image       String?  // Logo principal
   category    String
   isActive    Boolean  @default(true)
   
-  // Nuevos campos de verificación
-  openingHours       String?   // JSON con horarios
+  // Información adicional
+  cuisineType        String?   // Tipo de cocina (italiana, mexicana, etc.)
+  openingHours       String?   // JSON con horarios de atención
+  paymentMethods     String[]  @default([]) // efectivo, tarjeta, transferencia
   images             String[]  @default([]) // Array de URLs de fotos
+  website            String?   // Página web
+  instagram          String?   // Usuario de Instagram
+  facebook           String?   // URL de Facebook
+  twitter            String?   // Usuario de Twitter
+  
+  // Documentación legal
   legalDocument      String?   // URL del documento legal
-  businessType       String?   // Tipo de negocio
+  businessType       String?   // Tipo de negocio (restaurante, bar, cafetería)
   taxId              String?   @unique // NIT o RUT (único)
-  verificationStatus String    @default("APPROVED") // PENDING, APPROVED, REJECTED
+  alcoholLicense     String?   // Licencia de bebidas alcohólicas (si aplica)
+  
+  // Verificación y estado
+  verificationStatus String    @default("PENDING") // PENDING, APPROVED, REJECTED, SUSPENDED
   verificationNotes  String?   // Notas del admin
   approvedAt         DateTime? // Fecha de aprobación
   approvedBy         String?   // ID del admin que aprobó
+  suspendedAt        DateTime? // Fecha de suspensión
+  suspendedReason    String?   // Razón de suspensión
   
+  // Gestión administrativa
+  assignedAdminId    String?   // Admin asignado para gestionar
+  lastModifiedBy     String?   // Último usuario que modificó
+  registrationDate   DateTime  @default(now()) // Fecha de registro
+  
+  // Timestamps
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
@@ -109,8 +128,11 @@ model Establishment {
   
   @@index([name])
   @@index([category])
+  @@index([cuisineType])
   @@index([verificationStatus])
   @@index([taxId])
+  @@index([isActive])
+  @@index([assignedAdminId])
 }
 
 model Pack {
