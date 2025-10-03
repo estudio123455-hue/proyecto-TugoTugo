@@ -23,10 +23,19 @@ export const establishmentSchema = z.object({
   longitude: z.number().min(-180).max(180, 'Longitud inválida'),
   phone: z
     .string()
-    .regex(/^[+]?[1-9][\d\s\-()]{0,20}$/, 'Teléfono inválido')
+    .regex(/^\+?[1-9]\d{1,14}$/, 'Teléfono inválido. Formato: +573001234567')
     .optional()
     .or(z.literal('')),
-  email: z.string().email('Email inválido').optional().or(z.literal('')),
+  email: z
+    .string()
+    .email('Email inválido')
+    .toLowerCase()
+    .optional()
+    .or(z.literal('')),
+  nit: z
+    .string()
+    .regex(/^\d{9,10}-?\d?$/, 'NIT inválido. Formato: 900123456-7')
+    .optional(),
   description: z.string().max(1000, 'Descripción muy larga').optional(),
   image: z.string().url('URL de imagen inválida').optional(),
 })

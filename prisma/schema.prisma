@@ -92,7 +92,7 @@ model Establishment {
   images             String[]  @default([]) // Array de URLs de fotos
   legalDocument      String?   // URL del documento legal
   businessType       String?   // Tipo de negocio
-  taxId              String?   // NIT o RUT
+  taxId              String?   @unique // NIT o RUT (único)
   verificationStatus String    @default("APPROVED") // PENDING, APPROVED, REJECTED
   verificationNotes  String?   // Notas del admin
   approvedAt         DateTime? // Fecha de aprobación
@@ -106,6 +106,11 @@ model Establishment {
 
   packs Pack[]
   posts Post[]
+  
+  @@index([name])
+  @@index([category])
+  @@index([verificationStatus])
+  @@index([taxId])
 }
 
 model Pack {
