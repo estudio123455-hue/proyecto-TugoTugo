@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import { requireAdmin } from '@/lib/authorization'
 
@@ -13,7 +13,6 @@ export async function GET() {
     if (authResult instanceof NextResponse) {
       return authResult // Retorna error de autorización
     }
-    const session = authResult
 
     const [
       totalUsers,

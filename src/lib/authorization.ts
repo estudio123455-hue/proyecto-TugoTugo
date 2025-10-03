@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+import { NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from './auth'
 
@@ -8,6 +8,9 @@ export enum UserRole {
   ESTABLISHMENT = 'ESTABLISHMENT',
   CUSTOMER = 'CUSTOMER',
 }
+
+// Export individual values for convenience
+export const { ADMIN, ESTABLISHMENT, CUSTOMER } = UserRole
 
 // Tipo para la sesión con rol
 export interface AuthSession {

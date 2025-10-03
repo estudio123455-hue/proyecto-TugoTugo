@@ -1,5 +1,3 @@
-import { prisma } from './prisma'
-
 // Tipos de eventos a monitorear
 export enum MonitoringEvent {
   LOGIN_SUCCESS = 'LOGIN_SUCCESS',
@@ -12,6 +10,19 @@ export enum MonitoringEvent {
   DATA_EXPORT = 'DATA_EXPORT',
   ADMIN_ACTION = 'ADMIN_ACTION',
 }
+
+// Export individual values for convenience
+export const {
+  LOGIN_SUCCESS,
+  LOGIN_FAILED,
+  LOGOUT,
+  API_ERROR,
+  RATE_LIMIT_EXCEEDED,
+  UNAUTHORIZED_ACCESS,
+  SUSPICIOUS_ACTIVITY,
+  DATA_EXPORT,
+  ADMIN_ACTION,
+} = MonitoringEvent
 
 // Niveles de severidad
 export enum Severity {

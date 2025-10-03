@@ -56,7 +56,6 @@ const foodCategories = [
 ]
 
 export default function PacksExplorer() {
-  const { data: session } = useSession()
   const [packs, setPacks] = useState<Pack[]>([])
   const [posts, setPosts] = useState<Post[]>([])
   const [filteredPacks, setFilteredPacks] = useState<Pack[]>([])
@@ -64,7 +63,8 @@ export default function PacksExplorer() {
   const [isLoading, setIsLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
-  const [showType, setShowType] = useState<'all' | 'packs' | 'posts'>('all')
+  const [loading, setLoading] = useState(true)
+  const { data: session } = useSession()
 
   const getUniqueRestaurants = (packs: Pack[]) => {
     const restaurantMap = new Map()
