@@ -77,7 +77,14 @@ export default function AuthPage() {
       const userRole = session?.user?.role
       console.log('👤 [SignIn] User role:', userRole)
 
-      // ALWAYS require email verification for login
+      // Si es ADMIN, permitir acceso directo sin verificación
+      if (userRole === 'ADMIN') {
+        console.log('🔧 [SignIn] Admin user - skipping verification')
+        window.location.href = '/admin'
+        return
+      }
+
+      // Para otros usuarios, requerir verificación por email
       console.log('🔓 [SignIn] Signing out temporarily to send verification code')
       await signOut({ redirect: false })
       
