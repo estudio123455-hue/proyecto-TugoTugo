@@ -15,7 +15,11 @@
     "prefer-const": "error",
     "no-var": "error",
     "react/prop-types": "off",
-    "react/react-in-jsx-scope": "off"
+    "react/react-in-jsx-scope": "off",
+    "no-undef": "warn",
+    "no-useless-escape": "warn",
+    "@next/next/no-img-element": "warn",
+    "react-hooks/exhaustive-deps": "warn"
   },
   "env": {
     "browser": true,
