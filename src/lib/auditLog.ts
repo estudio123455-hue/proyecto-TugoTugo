@@ -2,7 +2,7 @@ import { prisma } from './prisma'
 
 interface AuditLogData {
   action: 'CREATE' | 'UPDATE' | 'DELETE' | 'APPROVE' | 'REJECT'
-  entityType: 'USER' | 'ESTABLISHMENT' | 'POST' | 'PACK' | 'ORDER'
+  entityType: 'USER' | 'ESTABLISHMENT' | 'POST' | 'PACK' | 'ORDER' | 'REVIEW' | 'FAVORITE' | 'MENU_ITEM'
   entityId: string
   userId: string
   userName?: string
