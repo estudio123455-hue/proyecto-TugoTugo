@@ -3,7 +3,6 @@
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { createAuditLog } from '@/lib/auditLog'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
