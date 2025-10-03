@@ -63,7 +63,6 @@ export default function PacksExplorer() {
   const [isLoading, setIsLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
-  const [loading, setLoading] = useState(true)
   const { data: session } = useSession()
 
   const getUniqueRestaurants = (packs: Pack[]) => {

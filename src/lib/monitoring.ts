@@ -11,19 +11,6 @@ export enum MonitoringEvent {
   ADMIN_ACTION = 'ADMIN_ACTION',
 }
 
-// Export individual values for convenience
-export const {
-  LOGIN_SUCCESS,
-  LOGIN_FAILED,
-  LOGOUT,
-  API_ERROR,
-  RATE_LIMIT_EXCEEDED,
-  UNAUTHORIZED_ACCESS,
-  SUSPICIOUS_ACTIVITY,
-  DATA_EXPORT,
-  ADMIN_ACTION,
-} = MonitoringEvent
-
 // Niveles de severidad
 export enum Severity {
   INFO = 'INFO',
@@ -255,23 +242,20 @@ export async function getSecurityStats(days: number = 7) {
     suspiciousActivity: 0,
   }
 }
-
 /**
  * Middleware para logging automático de requests
  */
 export function createRequestLogger() {
-  return async (request: Request, response: Response) => {
-    const startTime = Date.now()
+  return async (request: Request, ...args: any[]) => {
+    // Obtener IP del request
     const ip = request.headers.get('x-forwarded-for') || 
                request.headers.get('x-real-ip') || 
                'unknown'
-    const userAgent = request.headers.get('user-agent') || 'unknown'
     const method = request.method
     const url = new URL(request.url)
     const endpoint = url.pathname
 
     try {
-      // Aquí iría el handler de la request
       // const response = await handler(request)
       
       const duration = Date.now() - startTime

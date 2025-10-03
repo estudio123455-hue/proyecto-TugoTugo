@@ -9,9 +9,6 @@ export enum UserRole {
   CUSTOMER = 'CUSTOMER',
 }
 
-// Export individual values for convenience
-export const { ADMIN, ESTABLISHMENT, CUSTOMER } = UserRole
-
 // Tipo para la sesión con rol
 export interface AuthSession {
   user: {

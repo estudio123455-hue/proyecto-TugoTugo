@@ -289,7 +289,7 @@ export function formatColombianPhone(phone: string): string {
  * Formatear NIT colombiano
  */
 export function formatColombianNIT(nit: string): string {
-  const cleaned = nit.replace(/[\s\-\.]/g, '')
+  const cleaned = nit.replace(/[\s\-.]/g, '')
   
   if (cleaned.length >= 9) {
     const number = cleaned.slice(0, -1)
