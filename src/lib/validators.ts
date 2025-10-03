@@ -72,7 +72,7 @@ export function validateColombianNIT(nit: string): {
   error?: string
 } {
   // Limpiar NIT
-  const cleaned = nit.replace(/[\s\-\.]/g, '')
+  const cleaned = nit.replace(/[\s\-.]/g, '')
 
   // NIT debe tener 9 o 10 dígitos
   if (!/^\d{9,10}$/.test(cleaned)) {
