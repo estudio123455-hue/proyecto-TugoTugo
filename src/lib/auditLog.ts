@@ -20,11 +20,11 @@ export async function createAuditLog(data: AuditLogData) {
         entityType: data.entityType,
         entityId: data.entityId,
         userId: data.userId,
-        userName: data.userName,
-        changes: data.changes ? JSON.stringify(data.changes) : null,
-        metadata: data.metadata ? JSON.stringify(data.metadata) : null,
-        ipAddress: data.ipAddress,
-        userAgent: data.userAgent,
+        userName: data.userName || undefined,
+        changes: data.changes ? JSON.stringify(data.changes) : undefined,
+        metadata: data.metadata ? JSON.stringify(data.metadata) : undefined,
+        ipAddress: data.ipAddress || undefined,
+        userAgent: data.userAgent || undefined,
       },
     })
   } catch (error) {

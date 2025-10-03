@@ -23,7 +23,7 @@ export async function GET(request: NextRequest) {
     const sevenDaysAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
 
     switch (type) {
-      case 'revenue':
+      case 'revenue': {
         // Reporte de ingresos por día (últimos 30 días)
         const orders = await prisma.order.findMany({
           where: {
@@ -56,8 +56,9 @@ export async function GET(request: NextRequest) {
             total: orders.reduce((sum, order) => sum + order.totalAmount, 0),
           },
         })
+      }
 
-      case 'growth':
+      case 'growth': {
         // Crecimiento de usuarios y restaurantes
         const userGrowth = await prisma.user.groupBy({
           by: ['createdAt'],
@@ -105,8 +106,9 @@ export async function GET(request: NextRequest) {
             establishments: allDates.map((date) => establishmentsByDay[date] || 0),
           },
         })
+      }
 
-      case 'popular':
+      case 'popular': {
         // Packs y restaurantes más populares
         const popularPacks = await prisma.pack.findMany({
           include: {
@@ -176,8 +178,9 @@ export async function GET(request: NextRequest) {
             establishments: establishmentsWithOrders,
           },
         })
+      }
 
-      case 'waste-saved':
+      case 'waste-saved': {
         // Estimación de comida salvada
         const completedOrders = await prisma.order.findMany({
           where: {
@@ -232,8 +235,9 @@ export async function GET(request: NextRequest) {
             },
           },
         })
+      }
 
-      case 'overview':
+      case 'overview': {
         // Resumen general con métricas clave
         const totalUsers = await prisma.user.count()
         const totalEstablishments = await prisma.establishment.count()
@@ -303,6 +307,7 @@ export async function GET(request: NextRequest) {
             ),
           },
         })
+      }
 
       default:
         return NextResponse.json(

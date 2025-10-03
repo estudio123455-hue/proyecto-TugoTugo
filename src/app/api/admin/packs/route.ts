@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 import { createAuditLog } from '@/lib/auditLog'
 
 // GET - Obtener todos los packs
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions)
 
@@ -100,7 +100,7 @@ export async function DELETE(request: NextRequest) {
       entityType: 'PACK',
       entityId: packId,
       userId: session.user.id,
-      userName: session.user.name || session.user.email,
+      userName: session.user.name || session.user.email || undefined,
       metadata: { title: pack?.title },
     })
 
@@ -204,7 +204,7 @@ export async function POST(request: NextRequest) {
       entityType: 'PACK',
       entityId: pack.id,
       userId: session.user.id,
-      userName: session.user.name || session.user.email,
+      userName: session.user.name || session.user.email || undefined,
       metadata: { title: pack.title, establishmentName: establishment.name },
     })
 
@@ -255,7 +255,7 @@ export async function PATCH(request: NextRequest) {
       entityType: 'PACK',
       entityId: packId,
       userId: session.user.id,
-      userName: session.user.name || session.user.email,
+      userName: session.user.name || session.user.email || undefined,
       changes: { isActive },
     })
 

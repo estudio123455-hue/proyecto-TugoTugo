@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
     let emailContent = { subject: '', html: '' }
 
     switch (type) {
-      case 'establishment-approved':
+      case 'establishment-approved': {
         const approvedEst = await prisma.establishment.findUnique({
           where: { id: recipientId },
           include: {
@@ -53,8 +53,9 @@ export async function POST(request: NextRequest) {
         recipientEmail = approvedEst.user.email
         emailContent = emailTemplates.establishmentApproved(approvedEst.name)
         break
+      }
 
-      case 'establishment-rejected':
+      case 'establishment-rejected': {
         const rejectedEst = await prisma.establishment.findUnique({
           where: { id: recipientId },
           include: {
@@ -79,8 +80,9 @@ export async function POST(request: NextRequest) {
           data?.reason
         )
         break
+      }
 
-      case 'welcome-user':
+      case 'welcome-user': {
         const user = await prisma.user.findUnique({
           where: { id: recipientId },
         })
@@ -95,8 +97,9 @@ export async function POST(request: NextRequest) {
         recipientEmail = user.email
         emailContent = emailTemplates.welcomeUser(user.name || user.email)
         break
+      }
 
-      case 'custom':
+      case 'custom': {
         // Email personalizado
         if (!data?.email || !data?.subject || !data?.html) {
           return NextResponse.json(
@@ -111,6 +114,7 @@ export async function POST(request: NextRequest) {
           html: data.html,
         }
         break
+      }
 
       default:
         return NextResponse.json(

@@ -22,7 +22,7 @@ export async function GET(request: NextRequest) {
     let filename = 'export.csv'
 
     switch (type) {
-      case 'users':
+      case 'users': {
         const users = await prisma.user.findMany({
           select: {
             id: true,
@@ -41,8 +41,9 @@ export async function GET(request: NextRequest) {
         })
         filename = 'usuarios.csv'
         break
+      }
 
-      case 'establishments':
+      case 'establishments': {
         const establishments = await prisma.establishment.findMany({
           include: {
             user: {
@@ -61,8 +62,9 @@ export async function GET(request: NextRequest) {
         })
         filename = 'restaurantes.csv'
         break
+      }
 
-      case 'posts':
+      case 'posts': {
         const posts = await prisma.post.findMany({
           include: {
             establishment: {
@@ -80,8 +82,9 @@ export async function GET(request: NextRequest) {
         })
         filename = 'posts.csv'
         break
+      }
 
-      case 'packs':
+      case 'packs': {
         const packs = await prisma.pack.findMany({
           include: {
             establishment: {
@@ -104,8 +107,9 @@ export async function GET(request: NextRequest) {
         })
         filename = 'packs.csv'
         break
+      }
 
-      case 'orders':
+      case 'orders': {
         const orders = await prisma.order.findMany({
           include: {
             user: {
@@ -134,6 +138,7 @@ export async function GET(request: NextRequest) {
         })
         filename = 'ordenes.csv'
         break
+      }
 
       default:
         return NextResponse.json(

@@ -93,7 +93,7 @@ export async function DELETE(request: NextRequest) {
       entityType: 'ESTABLISHMENT',
       entityId: establishmentId,
       userId: session.user.id,
-      userName: session.user.name || session.user.email,
+      userName: session.user.name || session.user.email || undefined,
       metadata: { name: establishment?.name },
     })
 
@@ -214,7 +214,7 @@ export async function POST(request: NextRequest) {
       entityType: 'ESTABLISHMENT',
       entityId: establishment.id,
       userId: session.user.id,
-      userName: session.user.name || session.user.email,
+      userName: session.user.name || session.user.email || undefined,
       metadata: { name: establishment.name },
     })
 
@@ -283,7 +283,7 @@ export async function PATCH(request: NextRequest) {
       entityType: 'ESTABLISHMENT',
       entityId: establishmentId,
       userId: session.user.id,
-      userName: session.user.name || session.user.email,
+      userName: session.user.name || session.user.email || undefined,
       changes: updateData,
     })
 
