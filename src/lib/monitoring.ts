@@ -246,7 +246,8 @@ export async function getSecurityStats(days: number = 7) {
  * Middleware para logging automático de requests
  */
 export function createRequestLogger() {
-  return async (request: Request, ...args: any[]) => {
+  return async (request: Request, handler: Function, ...args: any[]) => {
+    const startTime = Date.now()
     // Obtener IP del request
     const ip = request.headers.get('x-forwarded-for') || 
                request.headers.get('x-real-ip') || 
@@ -256,13 +257,13 @@ export function createRequestLogger() {
     const endpoint = url.pathname
 
     try {
-      // const response = await handler(request)
+      // Ejecutar el handler
+      const response = await handler(request, ...args)
       
       const duration = Date.now() - startTime
       
       // Log de request exitoso
       console.log(`[${method}] ${endpoint} - ${duration}ms - IP: ${ip}`)
-      
       return response
     } catch (error: any) {
       const duration = Date.now() - startTime
