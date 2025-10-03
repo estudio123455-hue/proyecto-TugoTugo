@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
+import bcrypt from 'bcryptjs'
 
 // GET - Obtener todos los usuarios
 export async function GET(request: NextRequest) {
@@ -100,6 +101,76 @@ export async function DELETE(request: NextRequest) {
     console.error('Error deleting user:', error)
     return NextResponse.json(
       { success: false, message: 'Error al eliminar usuario' },
+      { status: 500 }
+    )
+  }
+}
+
+// POST - Crear nuevo usuario
+export async function POST(request: NextRequest) {
+  try {
+    const session = await getServerSession(authOptions)
+
+    if (!session || session.user.role !== 'ADMIN') {
+      return NextResponse.json(
+        { success: false, message: 'No autorizado' },
+        { status: 401 }
+      )
+    }
+
+    const body = await request.json()
+    const { email, name, password, role } = body
+
+    if (!email || !password || !role) {
+      return NextResponse.json(
+        { success: false, message: 'Email, contraseña y rol son requeridos' },
+        { status: 400 }
+      )
+    }
+
+    // Verificar si el usuario ya existe
+    const existingUser = await prisma.user.findUnique({
+      where: { email },
+    })
+
+    if (existingUser) {
+      return NextResponse.json(
+        { success: false, message: 'El email ya está registrado' },
+        { status: 400 }
+      )
+    }
+
+    // Hashear contraseña
+    const hashedPassword = await bcrypt.hash(password, 10)
+
+    // Crear usuario
+    const user = await prisma.user.create({
+      data: {
+        email,
+        name: name || email.split('@')[0],
+        password: hashedPassword,
+        role,
+        emailVerified: new Date(), // Auto-verificar usuarios creados por admin
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        role: true,
+        emailVerified: true,
+        createdAt: true,
+      },
+    })
+
+    return NextResponse.json({
+      success: true,
+      data: user,
+      message: 'Usuario creado exitosamente',
+    })
+  } catch (error) {
+    console.error('Error creating user:', error)
+    return NextResponse.json(
+      { success: false, message: 'Error al crear usuario' },
       { status: 500 }
     )
   }

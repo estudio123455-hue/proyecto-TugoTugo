@@ -22,6 +22,13 @@ export default function UsersManagement() {
   const [loading, setLoading] = useState(true)
   const [filter, setFilter] = useState<string>('')
   const [searchTerm, setSearchTerm] = useState('')
+  const [showCreateForm, setShowCreateForm] = useState(false)
+  const [newUser, setNewUser] = useState({
+    email: '',
+    name: '',
+    password: '',
+    role: 'CUSTOMER',
+  })
 
   useEffect(() => {
     fetchUsers()
@@ -91,6 +98,31 @@ export default function UsersManagement() {
     }
   }
 
+  const createUser = async (e: React.FormEvent) => {
+    e.preventDefault()
+
+    try {
+      const res = await fetch('/api/admin/users', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newUser),
+      })
+      const data = await res.json()
+      
+      if (data.success) {
+        alert('Usuario creado exitosamente')
+        setShowCreateForm(false)
+        setNewUser({ email: '', name: '', password: '', role: 'CUSTOMER' })
+        fetchUsers()
+      } else {
+        alert(data.message || 'Error al crear usuario')
+      }
+    } catch (error) {
+      console.error('Error creating user:', error)
+      alert('Error al crear usuario')
+    }
+  }
+
   const filteredUsers = users.filter(user =>
     user.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     user.name?.toLowerCase().includes(searchTerm.toLowerCase())
@@ -129,9 +161,71 @@ export default function UsersManagement() {
               <option value="ESTABLISHMENT">Restaurantes</option>
               <option value="ADMIN">Administradores</option>
             </select>
+
+            <button
+              onClick={() => setShowCreateForm(!showCreateForm)}
+              className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium"
+            >
+              + Crear Usuario
+            </button>
           </div>
         </div>
       </div>
+
+      {/* Create User Form */}
+      {showCreateForm && (
+        <div className="p-6 bg-gray-50 border-b border-gray-200">
+          <form onSubmit={createUser} className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <input
+              type="email"
+              placeholder="Email"
+              value={newUser.email}
+              onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+              required
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+            />
+            <input
+              type="text"
+              placeholder="Nombre"
+              value={newUser.name}
+              onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+            />
+            <input
+              type="password"
+              placeholder="Contraseña"
+              value={newUser.password}
+              onChange={(e) => setNewUser({ ...newUser, password: e.target.value })}
+              required
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+            />
+            <select
+              value={newUser.role}
+              onChange={(e) => setNewUser({ ...newUser, role: e.target.value })}
+              className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+            >
+              <option value="CUSTOMER">Cliente</option>
+              <option value="ESTABLISHMENT">Restaurante</option>
+              <option value="ADMIN">Admin</option>
+            </select>
+            <div className="flex gap-2">
+              <button
+                type="submit"
+                className="flex-1 px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+              >
+                Crear
+              </button>
+              <button
+                type="button"
+                onClick={() => setShowCreateForm(false)}
+                className="px-4 py-2 bg-gray-300 text-gray-700 rounded-lg hover:bg-gray-400"
+              >
+                Cancelar
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
 
       {/* Table */}
       <div className="overflow-x-auto">

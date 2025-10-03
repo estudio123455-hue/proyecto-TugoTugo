@@ -68,6 +68,14 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
+        // Si es ADMIN, marcar como verificado automáticamente
+        if (user.role === 'ADMIN' && !user.emailVerified) {
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { emailVerified: new Date() },
+          })
+        }
+
         return {
           id: user.id,
           email: user.email,
