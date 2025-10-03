@@ -17,6 +17,8 @@ export default function Navigation() {
         return '🛒 Cliente'
       case 'ESTABLISHMENT':
         return '🏪 Restaurante'
+      case 'ADMIN':
+        return '🔧 Admin'
       default:
         return '👤 Usuario'
     }
@@ -42,7 +44,15 @@ export default function Navigation() {
                   Home
                 </Link>
                 {/* Links según el rol */}
-                {session?.user?.role === 'ESTABLISHMENT' ? (
+                {session?.user?.role === 'ADMIN' ? (
+                  // Admin ve: Admin Panel
+                  <Link
+                    href="/admin"
+                    className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                  >
+                    🔧 Admin Panel
+                  </Link>
+                ) : session?.user?.role === 'ESTABLISHMENT' ? (
                   // Restaurante ve: Dashboard
                   <Link
                     href="/dashboard"
@@ -151,7 +161,22 @@ export default function Navigation() {
                     </div>
 
                     <div className="p-2">
-                      {session.user?.role === 'ESTABLISHMENT' ? (
+                      {session.user?.role === 'ADMIN' ? (
+                        <>
+                          <Link
+                            href="/admin"
+                            className="flex items-center space-x-3 px-4 py-3 text-gray-700 hover:bg-green-50 hover:text-green-600 rounded-lg transition-colors"
+                          >
+                            <span className="text-lg">🔧</span>
+                            <div>
+                              <div className="font-medium">Admin Panel</div>
+                              <div className="text-xs text-gray-500">
+                                Gestionar plataforma
+                              </div>
+                            </div>
+                          </Link>
+                        </>
+                      ) : session.user?.role === 'ESTABLISHMENT' ? (
                         <>
                           <Link
                             href="/dashboard"
