@@ -26,7 +26,7 @@ export async function GET(request: NextRequest) {
     })
 
     // Agrupar por categoría
-    const groupedMenu = menuItems.reduce((acc: any, item) => {
+    const groupedMenu = menuItems.reduce((acc: Record<string, any[]>, item: any) => {
       if (!acc[item.category]) {
         acc[item.category] = []
       }

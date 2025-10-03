@@ -16,6 +16,7 @@ export default function FavoriteButton({ establishmentId }: FavoriteButtonProps)
     if (session) {
       checkFavorite()
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [session, establishmentId])
 
   const checkFavorite = async () => {

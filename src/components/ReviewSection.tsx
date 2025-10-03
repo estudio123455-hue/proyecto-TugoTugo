@@ -32,6 +32,7 @@ export default function ReviewSection({ establishmentId }: ReviewSectionProps) {
 
   useEffect(() => {
     fetchReviews()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [establishmentId])
 
   const fetchReviews = async () => {

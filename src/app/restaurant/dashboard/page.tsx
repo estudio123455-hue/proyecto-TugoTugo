@@ -298,7 +298,7 @@ function OrderItem({ order }: { order: any }) {
           {order.status}
         </span>
         <span className="font-bold text-gray-900">
-          ${order.totalPrice?.toLocaleString()}
+          ${order.totalAmount?.toLocaleString()}
         </span>
       </div>
     </div>

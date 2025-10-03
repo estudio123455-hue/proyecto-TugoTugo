@@ -85,7 +85,7 @@ export async function GET() {
     const completedOrders = orders.filter((o) => o.status === 'COMPLETED').length
     const totalRevenue = orders
       .filter((o) => o.status === 'COMPLETED' || o.status === 'CONFIRMED')
-      .reduce((sum, order) => sum + (order.totalPrice || 0), 0)
+      .reduce((sum, order) => sum + (order.totalAmount || 0), 0)
 
     return NextResponse.json({
       success: true,
