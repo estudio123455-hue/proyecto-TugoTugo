@@ -3,6 +3,9 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { getAuditLogs } from '@/lib/auditLog'
 
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
+
 // GET - Obtener logs de auditoría
 export async function GET(request: NextRequest) {
   try {
