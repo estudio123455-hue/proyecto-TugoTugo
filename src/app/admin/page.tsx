@@ -3,6 +3,9 @@
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+
+// Force dynamic rendering
+export const dynamic = 'force-dynamic'
 import UsersManagement from '@/components/admin/UsersManagement'
 import EstablishmentsManagement from '@/components/admin/EstablishmentsManagement'
 import PostsManagement from '@/components/admin/PostsManagement'
