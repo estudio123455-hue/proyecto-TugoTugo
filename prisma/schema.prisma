@@ -49,6 +49,8 @@ model User {
   sessions      Session[]
   orders        Order[]
   establishment Establishment?
+  reviews       Review[]
+  favorites     Favorite[]
 }
 
 model VerificationToken {
@@ -123,8 +125,11 @@ model Establishment {
   userId String @unique
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  packs Pack[]
-  posts Post[]
+  packs     Pack[]
+  posts     Post[]
+  reviews   Review[]
+  favorites Favorite[]
+  menuItems MenuItem[]
   
   @@index([name])
   @@index([category])
@@ -208,6 +213,59 @@ model AuditLog {
   @@index([entityType, entityId])
   @@index([userId])
   @@index([createdAt])
+}
+
+model Review {
+  id              String        @id @default(cuid())
+  rating          Int           // 1-5 estrellas
+  comment         String?
+  establishmentId String
+  establishment   Establishment @relation(fields: [establishmentId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@unique([userId, establishmentId]) // Un usuario solo puede dejar una reseña por restaurante
+  @@index([establishmentId])
+  @@index([userId])
+  @@index([rating])
+}
+
+model Favorite {
+  id              String        @id @default(cuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  establishmentId String
+  establishment   Establishment @relation(fields: [establishmentId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+
+  @@unique([userId, establishmentId]) // Un usuario no puede agregar el mismo restaurante dos veces
+  @@index([userId])
+  @@index([establishmentId])
+}
+
+model MenuItem {
+  id              String        @id @default(cuid())
+  name            String
+  description     String?
+  price           Float
+  category        String        // Entrada, Plato Principal, Postre, Bebida, etc.
+  image           String?
+  isAvailable     Boolean       @default(true)
+  preparationTime Int?          // Minutos
+  allergens       String[]      @default([]) // Gluten, Lácteos, Nueces, etc.
+  isVegetarian    Boolean       @default(false)
+  isVegan         Boolean       @default(false)
+  isGlutenFree    Boolean       @default(false)
+  establishmentId String
+  establishment   Establishment @relation(fields: [establishmentId], references: [id], onDelete: Cascade)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([establishmentId])
+  @@index([category])
+  @@index([isAvailable])
 }
 
 // Removed enums for SQLite compatibility
