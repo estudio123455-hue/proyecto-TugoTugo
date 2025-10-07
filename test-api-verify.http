@@ -1,0 +1,41 @@
+### Test del Sistema de Verificación QR
+### Asegúrate de tener el servidor corriendo: npm run dev
+
+### Variables
+@baseUrl = http://localhost:3000
+@verificationCode = A1B2C3D4E5F6
+
+###############################################
+# 1. Consultar orden por código (GET)
+###############################################
+GET {{baseUrl}}/api/orders/verify?code={{verificationCode}}
+Content-Type: application/json
+
+###############################################
+# 2. Verificar y completar orden (POST)
+###############################################
+POST {{baseUrl}}/api/orders/verify
+Content-Type: application/json
+
+{
+  "verificationCode": "{{verificationCode}}"
+}
+
+###############################################
+# 3. Intentar verificar código inválido
+###############################################
+POST {{baseUrl}}/api/orders/verify
+Content-Type: application/json
+
+{
+  "verificationCode": "INVALID123"
+}
+
+###############################################
+# 4. Intentar verificar sin código
+###############################################
+POST {{baseUrl}}/api/orders/verify
+Content-Type: application/json
+
+{
+}
