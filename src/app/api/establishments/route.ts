@@ -1,14 +1,47 @@
-import { NextResponse } from 'next/server'
+import { NextRequest, NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
+import { calculateDistance } from '@/lib/geolocation'
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    console.log('🔍 API: Fetching establishments...')
+    const { searchParams } = new URL(request.url)
+    
+    // Parámetros de búsqueda y filtros
+    const query = searchParams.get('query')
+    const category = searchParams.get('category')
+    const lat = searchParams.get('lat')
+    const lng = searchParams.get('lng')
+    const maxDistance = searchParams.get('maxDistance')
+    
+    console.log('🔍 API: Fetching establishments with filters:', {
+      query,
+      category,
+      userLocation: lat && lng ? { lat, lng } : null,
+      maxDistance,
+    })
+
+    // Construir filtros de Prisma
+    const where: any = {
+      isActive: true,
+      verificationStatus: 'APPROVED',
+    }
+
+    // Filtro por categoría
+    if (category && category !== 'all') {
+      where.category = category
+    }
+
+    // Filtro por búsqueda de texto
+    if (query) {
+      where.OR = [
+        { name: { contains: query, mode: 'insensitive' } },
+        { description: { contains: query, mode: 'insensitive' } },
+        { cuisineType: { contains: query, mode: 'insensitive' } },
+      ]
+    }
 
     const establishments = await prisma.establishment.findMany({
-      where: {
-        isActive: true,
-      },
+      where,
       include: {
         user: {
           select: {
@@ -22,6 +55,9 @@ export async function GET() {
             quantity: {
               gt: 0,
             },
+            availableFrom: {
+              lte: new Date(),
+            },
             availableUntil: {
               gte: new Date(),
             },
@@ -30,26 +66,58 @@ export async function GET() {
             createdAt: 'desc',
           },
         },
+        reviews: {
+          select: {
+            rating: true,
+          },
+        },
         _count: {
           select: {
             posts: true,
             packs: true,
+            reviews: true,
           },
         },
       },
     })
 
-    console.log(`📊 API: Found ${establishments.length} establishments`)
-    establishments.forEach(est => {
-      console.log(`🏪 API: ${est.name} has ${est.packs.length} active packs`)
-      est.packs.forEach(pack => {
-        console.log(
-          `📦 API: Pack "${pack.title}" - quantity: ${pack.quantity}, isActive: ${pack.isActive}`
+    // Calcular distancia y rating promedio
+    let results = establishments.map(est => {
+      // Calcular rating promedio
+      const averageRating = est.reviews.length > 0
+        ? est.reviews.reduce((sum, r) => sum + r.rating, 0) / est.reviews.length
+        : 0
+
+      // Calcular distancia si hay ubicación del usuario
+      let distance: number | undefined
+      if (lat && lng) {
+        distance = calculateDistance(
+          { latitude: parseFloat(lat), longitude: parseFloat(lng) },
+          { latitude: est.latitude, longitude: est.longitude }
         )
-      })
+      }
+
+      return {
+        ...est,
+        distance,
+        averageRating: Math.round(averageRating * 10) / 10,
+      }
     })
 
-    return NextResponse.json(establishments)
+    // Filtrar por distancia máxima
+    if (maxDistance && lat && lng) {
+      const maxDist = parseFloat(maxDistance)
+      results = results.filter(est => est.distance !== undefined && est.distance <= maxDist)
+    }
+
+    // Ordenar por distancia si hay ubicación
+    if (lat && lng) {
+      results.sort((a, b) => (a.distance || 999) - (b.distance || 999))
+    }
+
+    console.log(`📊 API: Found ${results.length} establishments`)
+
+    return NextResponse.json(results)
   } catch (error) {
     console.error('Error fetching establishments:', error)
     return NextResponse.json(
