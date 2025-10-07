@@ -10,6 +10,9 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 export async function POST(request: NextRequest) {
   try {
+    // Log para debug
+    console.log('🔍 Creating order - Stripe key exists:', !!process.env.STRIPE_SECRET_KEY)
+    
     const session = await getServerSession(authOptions)
 
     if (!session?.user?.id) {
@@ -103,11 +106,19 @@ export async function POST(request: NextRequest) {
       // Delete the order if Stripe fails
       await prisma.order.delete({ where: { id: order.id } })
       
-      console.error('Stripe error:', stripeError)
+      console.error('❌ Stripe error:', stripeError)
+      console.error('Error type:', stripeError.type)
+      console.error('Error code:', stripeError.code)
+      
       return NextResponse.json(
         { 
           message: 'Error al procesar el pago. Por favor intenta de nuevo.',
-          error: stripeError.message 
+          error: stripeError.message,
+          details: process.env.NODE_ENV === 'development' ? {
+            type: stripeError.type,
+            code: stripeError.code,
+            hasKey: !!process.env.STRIPE_SECRET_KEY
+          } : undefined
         },
         { status: 500 }
       )
