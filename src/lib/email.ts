@@ -22,6 +22,8 @@ interface OrderConfirmationEmailData {
   pickupDate: string
   pickupTimeStart: string
   pickupTimeEnd: string
+  verificationCode: string
+  qrCodeDataURL?: string
 }
 
 interface PickupReminderEmailData {
@@ -92,11 +94,27 @@ export async function sendOrderConfirmationEmail(
             </div>
           </div>
           
+          <div style="background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%); border: 2px solid #f59e0b; padding: 25px; border-radius: 12px; margin: 25px 0; text-align: center;">
+            <h2 style="margin-top: 0; color: #92400e; font-size: 18px;">📱 Código de Verificación</h2>
+            <p style="color: #374151; margin: 10px 0;">Presenta este código QR al llegar al restaurante:</p>
+            ${data.qrCodeDataURL ? `
+            <div style="background: white; padding: 20px; border-radius: 12px; display: inline-block; margin: 15px 0;">
+              <img src="${data.qrCodeDataURL}" alt="QR Code" style="width: 250px; height: 250px; display: block;" />
+            </div>
+            ` : ''}
+            <div style="background: white; padding: 15px; border-radius: 8px; margin: 15px 0;">
+              <p style="margin: 5px 0; color: #6b7280; font-size: 14px;">Código de verificación:</p>
+              <p style="margin: 5px 0; font-size: 24px; font-weight: bold; color: #f59e0b; letter-spacing: 3px; font-family: monospace;">${data.verificationCode}</p>
+            </div>
+            <p style="color: #6b7280; font-size: 13px; margin: 10px 0;">El restaurante escaneará este código para confirmar tu pedido</p>
+          </div>
+
           <div style="background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%); border: 2px solid #3b82f6; padding: 25px; border-radius: 12px; margin: 25px 0;">
             <h2 style="margin-top: 0; color: #1e40af; font-size: 18px;">⚠️ Recordatorios Importantes</h2>
             <ul style="margin: 15px 0; padding-left: 25px; color: #374151; line-height: 1.8;">
               <li style="margin: 8px 0;">🕐 <strong>Llega puntual</strong> durante el horario especificado</li>
-              <li style="margin: 8px 0;">🆔 <strong>Trae tu cédula</strong> y muestra este email de confirmación</li>
+              <li style="margin: 8px 0;">📱 <strong>Muestra el código QR</strong> o el código de verificación al restaurante</li>
+              <li style="margin: 8px 0;">🆔 <strong>Trae tu cédula</strong> para confirmar tu identidad</li>
               <li style="margin: 8px 0;">🎁 <strong>El contenido es sorpresa</strong> - ¡disfruta descubriendo qué hay dentro!</li>
               <li style="margin: 8px 0;">📞 <strong>Si no puedes ir</strong>, contacta al restaurante con anticipación</li>
               <li style="margin: 8px 0;">💝 <strong>Trae tu propia bolsa</strong> para ser más eco-friendly</li>

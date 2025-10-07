@@ -71,12 +71,12 @@ export async function POST(request: NextRequest) {
       line_items: [
         {
           price_data: {
-            currency: 'usd',
+            currency: 'cop',
             product_data: {
               name: `${pack.title} - ${pack.establishment.name}`,
               description: pack.description,
             },
-            unit_amount: Math.round(pack.discountedPrice * 100), // Stripe expects cents
+            unit_amount: Math.round(pack.discountedPrice), // COP doesn't use decimals
           },
           quantity: quantity,
         },

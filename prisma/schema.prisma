@@ -162,20 +162,24 @@ model Pack {
 }
 
 model Order {
-  id              String      @id @default(cuid())
-  quantity        Int
-  totalAmount     Float
-  status          String      @default("PENDING")
-  pickupDate      DateTime
-  stripePaymentId String?
-  createdAt       DateTime    @default(now())
-  updatedAt       DateTime    @updatedAt
+  id               String      @id @default(cuid())
+  quantity         Int
+  totalAmount      Float
+  status           String      @default("PENDING")
+  pickupDate       DateTime
+  stripePaymentId  String?
+  verificationCode String?     @unique // Código QR único para verificación
+  verifiedAt       DateTime?   // Fecha de verificación por el restaurante
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
 
   userId String
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   packId String
   pack   Pack   @relation(fields: [packId], references: [id], onDelete: Cascade)
+  
+  @@index([verificationCode])
 }
 
 model Post {

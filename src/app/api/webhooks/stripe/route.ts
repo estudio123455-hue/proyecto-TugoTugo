@@ -3,6 +3,7 @@ import { headers } from 'next/headers'
 import Stripe from 'stripe'
 import { prisma } from '@/lib/prisma'
 import { sendOrderConfirmationEmail } from '@/lib/email'
+import { generateVerificationCode, generateOrderQRCode } from '@/lib/qrcode'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2023-08-16',
@@ -40,11 +41,17 @@ export async function POST(request: NextRequest) {
         const session = event.data.object as Stripe.Checkout.Session
 
         if (session.metadata?.orderId) {
+          // Generate verification code
+          const verificationCode = generateVerificationCode()
+
           // Update order status and reduce pack quantity
           const order = await prisma.$transaction(async tx => {
             const updatedOrder = await tx.order.update({
               where: { id: session.metadata!.orderId },
-              data: { status: 'CONFIRMED' },
+              data: { 
+                status: 'CONFIRMED',
+                verificationCode: verificationCode,
+              },
               include: {
                 pack: {
                   include: {
@@ -68,7 +75,15 @@ export async function POST(request: NextRequest) {
             return updatedOrder
           })
 
-          // Send confirmation email
+          // Generate QR code
+          let qrCodeDataURL: string | undefined
+          try {
+            qrCodeDataURL = await generateOrderQRCode(order.id, verificationCode)
+          } catch (qrError) {
+            console.error('Failed to generate QR code:', qrError)
+          }
+
+          // Send confirmation email with QR code
           try {
             if (order.user.email) {
               await sendOrderConfirmationEmail({
@@ -83,6 +98,8 @@ export async function POST(request: NextRequest) {
                 pickupDate: order.pickupDate.toISOString(),
                 pickupTimeStart: order.pack.pickupTimeStart,
                 pickupTimeEnd: order.pack.pickupTimeEnd,
+                verificationCode: verificationCode,
+                qrCodeDataURL: qrCodeDataURL,
               })
             }
           } catch (emailError) {
