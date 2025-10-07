@@ -56,9 +56,17 @@ export async function POST(request: NextRequest) {
 
     const totalAmount = pack.discountedPrice * quantity
 
-    // Stripe minimum amount for COP is 3000 (about $0.75 USD)
-    const unitAmount = Math.round(pack.discountedPrice)
-    if (unitAmount < 3000) {
+    // For COP (Colombian Peso), Stripe requires amount in centavos (cents)
+    // 1 COP = 100 centavos, so multiply by 100
+    // Example: 11000 COP = 1100000 centavos
+    const unitAmount = Math.round(pack.discountedPrice * 100)
+    
+    console.log('💰 Pack price (COP):', pack.discountedPrice)
+    console.log('💰 Unit amount for Stripe (centavos):', unitAmount)
+    console.log('💰 Total amount:', totalAmount)
+    
+    // Stripe minimum for COP is 300000 centavos (3000 COP)
+    if (unitAmount < 300000) {
       return NextResponse.json(
         { message: 'El monto mínimo para pagos es $3,000 COP' },
         { status: 400 }
