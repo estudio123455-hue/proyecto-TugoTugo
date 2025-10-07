@@ -53,6 +53,15 @@ export async function POST(request: NextRequest) {
 
     const totalAmount = pack.discountedPrice * quantity
 
+    // Stripe minimum amount for COP is 3000 (about $0.75 USD)
+    const unitAmount = Math.round(pack.discountedPrice)
+    if (unitAmount < 3000) {
+      return NextResponse.json(
+        { message: 'El monto mínimo para pagos es $3,000 COP' },
+        { status: 400 }
+      )
+    }
+
     // Create order
     const order = await prisma.order.create({
       data: {
@@ -66,28 +75,43 @@ export async function POST(request: NextRequest) {
     })
 
     // Create Stripe checkout session
-    const stripeSession = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
-      line_items: [
-        {
-          price_data: {
-            currency: 'cop',
-            product_data: {
-              name: `${pack.title} - ${pack.establishment.name}`,
-              description: pack.description,
+    let stripeSession
+    try {
+      stripeSession = await stripe.checkout.sessions.create({
+        payment_method_types: ['card'],
+        line_items: [
+          {
+            price_data: {
+              currency: 'cop',
+              product_data: {
+                name: `${pack.title} - ${pack.establishment.name}`,
+                description: pack.description,
+              },
+              unit_amount: unitAmount, // COP doesn't use decimals
             },
-            unit_amount: Math.round(pack.discountedPrice), // COP doesn't use decimals
+            quantity: quantity,
           },
-          quantity: quantity,
+        ],
+        mode: 'payment',
+        success_url: `${request.nextUrl.origin}/orders/${order.id}/success`,
+        cancel_url: `${request.nextUrl.origin}/map`,
+        metadata: {
+          orderId: order.id,
         },
-      ],
-      mode: 'payment',
-      success_url: `${request.nextUrl.origin}/orders/${order.id}/success`,
-      cancel_url: `${request.nextUrl.origin}/map`,
-      metadata: {
-        orderId: order.id,
-      },
-    })
+      })
+    } catch (stripeError: any) {
+      // Delete the order if Stripe fails
+      await prisma.order.delete({ where: { id: order.id } })
+      
+      console.error('Stripe error:', stripeError)
+      return NextResponse.json(
+        { 
+          message: 'Error al procesar el pago. Por favor intenta de nuevo.',
+          error: stripeError.message 
+        },
+        { status: 500 }
+      )
+    }
 
     // Update order with Stripe session ID
     await prisma.order.update({
