@@ -119,11 +119,11 @@ export async function POST(request: NextRequest) {
         status: 'COMPLETED',
         verifiedAt: new Date().toISOString(),
       },
-      metadata: JSON.stringify({
+      metadata: {
         verificationCode,
         establishmentId: establishment.id,
         establishmentName: establishment.name,
-      }),
+      },
     })
 
     return NextResponse.json({
