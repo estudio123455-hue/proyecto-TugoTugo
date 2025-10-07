@@ -1,33 +1,138 @@
-# FoodSave - Food Waste Reduction Marketplace
+# 🌱 TugoTugo - Plataforma de Reducción de Desperdicio Alimentario
 
-A web application that connects customers with local restaurants and stores to purchase discounted "surprise packs" of food that would otherwise go to waste.
+Una aplicación web que conecta clientes con restaurantes locales para comprar "packs sorpresa" con descuento de comida que de otro modo se desperdiciaría.
 
-## Features
+## ✨ Características Principales
 
-### For Customers
+### 👥 Para Clientes
 
-- 🗺️ **Interactive Map**: Browse nearby establishments with available food packs
-- 🛒 **Easy Booking**: Reserve and pay for surprise packs online
-- 👤 **User Profile**: Track purchase history and manage personal data
-- 🔔 **Notifications**: Get reminders for pickup times
-- 💳 **Secure Payments**: Integrated with Stripe for safe transactions
+- 🗺️ **Mapa Interactivo Mejorado**: 
+  - Geolocalización automática
+  - Cálculo de distancias en tiempo real
+  - Marcadores de colores (verde=disponible, rojo=agotado, azul=tu ubicación)
+  - Popups informativos con rating, distancia y precios
 
-### For Establishments
+- 🔍 **Búsqueda Avanzada**:
+  - Autocompletado inteligente
+  - Búsqueda por nombre, tipo de cocina, categoría
+  - Filtros por distancia, precio, rating
+  - Resultados en tiempo real
 
-- 📊 **Dashboard**: Manage inventory and publish available packs
-- ⏰ **Flexible Scheduling**: Set pickup windows and availability
-- 💰 **Revenue Recovery**: Convert waste into revenue
-- 📈 **Analytics**: Track sales and reduce waste metrics
+- 📱 **Sistema de Verificación QR**:
+  - Código QR único por orden
+  - Email con QR y código alfanumérico
+  - Verificación en restaurante sin contacto
+  - Audit log completo
 
-## Tech Stack
+- 🛒 **Compras Fáciles**: 
+  - Reserva y pago online con Stripe
+  - Pagos en pesos colombianos (COP)
+  - Confirmación por email
+  - Recordatorios de recogida
 
-- **Frontend**: Next.js 13 with TypeScript, Tailwind CSS
-- **Backend**: Next.js API Routes
-- **Database**: PostgreSQL with Prisma ORM
-- **Authentication**: NextAuth.js (Google, Facebook, Email)
-- **Maps**: React Leaflet with OpenStreetMap
-- **Payments**: Stripe
-- **Email**: Nodemailer
+- 👤 **Perfil de Usuario**: 
+  - Historial de órdenes
+  - Restaurantes favoritos
+  - Reseñas y ratings
+  - Gestión de datos personales
+
+- ⭐ **Sistema de Reseñas**:
+  - Calificación de 1-5 estrellas
+  - Comentarios detallados
+  - Ver reseñas de otros usuarios
+
+### 🏪 Para Restaurantes
+
+- 📊 **Dashboard Completo**: 
+  - Gestión de inventario
+  - Publicar packs sorpresa
+  - Ver órdenes en tiempo real
+  - Estadísticas de ventas
+
+- 📱 **Verificación de Órdenes**:
+  - Escanear código QR del cliente
+  - Verificación manual con código
+  - Marcar orden como completada
+  - Ver detalles del cliente
+
+- ⏰ **Programación Flexible**: 
+  - Configurar horarios de recogida
+  - Establecer disponibilidad
+  - Packs recurrentes
+
+- 💰 **Recuperación de Ingresos**: 
+  - Convertir desperdicio en revenue
+  - Precios con descuento atractivos
+  - Sistema de pagos automático
+
+- 📈 **Analytics y Reportes**: 
+  - Tracking de ventas
+  - Métricas de reducción de desperdicio
+  - Reportes exportables
+  - Audit log de acciones
+
+- 📝 **Gestión de Contenido**:
+  - Crear posts con fotos
+  - Menú digital completo
+  - Categorización de items
+  - Información de alergenos
+
+### 👨‍💼 Para Administradores
+
+- 🏢 **Gestión de Restaurantes**:
+  - Aprobar/rechazar solicitudes
+  - Verificación de documentos
+  - Suspender establecimientos
+  - Asignar admins
+
+- 👥 **Gestión de Usuarios**:
+  - Ver todos los usuarios
+  - Cambiar roles
+  - Monitorear actividad
+
+- 📦 **Gestión de Packs**:
+  - Ver todos los packs
+  - Activar/desactivar
+  - Estadísticas globales
+
+- 📊 **Auditoría Completa**:
+  - Audit log de todas las acciones
+  - Filtros avanzados
+  - Exportación de datos
+  - Reportes detallados
+
+## 🛠️ Tech Stack
+
+### Frontend
+- **Framework**: Next.js 13 (App Router)
+- **Language**: TypeScript
+- **Styling**: Tailwind CSS
+- **Maps**: React Leaflet + OpenStreetMap
+- **Rich Text**: TipTap Editor
+- **Data Fetching**: SWR
+- **QR Codes**: qrcode library
+
+### Backend
+- **API**: Next.js API Routes
+- **Database**: PostgreSQL (Neon)
+- **ORM**: Prisma
+- **Authentication**: NextAuth.js
+- **Payments**: Stripe (COP currency)
+- **Email**: Nodemailer (SMTP)
+- **Geolocation**: Haversine formula
+
+### Security & Validation
+- **Rate Limiting**: Custom implementation
+- **XSS Protection**: DOMPurify
+- **SQL Injection**: Prisma ORM
+- **Audit Logging**: Complete action tracking
+- **Email Verification**: 6-digit codes
+
+### Deployment
+- **Hosting**: Vercel
+- **Database**: Neon PostgreSQL
+- **CDN**: Vercel Edge Network
+- **Environment**: Production-ready
 
 ## Getting Started
 
