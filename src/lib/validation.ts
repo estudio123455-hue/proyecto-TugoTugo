@@ -46,13 +46,15 @@ export const validatePackData = (data: any) => {
 
   // Date validation
   const now = new Date()
+  // Allow dates from today (not just future)
+  const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
   const availableFrom = new Date(data.availableFrom)
   const availableUntil = new Date(data.availableUntil)
 
   if (isNaN(availableFrom.getTime())) {
     errors.push('Available from date is invalid')
-  } else if (availableFrom < now) {
-    errors.push('Available from date must be in the future')
+  } else if (availableFrom < today) {
+    errors.push('Available from date cannot be in the past')
   }
 
   if (isNaN(availableUntil.getTime())) {
