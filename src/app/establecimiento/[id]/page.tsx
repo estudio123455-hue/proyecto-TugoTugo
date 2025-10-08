@@ -5,6 +5,8 @@ import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import Navigation from '@/components/Navigation'
 import PackCard from '@/components/PackCard'
+import ReviewList from '@/components/reviews/ReviewList'
+import StarRating from '@/components/reviews/StarRating'
 
 interface Establishment {
   id: string
@@ -18,6 +20,20 @@ interface Establishment {
   isActive: boolean
   createdAt: string
   updatedAt: string
+}
+
+interface Review {
+  id: string
+  rating: number
+  comment: string | null
+  createdAt: string
+  updatedAt: string
+  user: {
+    id: string
+    name: string | null
+    email: string
+    image: string | null
+  }
 }
 
 interface Pack {
@@ -50,6 +66,9 @@ export default function EstablishmentProfile() {
   const [establishment, setEstablishment] = useState<Establishment | null>(null)
   const [packs, setPacks] = useState<Pack[]>([])
   const [posts, setPosts] = useState<Post[]>([])
+  const [reviews, setReviews] = useState<Review[]>([])
+  const [averageRating, setAverageRating] = useState(0)
+  const [totalReviews, setTotalReviews] = useState(0)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
 
@@ -85,6 +104,17 @@ export default function EstablishmentProfile() {
       if (postsResponse.ok) {
         const postsData = await postsResponse.json()
         setPosts(postsData.data || [])
+      }
+
+      // Fetch reviews from this establishment
+      const reviewsResponse = await fetch(`/api/reviews?establishmentId=${id}`)
+      if (reviewsResponse.ok) {
+        const reviewsData = await reviewsResponse.json()
+        if (reviewsData.success) {
+          setReviews(reviewsData.data.reviews || [])
+          setAverageRating(reviewsData.data.avgRating || 0)
+          setTotalReviews(reviewsData.data.totalReviews || 0)
+        }
       }
     } catch (err) {
       setError(
@@ -181,13 +211,26 @@ export default function EstablishmentProfile() {
                   <h1 className="text-4xl font-bold text-gray-900 mb-2">
                     {establishment.name}
                   </h1>
-                  <div className="flex items-center text-gray-600 mb-4">
-                    <span className="mr-2">
-                      {getCategoryEmoji(establishment.category)}
-                    </span>
-                    <span className="capitalize">
-                      {establishment.category.toLowerCase()}
-                    </span>
+                  <div className="flex items-center gap-4 text-gray-600 mb-4">
+                    <div className="flex items-center">
+                      <span className="mr-2">
+                        {getCategoryEmoji(establishment.category)}
+                      </span>
+                      <span className="capitalize">
+                        {establishment.category.toLowerCase()}
+                      </span>
+                    </div>
+                    {totalReviews > 0 && (
+                      <div className="flex items-center gap-2 border-l border-gray-300 pl-4">
+                        <StarRating
+                          rating={averageRating}
+                          readonly
+                          size="sm"
+                          showCount
+                          count={totalReviews}
+                        />
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -335,6 +378,21 @@ export default function EstablishmentProfile() {
               </Link>
             </div>
           )}
+        </div>
+      </section>
+
+      {/* Reviews Section */}
+      <section className="py-12 bg-gray-50">
+        <div className="max-w-6xl mx-auto px-6">
+          <h2 className="text-3xl font-bold text-gray-900 mb-8">
+            ⭐ Reseñas y Opiniones
+          </h2>
+          <ReviewList
+            establishmentId={params.id as string}
+            reviews={reviews}
+            averageRating={averageRating}
+            totalReviews={totalReviews}
+          />
         </div>
       </section>
 
