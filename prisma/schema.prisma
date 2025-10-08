@@ -45,12 +45,13 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  accounts      Account[]
-  sessions      Session[]
-  orders        Order[]
-  establishment Establishment?
-  reviews       Review[]
-  favorites     Favorite[]
+  accounts          Account[]
+  sessions          Session[]
+  orders            Order[]
+  establishment     Establishment?
+  reviews           Review[]
+  favorites         Favorite[]
+  pushSubscriptions PushSubscription[]
 }
 
 model VerificationToken {
@@ -270,6 +271,21 @@ model MenuItem {
   @@index([establishmentId])
   @@index([category])
   @@index([isAvailable])
+}
+
+model PushSubscription {
+  id        String   @id @default(cuid())
+  userId    String
+  endpoint  String
+  p256dh    String
+  auth      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, endpoint])
+  @@index([userId])
 }
 
 // Removed enums for SQLite compatibility
