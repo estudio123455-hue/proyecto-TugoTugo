@@ -106,7 +106,7 @@ export const NotificationTypes = {
  * Plantillas de notificaciones
  */
 export function getNotificationTemplate(
-  type: keyof typeof NotificationTypes,
+  type: string,
   data: any
 ): NotificationPayload {
   const templates: Record<string, NotificationPayload> = {
@@ -170,7 +170,7 @@ export function getNotificationTemplate(
       body: `${data.customerName} dejó una reseña de ${data.rating} estrellas`,
       icon: '/icons/icon-192x192.png',
       badge: '/icons/badge-72x72.png',
-      data: { reviewId: data.reviewId, url: `/dashboard/reviews` },
+      data: { reviewId: data.reviewId, url: '/dashboard/reviews' },
       actions: [
         { action: 'view', title: 'Ver Reseña' },
         { action: 'close', title: 'Cerrar' },
@@ -217,7 +217,7 @@ export function isPushNotificationSupported(): boolean {
 /**
  * Solicitar permiso para notificaciones
  */
-export async function requestNotificationPermission(): Promise<NotificationPermission> {
+export async function requestNotificationPermission(): Promise<'granted' | 'denied' | 'default'> {
   if (!isPushNotificationSupported()) {
     throw new Error('Push notifications are not supported')
   }

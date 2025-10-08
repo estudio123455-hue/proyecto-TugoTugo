@@ -1,11 +1,11 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { isPushNotificationSupported, requestNotificationPermission, getVapidPublicKey, urlBase64ToUint8Array } from '@/lib/notifications'
 
 export function useNotifications() {
   const [isSupported, setIsSupported] = useState(false)
-  const [permission, setPermission] = useState<NotificationPermission>('default')
+  const [permission, setPermission] = useState<'granted' | 'denied' | 'default'>('default')
   const [isSubscribed, setIsSubscribed] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
 
@@ -97,7 +97,7 @@ export function useNotifications() {
     }
   }
 
-  const checkSubscription = async () => {
+  const checkSubscription = useCallback(async () => {
     if (!isSupported) return
 
     try {
@@ -107,11 +107,11 @@ export function useNotifications() {
     } catch (error) {
       console.error('Error checking subscription:', error)
     }
-  }
+  }, [isSupported])
 
   useEffect(() => {
     checkSubscription()
-  }, [isSupported])
+  }, [checkSubscription])
 
   return {
     isSupported,
