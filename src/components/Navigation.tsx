@@ -31,7 +31,7 @@ export default function Navigation() {
         <div className="flex justify-between h-16">
           <div className="flex items-center">
             <Link href="/" className="flex-shrink-0 flex items-center">
-              <span className="text-xl sm:text-2xl font-bold text-green-600">
+              <span className="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400">
                 🍃 FoodSave
               </span>
             </Link>
