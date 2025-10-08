@@ -20,7 +20,7 @@ export default function Home() {
       } else if (session.user.role === 'ADMIN') {
         router.push('/admin')
       } else {
-        router.push('/explore')
+        router.push('/packs')
       }
     }
   }, [status, session, router])

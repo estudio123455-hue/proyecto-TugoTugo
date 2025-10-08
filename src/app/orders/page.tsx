@@ -184,7 +184,7 @@ export default function OrdersPage() {
               }
             </p>
             <button
-              onClick={() => router.push('/explore')}
+              onClick={() => router.push('/packs')}
               className="inline-flex items-center gap-2 bg-gradient-to-r from-primary-500 to-primary-600 hover:from-primary-600 hover:to-primary-700 text-white px-8 py-3.5 rounded-xl font-semibold transition-all duration-200 shadow-lg shadow-primary-500/30 hover:shadow-xl hover:scale-105"
             >
               <Package className="w-5 h-5" />

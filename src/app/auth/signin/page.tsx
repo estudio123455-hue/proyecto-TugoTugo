@@ -90,7 +90,7 @@ export default function SignInNew() {
           if (session?.user?.role === 'ESTABLISHMENT') {
             window.location.href = '/dashboard'
           } else {
-            window.location.href = '/explore'
+            window.location.href = '/packs'
           }
         }, 800)
       }
