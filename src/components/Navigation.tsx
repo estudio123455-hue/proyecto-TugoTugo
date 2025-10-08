@@ -26,12 +26,12 @@ export default function Navigation() {
   }
 
   return (
-    <nav className="bg-white dark:bg-gray-900 shadow-lg border-b border-gray-200 dark:border-gray-700">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          <div className="flex items-center">
+    <nav className="bg-white dark:bg-gray-900 shadow-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+        <div className="flex justify-between items-center h-14 sm:h-16">
+          <div className="flex items-center min-w-0">
             <Link href="/" className="flex-shrink-0 flex items-center">
-              <span className="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400">
+              <span className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 dark:text-green-400 whitespace-nowrap">
                 🍃 FoodSave
               </span>
             </Link>
@@ -102,7 +102,7 @@ export default function Navigation() {
             </div>
           </div>
 
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center space-x-1 sm:space-x-2 lg:space-x-4">
             {/* Theme Toggle */}
             <ThemeToggle />
             
@@ -110,17 +110,17 @@ export default function Navigation() {
             {session && <NotificationButton />}
             
             {status === 'loading' ? (
-              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-8 w-20 rounded"></div>
+              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-8 w-16 sm:w-20 rounded"></div>
             ) : session ? (
-              <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-1 sm:space-x-2 lg:space-x-4">
                 {/* User Menu Dropdown */}
                 <div className="relative group">
-                  <button className="flex items-center space-x-3 text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
+                  <button className="flex items-center space-x-1 sm:space-x-2 lg:space-x-3 text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
                     {/* User Avatar */}
-                    <div className="w-8 h-8 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-sm">
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-xs sm:text-sm">
                       {getUserInitials(session.user?.name, session.user?.email)}
                     </div>
-                    <div className="hidden md:block text-left">
+                    <div className="hidden lg:block text-left">
                       <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
                         {getFirstName(session.user?.name)}
                       </div>
@@ -267,18 +267,20 @@ export default function Navigation() {
                 </div>
               </div>
             ) : (
-              <div className="flex items-center space-x-3">
+              <div className="flex items-center space-x-1 sm:space-x-2">
                 <button
                   onClick={() => signIn()}
-                  className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium"
                 >
-                  Iniciar Sesión
+                  <span className="hidden sm:inline">Iniciar Sesión</span>
+                  <span className="sm:hidden">Entrar</span>
                 </button>
                 <Link
                   href="/packs"
-                  className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-lg text-sm font-bold transition-all shadow-lg"
+                  className="bg-green-500 hover:bg-green-600 text-white px-3 sm:px-4 lg:px-6 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all shadow-lg whitespace-nowrap"
                 >
-                  🗺️ Encuentra Packs
+                  <span className="hidden sm:inline">🗺️ Encuentra Packs</span>
+                  <span className="sm:hidden">🗺️ Packs</span>
                 </Link>
               </div>
             )}
