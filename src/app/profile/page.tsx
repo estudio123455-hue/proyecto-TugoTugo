@@ -144,73 +144,73 @@ export default function Profile() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-8">
       <Navigation />
 
-      <div className="max-w-6xl mx-auto pt-8 px-4">
+      <div className="max-w-6xl mx-auto pt-4 md:pt-8 px-4">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900">
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
             Hello, {session?.user?.name}!
           </h1>
-          <p className="text-gray-600 mt-2">
+          <p className="text-sm md:text-base text-gray-600 mt-1 md:mt-2">
             Manage your orders and track your impact
           </p>
         </div>
 
         {/* Stats Cards */}
         {stats && (
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center">
-                <div className="text-2xl mr-3">📦</div>
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-6 mb-6 md:mb-8">
+            <div className="bg-white rounded-lg shadow p-3 md:p-6">
+              <div className="flex flex-col md:flex-row items-start md:items-center">
+                <div className="text-xl md:text-2xl mb-2 md:mb-0 md:mr-3">📦</div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">
+                  <p className="text-xs md:text-sm font-medium text-gray-500">
                     Total Orders
                   </p>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-xl md:text-2xl font-bold text-gray-900">
                     {stats.totalOrders}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center">
-                <div className="text-2xl mr-3">💰</div>
+            <div className="bg-white rounded-lg shadow p-3 md:p-6">
+              <div className="flex flex-col md:flex-row items-start md:items-center">
+                <div className="text-xl md:text-2xl mb-2 md:mb-0 md:mr-3">💰</div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">
+                  <p className="text-xs md:text-sm font-medium text-gray-500">
                     Money Saved
                   </p>
-                  <p className="text-2xl font-bold text-green-600">
+                  <p className="text-xl md:text-2xl font-bold text-green-600">
                     ${stats.totalSaved.toFixed(2)}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center">
-                <div className="text-2xl mr-3">✅</div>
+            <div className="bg-white rounded-lg shadow p-3 md:p-6">
+              <div className="flex flex-col md:flex-row items-start md:items-center">
+                <div className="text-xl md:text-2xl mb-2 md:mb-0 md:mr-3">✅</div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">
+                  <p className="text-xs md:text-sm font-medium text-gray-500">
                     Packs Collected
                   </p>
-                  <p className="text-2xl font-bold text-gray-900">
+                  <p className="text-xl md:text-2xl font-bold text-gray-900">
                     {stats.packsCollected}
                   </p>
                 </div>
               </div>
             </div>
 
-            <div className="bg-white rounded-lg shadow p-6">
-              <div className="flex items-center">
-                <div className="text-2xl mr-3">🌍</div>
+            <div className="bg-white rounded-lg shadow p-3 md:p-6">
+              <div className="flex flex-col md:flex-row items-start md:items-center">
+                <div className="text-xl md:text-2xl mb-2 md:mb-0 md:mr-3">🌍</div>
                 <div>
-                  <p className="text-sm font-medium text-gray-500">
+                  <p className="text-xs md:text-sm font-medium text-gray-500">
                     Food Saved
                   </p>
-                  <p className="text-2xl font-bold text-green-600">
+                  <p className="text-xl md:text-2xl font-bold text-green-600">
                     {stats.foodSaved}kg
                   </p>
                 </div>
@@ -220,13 +220,13 @@ export default function Profile() {
         )}
 
         {/* Tabs */}
-        <div className="border-b border-gray-200 mb-8">
-          <nav className="-mb-px flex space-x-8">
+        <div className="border-b border-gray-200 mb-6 md:mb-8 -mx-4 px-4 overflow-x-auto">
+          <nav className="-mb-px flex space-x-4 md:space-x-8 min-w-max md:min-w-0">
             {tabs.map(tab => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`whitespace-nowrap py-2 px-1 border-b-2 font-medium text-sm flex items-center space-x-2 ${
+                className={`whitespace-nowrap py-3 px-2 border-b-2 font-medium text-xs md:text-sm flex items-center space-x-1 md:space-x-2 ${
                   activeTab === tab.id
                     ? 'border-green-500 text-green-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
@@ -240,16 +240,16 @@ export default function Profile() {
         </div>
 
         {/* Tab Content */}
-        <div className="pb-8">
+        <div className="pb-6 md:pb-8">
           {activeTab === 'orders' && (
             <div className="space-y-6">
-              <div className="flex justify-between items-center">
-                <h2 className="text-xl font-semibold text-gray-900">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+                <h2 className="text-lg md:text-xl font-semibold text-gray-900">
                   📦 Mis Órdenes
                 </h2>
                 <Link
                   href="/packs"
-                  className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm"
+                  className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm w-full sm:w-auto text-center"
                 >
                   🔍 Buscar Packs
                 </Link>
@@ -284,7 +284,7 @@ export default function Profile() {
                     return (
                       <div
                         key={order.id}
-                        className={`rounded-lg shadow-md p-6 border-l-4 ${
+                        className={`rounded-lg shadow-md p-4 md:p-6 border-l-4 ${
                           isActive
                             ? 'bg-green-50 border-green-500'
                             : isPast
@@ -292,10 +292,10 @@ export default function Profile() {
                               : 'bg-white border-blue-500'
                         }`}
                       >
-                        <div className="flex justify-between items-start mb-4">
+                        <div className="flex flex-col sm:flex-row justify-between items-start gap-3 sm:gap-0 mb-4">
                           <div>
-                            <div className="flex items-center space-x-2 mb-2">
-                              <h3 className="text-lg font-semibold text-gray-900">
+                            <div className="flex flex-col sm:flex-row sm:items-center space-y-2 sm:space-y-0 sm:space-x-2 mb-2">
+                              <h3 className="text-base md:text-lg font-semibold text-gray-900">
                                 🏪 {order.pack.establishment.name}
                               </h3>
                               <span
@@ -308,11 +308,11 @@ export default function Profile() {
                               {order.pack.establishment.address}
                             </p>
                           </div>
-                          <div className="text-right">
-                            <div className="text-xl font-bold text-green-600 mb-1">
+                          <div className="text-left sm:text-right">
+                            <div className="text-lg md:text-xl font-bold text-green-600 mb-1">
                               ${order.totalAmount.toFixed(2)}
                             </div>
-                            <div className="text-sm text-gray-500">
+                            <div className="text-xs md:text-sm text-gray-500">
                               {order.quantity} pack
                               {order.quantity !== 1 ? 's' : ''}
                             </div>
@@ -321,25 +321,25 @@ export default function Profile() {
 
                         {/* Status-specific content */}
                         {isActive && (
-                          <div className="bg-white border border-green-200 rounded-lg p-4 mb-4">
-                            <div className="flex items-center justify-between">
+                          <div className="bg-white border border-green-200 rounded-lg p-3 md:p-4 mb-4">
+                            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-0">
                               <div>
-                                <h4 className="font-semibold text-green-800 flex items-center">
+                                <h4 className="text-sm md:text-base font-semibold text-green-800 flex items-center">
                                   ⏰ Horario de Recogida
                                 </h4>
-                                <p className="text-green-700 text-lg font-bold">
+                                <p className="text-green-700 text-base md:text-lg font-bold">
                                   {formatTime(order.pack.pickupTimeStart)} -{' '}
                                   {formatTime(order.pack.pickupTimeEnd)}
                                 </p>
-                                <p className="text-green-600 text-sm">
+                                <p className="text-green-600 text-xs md:text-sm">
                                   📅 {formatDate(order.pickupDate)}
                                 </p>
                               </div>
-                              <div className="text-right">
+                              <div className="w-full sm:w-auto">
                                 {order.pack.establishment.phone && (
                                   <a
                                     href={`tel:${order.pack.establishment.phone}`}
-                                    className="bg-green-500 hover:bg-green-600 text-white px-3 py-2 rounded-lg text-sm font-medium transition-colors"
+                                    className="block sm:inline-block text-center bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
                                   >
                                     📞 Llamar
                                   </a>
@@ -376,14 +376,14 @@ export default function Profile() {
 
           {activeTab === 'impact' && (
             <div className="space-y-6">
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-lg md:text-xl font-semibold text-gray-900">
                 Your Environmental Impact
               </h2>
 
-              <div className="bg-white rounded-lg shadow p-6">
-                <div className="text-center mb-8">
-                  <div className="text-6xl mb-4">🌱</div>
-                  <h3 className="text-2xl font-bold text-gray-900 mb-2">
+              <div className="bg-white rounded-lg shadow p-4 md:p-6">
+                <div className="text-center mb-6 md:mb-8">
+                  <div className="text-4xl md:text-6xl mb-3 md:mb-4">🌱</div>
+                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
                     Thank you for making a difference!
                   </h3>
                   <p className="text-gray-600">
@@ -393,7 +393,7 @@ export default function Profile() {
                 </div>
 
                 {stats && (
-                  <div className="grid md:grid-cols-2 gap-8">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8">
                     <div className="text-center">
                       <div className="text-4xl font-bold text-green-600 mb-2">
                         {stats.foodSaved}kg
@@ -443,17 +443,17 @@ export default function Profile() {
 
           {activeTab === 'settings' && (
             <div className="space-y-6">
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-lg md:text-xl font-semibold text-gray-900">
                 Account Settings
               </h2>
 
-              <div className="bg-white rounded-lg shadow p-6">
+              <div className="bg-white rounded-lg shadow p-4 md:p-6">
                 <div className="space-y-6">
                   <div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-4">
+                    <h3 className="text-base md:text-lg font-medium text-gray-900 mb-4">
                       Personal Information
                     </h3>
-                    <div className="grid md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-1">
                           Name
@@ -480,7 +480,7 @@ export default function Profile() {
                   </div>
 
                   <div>
-                    <h3 className="text-lg font-medium text-gray-900 mb-4">
+                    <h3 className="text-base md:text-lg font-medium text-gray-900 mb-4">
                       Notifications
                     </h3>
                     <div className="space-y-3">
