@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -19,6 +19,7 @@ export async function PUT(
     }
 
     const data = await request.json()
+    const { id } = await params
 
     // Get establishment
     const establishment = await prisma.establishment.findUnique({
@@ -37,7 +38,7 @@ export async function PUT(
     // Verify pack belongs to this establishment
     const existingPack = await prisma.pack.findFirst({
       where: {
-        id: params.id,
+        id,
         establishmentId: establishment.id,
       },
     })
@@ -67,7 +68,7 @@ export async function PUT(
     if (data.isActive !== undefined) updateData.isActive = data.isActive
 
     const pack = await prisma.pack.update({
-      where: { id: params.id },
+      where: { id },
       data: updateData,
     })
 
@@ -83,7 +84,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -95,6 +96,8 @@ export async function DELETE(
     if (session.user.role !== 'ESTABLISHMENT') {
       return NextResponse.json({ message: 'Access denied' }, { status: 403 })
     }
+
+    const { id } = await params
 
     // Get establishment
     const establishment = await prisma.establishment.findUnique({
@@ -113,7 +116,7 @@ export async function DELETE(
     // Verify pack belongs to this establishment and check for existing orders
     const pack = await prisma.pack.findFirst({
       where: {
-        id: params.id,
+        id,
         establishmentId: establishment.id,
       },
       include: {
@@ -133,7 +136,7 @@ export async function DELETE(
     }
 
     await prisma.pack.delete({
-      where: { id: params.id },
+      where: { id },
     })
 
     return NextResponse.json({ message: 'Pack deleted successfully' })

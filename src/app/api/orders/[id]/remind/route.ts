@@ -6,7 +6,7 @@ import { sendPickupReminderEmail } from '@/lib/email'
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -15,10 +15,12 @@ export async function POST(
       return NextResponse.json({ message: 'Unauthorized' }, { status: 401 })
     }
 
+    const { id } = await params
+
     // Get the order with all necessary details
     const order = await prisma.order.findFirst({
       where: {
-        id: params.id,
+        id,
         OR: [
           { userId: session.user.id }, // Customer can remind themselves
           { pack: { establishment: { userId: session.user.id } } }, // Establishment can remind customers

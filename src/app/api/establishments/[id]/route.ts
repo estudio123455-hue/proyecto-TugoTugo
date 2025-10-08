@@ -3,11 +3,12 @@ import { prisma } from '@/lib/prisma'
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
+    const { id } = await params
     const establishment = await prisma.establishment.findUnique({
-      where: { id: params.id },
+      where: { id },
       include: {
         packs: {
           where: {
@@ -39,14 +40,15 @@ export async function GET(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    console.log('🗑️ [DELETE] Deleting establishment:', params.id)
+    const { id } = await params
+    console.log('🗑️ [DELETE] Deleting establishment:', id)
 
     // Delete establishment (cascade will delete posts and packs)
     await prisma.establishment.delete({
-      where: { id: params.id },
+      where: { id },
     })
 
     console.log('✅ [DELETE] Establishment deleted successfully')

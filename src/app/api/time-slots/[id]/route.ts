@@ -5,7 +5,7 @@ import { prisma } from '@/lib/prisma'
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -20,6 +20,8 @@ export async function PUT(
 
     const data = await request.json()
     const { startTime, endTime, packCount, price, date } = data
+
+    const { id } = await params
 
     // Get establishment
     const establishment = await prisma.establishment.findUnique({
@@ -38,7 +40,7 @@ export async function PUT(
     // Verify pack belongs to this establishment
     const existingPack = await prisma.pack.findFirst({
       where: {
-        id: params.id,
+        id,
         establishmentId: establishment.id,
       },
     })
@@ -56,7 +58,7 @@ export async function PUT(
 
     // Update pack
     const updatedPack = await prisma.pack.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         title: `Pack Sorpresa - ${startTime} a ${endTime}`,
         description: `Pack sorpresa disponible para recoger entre las ${startTime} y ${endTime}`,
@@ -85,7 +87,7 @@ export async function PUT(
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -97,6 +99,8 @@ export async function DELETE(
     if (session.user.role !== 'ESTABLISHMENT') {
       return NextResponse.json({ message: 'Access denied' }, { status: 403 })
     }
+
+    const { id } = await params
 
     // Get establishment
     const establishment = await prisma.establishment.findUnique({
@@ -115,7 +119,7 @@ export async function DELETE(
     // Verify pack belongs to this establishment and check for existing orders
     const pack = await prisma.pack.findFirst({
       where: {
-        id: params.id,
+        id,
         establishmentId: establishment.id,
       },
       include: {
@@ -132,7 +136,7 @@ export async function DELETE(
 
     // Always deactivate instead of deleting to maintain data integrity
     await prisma.pack.update({
-      where: { id: params.id },
+      where: { id },
       data: {
         isActive: false,
         quantity: 0,
@@ -141,7 +145,7 @@ export async function DELETE(
       },
     })
 
-    console.log(`Pack ${params.id} marked as inactive and cancelled`)
+    console.log(`Pack ${id} marked as inactive and cancelled`)
 
     return NextResponse.json({ message: 'Time slot cancelled successfully' })
   } catch (error) {

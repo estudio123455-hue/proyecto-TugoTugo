@@ -1,5 +1,4 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { headers } from 'next/headers'
 import Stripe from 'stripe'
 import { prisma } from '@/lib/prisma'
 import { sendOrderConfirmationEmail } from '@/lib/email'
@@ -16,8 +15,7 @@ const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET!
 export async function POST(request: NextRequest) {
   try {
     const body = await request.text()
-    const headersList = headers()
-    const sig = headersList.get('stripe-signature')
+    const sig = request.headers.get('stripe-signature')
 
     if (!sig) {
       return NextResponse.json(

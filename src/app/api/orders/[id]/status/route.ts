@@ -6,7 +6,7 @@ import { sendPickupReminderEmail } from '@/lib/email'
 
 export async function PUT(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -16,6 +16,7 @@ export async function PUT(
     }
 
     const { status } = await request.json()
+    const { id } = await params
 
     if (!status) {
       return NextResponse.json(
@@ -27,7 +28,7 @@ export async function PUT(
     // Get the order and verify permissions
     const order = await prisma.order.findFirst({
       where: {
-        id: params.id,
+        id,
         pack: {
           establishment: {
             userId: session.user.id,
@@ -53,7 +54,7 @@ export async function PUT(
 
     // Update order status
     const updatedOrder = await prisma.order.update({
-      where: { id: params.id },
+      where: { id },
       data: { status },
     })
 
