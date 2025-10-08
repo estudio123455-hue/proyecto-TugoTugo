@@ -4,7 +4,8 @@ import Stripe from 'stripe'
 import { prisma } from '@/lib/prisma'
 import { sendOrderConfirmationEmail } from '@/lib/email'
 import { generateVerificationCode, generateOrderQRCode } from '@/lib/qrcode'
-import { sendPushNotification, getNotificationTemplate } from '@/lib/notifications'
+import { sendPushNotification } from '@/lib/notifications-server'
+import { getNotificationTemplate } from '@/lib/notifications'
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2023-08-16',
