@@ -1,19 +1,9 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import dynamic from 'next/dynamic'
 import Navigation from '@/components/Navigation'
 import PackCard from '@/components/PackCard'
-
-// Dynamically import the Map component to avoid SSR issues
-const Map = dynamic(() => import('@/components/Map'), {
-  ssr: false,
-  loading: () => (
-    <div className="h-full w-full bg-gray-200 animate-pulse flex items-center justify-center">
-      <div className="text-gray-500">Loading map...</div>
-    </div>
-  ),
-})
+import MapWithFilters from '@/components/map/MapWithFilters'
 
 interface Establishment {
   id: string
@@ -114,7 +104,7 @@ export default function MapPage() {
       <div className="relative h-[calc(100vh-4rem)]">
         {/* Map */}
         <div className="h-full w-full">
-          <Map
+          <MapWithFilters
             establishments={establishments}
             onEstablishmentSelect={handleEstablishmentSelect}
           />
