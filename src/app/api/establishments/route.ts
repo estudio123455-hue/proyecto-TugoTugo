@@ -23,7 +23,10 @@ export async function GET(request: NextRequest) {
     // Construir filtros de Prisma
     const where: any = {
       isActive: true,
-      verificationStatus: 'APPROVED',
+      // Mostrar establecimientos aprobados o pendientes (no rechazados)
+      verificationStatus: {
+        in: ['APPROVED', 'PENDING'],
+      },
     }
 
     // Filtro por categoría

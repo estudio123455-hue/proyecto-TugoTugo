@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import Navigation from '@/components/Navigation'
 import SearchBar from '@/components/SearchBar'
 import FilterPanel from '@/components/FilterPanel'
 import { getCurrentLocation, formatDistance } from '@/lib/geolocation'
@@ -82,9 +83,11 @@ export default function ExplorePage() {
   }, [searchQuery, filters, establishments])
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-      {/* Header - Responsive */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-0 z-30 shadow-sm">
+    <>
+      <Navigation />
+      <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+        {/* Header - Responsive */}
+        <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 sticky top-16 z-30 shadow-sm">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 lg:py-6">
           {/* Título */}
           <div className="mb-4">
@@ -116,9 +119,9 @@ export default function ExplorePage() {
         </div>
       </div>
 
-      {/* Contenido principal */}
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 lg:py-8 pb-24">
-        <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
+        {/* Contenido principal */}
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 lg:py-8 pb-24">
+          <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
           {/* Panel de filtros - Desktop */}
           <aside className="hidden lg:block lg:w-72 flex-shrink-0">
             <div className="sticky top-24">
@@ -243,9 +246,10 @@ export default function ExplorePage() {
               </div>
             )}
           </main>
+          </div>
         </div>
       </div>
-    </div>
+    </>
   )
 }
 
