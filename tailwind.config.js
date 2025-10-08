@@ -6,6 +6,23 @@ module.exports = {
   ],
   theme: {
     extend: {
+      spacing: {
+        // Sistema de espaciado consistente
+        'xs': '0.5rem',    // 8px
+        'sm': '1rem',      // 16px
+        'md': '1.5rem',    // 24px
+        'lg': '2rem',      // 32px
+        'xl': '3rem',      // 48px
+        '2xl': '4rem',     // 64px
+        '3xl': '6rem',     // 96px
+        '4xl': '8rem',     // 128px
+        '5xl': '10rem',    // 160px
+        // Espaciado específico para componentes
+        'section': '5rem',      // 80px - Entre secciones
+        'container': '1.5rem',  // 24px - Padding de contenedores
+        'card': '1.5rem',       // 24px - Padding de cards
+        'element': '1rem',      // 16px - Entre elementos
+      },
       colors: {
         // Primary Brand Colors (Verde sostenibilidad)
         primary: {

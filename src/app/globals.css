@@ -71,6 +71,96 @@
   .text-link-secondary {
     @apply text-secondary-600 hover:text-secondary-700 underline-offset-2 hover:underline transition-colors;
   }
+
+  /* ========================================
+     SISTEMA DE ESPACIADO
+     ======================================== */
+
+  /* Contenedores */
+  .container-padding {
+    @apply px-container py-container;
+  }
+
+  .container-padding-x {
+    @apply px-container;
+  }
+
+  .container-padding-y {
+    @apply py-container;
+  }
+
+  /* Secciones */
+  .section-spacing {
+    @apply py-section;
+  }
+
+  .section-spacing-top {
+    @apply pt-section;
+  }
+
+  .section-spacing-bottom {
+    @apply pb-section;
+  }
+
+  /* Cards */
+  .card-padding {
+    @apply p-card;
+  }
+
+  /* Espaciado entre elementos */
+  .stack-xs {
+    @apply space-y-xs;
+  }
+
+  .stack-sm {
+    @apply space-y-sm;
+  }
+
+  .stack-md {
+    @apply space-y-md;
+  }
+
+  .stack-lg {
+    @apply space-y-lg;
+  }
+
+  .stack-xl {
+    @apply space-y-xl;
+  }
+
+  /* Espaciado horizontal */
+  .inline-xs {
+    @apply space-x-xs;
+  }
+
+  .inline-sm {
+    @apply space-x-sm;
+  }
+
+  .inline-md {
+    @apply space-x-md;
+  }
+
+  .inline-lg {
+    @apply space-x-lg;
+  }
+
+  /* Gap para grid/flex */
+  .gap-xs {
+    @apply gap-xs;
+  }
+
+  .gap-sm {
+    @apply gap-sm;
+  }
+
+  .gap-md {
+    @apply gap-md;
+  }
+
+  .gap-lg {
+    @apply gap-lg;
+  }
 }
 
 /* Mobile optimizations */
