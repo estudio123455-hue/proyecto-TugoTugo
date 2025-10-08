@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Clock, CheckCircle, XCircle, Package, User, Calendar, MapPin } from 'lucide-react'
+import { CheckCircle, XCircle, Package, User, Calendar, ShoppingCart } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale'
 
@@ -226,7 +226,9 @@ export default function OrdersReceived() {
 
       {filteredOrders.length === 0 && (
         <div className="text-center py-12 bg-gray-50 rounded-lg">
-          <ShoppingCart className="w-16 h-16 text-gray-300 mx-auto mb-4" />
+          <div className="w-16 h-16 text-gray-300 mx-auto mb-4 flex items-center justify-center">
+            <ShoppingCart className="w-16 h-16" />
+          </div>
           <p className="text-gray-600">No hay órdenes {filter !== 'all' ? 'con este estado' : ''}</p>
         </div>
       )}
