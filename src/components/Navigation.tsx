@@ -6,6 +6,7 @@ import { useState } from 'react'
 import { getFirstName, getUserInitials } from '@/lib/user-utils'
 import { useCleanSession } from '@/hooks/useCleanSession'
 import ThemeToggle from './ThemeToggle'
+import NotificationButton from './NotificationButton'
 
 export default function Navigation() {
   const { data: session, status } = useCleanSession()
@@ -104,6 +105,9 @@ export default function Navigation() {
           <div className="flex items-center space-x-4">
             {/* Theme Toggle */}
             <ThemeToggle />
+            
+            {/* Notification Button - Solo para usuarios autenticados */}
+            {session && <NotificationButton />}
             
             {status === 'loading' ? (
               <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-8 w-20 rounded"></div>
