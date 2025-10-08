@@ -1,8 +1,10 @@
 import { Inter } from 'next/font/google'
 import './globals.css'
+import '@/styles/mobile.css'
 import React from 'react'
 import { Providers } from './providers'
 import AuthGuard from '@/components/AuthGuard'
+import BottomNavigation from '@/components/mobile/BottomNavigation'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -23,7 +25,10 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>
           <AuthGuard>
-            {children}
+            <div className="with-bottom-nav">
+              {children}
+            </div>
+            <BottomNavigation />
           </AuthGuard>
         </Providers>
       </body>
