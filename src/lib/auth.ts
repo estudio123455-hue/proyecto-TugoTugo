@@ -22,6 +22,7 @@ export const authOptions: NextAuthOptions = {
         email: { label: 'Email', type: 'email' },
         password: { label: 'Password', type: 'password' },
         verified: { label: 'Verified', type: 'text' },
+        verificationCode: { label: 'Verification Code', type: 'text' },
       },
       async authorize(credentials) {
         if (!credentials?.email) {
@@ -46,7 +47,65 @@ export const authOptions: NextAuthOptions = {
           }
         }
 
-        // Normal password verification
+        // Login with verification code
+        if (credentials.verificationCode) {
+          // Verify the code
+          const verification = await prisma.verificationToken.findFirst({
+            where: {
+              identifier: {
+                startsWith: `${credentials.email}-LOGIN`,
+              },
+              token: credentials.verificationCode,
+              expires: {
+                gt: new Date(),
+              },
+            },
+          })
+
+          if (!verification) {
+            return null
+          }
+
+          // Delete the used code
+          await prisma.verificationToken.delete({
+            where: {
+              identifier_token: {
+                identifier: verification.identifier,
+                token: verification.token,
+              },
+            },
+          })
+
+          // Get user
+          const user = await prisma.user.findUnique({
+            where: { email: credentials.email },
+          })
+
+          if (!user) {
+            return null
+          }
+
+          // Verify password
+          if (credentials.password && user.password) {
+            const isPasswordValid = await bcrypt.compare(
+              credentials.password,
+              user.password
+            )
+
+            if (!isPasswordValid) {
+              return null
+            }
+          }
+
+          return {
+            id: user.id,
+            email: user.email,
+            name: user.name,
+            role: user.role,
+          }
+        }
+
+        // Normal password verification (fallback)
         if (!credentials?.password) {
           return null
         }
