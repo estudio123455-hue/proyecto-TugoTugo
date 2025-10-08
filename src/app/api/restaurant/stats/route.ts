@@ -36,6 +36,7 @@ export async function GET() {
       activePacks,
       totalPosts,
       orders,
+      reviews,
     ] = await Promise.all([
       // Total de packs
       prisma.pack.count({
@@ -75,6 +76,10 @@ export async function GET() {
         },
         take: 10,
       }),
+      // Reseñas
+      prisma.review.findMany({
+        where: { establishmentId: establishment.id },
+      }),
     ])
 
     // Calcular estadísticas de órdenes
@@ -87,18 +92,25 @@ export async function GET() {
       .filter((o) => o.status === 'COMPLETED' || o.status === 'CONFIRMED')
       .reduce((sum, order) => sum + (order.totalAmount || 0), 0)
 
+    // Calcular estadísticas de reseñas
+    const totalReviews = reviews.length
+    const averageRating =
+      totalReviews > 0
+        ? reviews.reduce((sum, r) => sum + r.rating, 0) / totalReviews
+        : 0
+
     return NextResponse.json({
-      success: true,
-      data: {
-        totalPacks,
-        activePacks,
-        totalPosts,
-        totalOrders,
-        pendingOrders,
-        completedOrders,
-        totalRevenue,
-        recentOrders: orders,
-      },
+      totalOrders,
+      totalRevenue,
+      activePacks,
+      averageRating: Math.round(averageRating * 10) / 10,
+      totalReviews,
+      pendingOrders,
+      completedOrders,
+      revenueGrowth: 0, // TODO: Calculate based on previous period
+      totalPacks,
+      totalPosts,
+      recentOrders: orders,
     })
   } catch (error: any) {
     console.error('Error fetching restaurant stats:', error)
