@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
+import { useParams } from 'next/navigation'
 import Link from 'next/link'
 import Navigation from '@/components/Navigation'
 import PackCard from '@/components/PackCard'
@@ -8,7 +9,7 @@ import ReviewList from '@/components/reviews/ReviewList'
 import StarRating from '@/components/reviews/StarRating'
 import dynamic from 'next/dynamic'
 
-const MenuDisplay = dynamic(() => import('@/components/menu/MenuDisplay"), {
+const MenuDisplay = dynamic(() => import('@/components/menu/MenuDisplay'), {
   ssr: false,
   loading: () => <div className="animate-pulse">Cargando menú...</div>
 })
