@@ -79,56 +79,99 @@ export default function Home() {
     <div className="min-h-screen bg-white font-sans">
       <Navigation />
 
-      {/* Hero Section - Minimalista y limpio */}
-      <section
-        className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-fresh-50 to-warm-50"
-        style={{
-          backgroundImage:
-            'linear-gradient(rgba(255,255,255,0.8), rgba(255,255,255,0.8)), url(\'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="40">🥘</text></svg>\')',
-          backgroundSize: '100px 100px',
-          backgroundRepeat: 'repeat',
-          backgroundPosition: '0 0',
-        }}
-      >
-        <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-12 sm:py-20 text-center">
-          {/* Título principal - Mobile Optimized */}
-          <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-7xl font-bold mb-4 sm:mb-6 text-gray-900 leading-tight">
-            Salva comida deliciosa
+      {/* Hero Section - Mejorado */}
+      <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-purple-50 via-white to-orange-50">
+        {/* Patrón de fondo animado */}
+        <div className="absolute inset-0 opacity-30">
+          <div className="absolute top-10 left-10 w-72 h-72 bg-purple-300 rounded-full mix-blend-multiply filter blur-xl animate-blob"></div>
+          <div className="absolute top-20 right-10 w-72 h-72 bg-orange-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-2000"></div>
+          <div className="absolute -bottom-8 left-1/2 w-72 h-72 bg-pink-300 rounded-full mix-blend-multiply filter blur-xl animate-blob animation-delay-4000"></div>
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-12 sm:py-20 text-center">
+          {/* Badge superior */}
+          <div className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-100 to-orange-100 px-4 py-2 rounded-full mb-6 sm:mb-8 border border-purple-200">
+            <span className="text-sm sm:text-base font-semibold bg-gradient-to-r from-purple-600 to-orange-500 bg-clip-text text-transparent">
+              🎉 Ahorra hasta 50% en comida deliciosa
+            </span>
+          </div>
+
+          {/* Título principal - Mejorado */}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-extrabold mb-6 sm:mb-8 leading-tight">
+            <span className="text-gray-900">Salva comida deliciosa</span>
             <br />
-            <span className="bg-gradient-to-r from-fresh-600 to-warm-500 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-green-600 via-emerald-500 to-teal-500 bg-clip-text text-transparent animate-gradient">
               y ayuda al planeta
             </span>
           </h1>
 
-          {/* Subtítulo */}
-          <p className="text-lg sm:text-xl lg:text-2xl text-gray-600 mb-8 sm:mb-12 max-w-3xl mx-auto leading-relaxed px-4">
-            Encuentra packs sorpresa en restaurantes cercanos a un precio
-            reducido
+          {/* Subtítulo mejorado */}
+          <p className="text-lg sm:text-xl lg:text-2xl text-gray-700 mb-10 sm:mb-14 max-w-3xl mx-auto leading-relaxed px-4 font-medium">
+            Encuentra packs sorpresa en restaurantes cercanos a un
+            <span className="text-purple-600 font-bold"> precio reducido</span>
           </p>
 
-          {/* Botón principal - Redirige a auth */}
-          <div className="space-y-4">
+          {/* Botón principal mejorado */}
+          <div className="space-y-6 mb-12 sm:mb-16">
             <Link
               href="/auth"
-              className="inline-flex items-center bg-gradient-to-r from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600 text-white px-8 py-4 sm:px-12 sm:py-5 rounded-xl sm:rounded-2xl text-lg sm:text-xl font-bold transition-all transform hover:scale-105 shadow-lg hover:shadow-xl"
+              className="group inline-flex items-center bg-gradient-to-r from-purple-600 via-purple-500 to-orange-500 hover:from-purple-700 hover:via-purple-600 hover:to-orange-600 text-white px-10 py-5 sm:px-14 sm:py-6 rounded-2xl text-lg sm:text-xl font-bold transition-all transform hover:scale-105 shadow-2xl hover:shadow-purple-500/50 relative overflow-hidden"
             >
-              <span className="mr-2 sm:mr-3 text-xl sm:text-2xl">🚀</span>
-              Comenzar Ahora
+              <span className="absolute inset-0 bg-gradient-to-r from-white/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></span>
+              <span className="mr-3 text-2xl sm:text-3xl animate-bounce">🚀</span>
+              <span className="relative">Comenzar Ahora</span>
             </Link>
-            <p className="text-sm text-gray-500">
-              Regístrate gratis y empieza a ahorrar
+            <p className="text-sm sm:text-base text-gray-600 font-medium">
+              ✨ Regístrate gratis y empieza a ahorrar
             </p>
           </div>
 
-          {/* Imagen hero - Mobile Optimized */}
-          <div className="mt-8 sm:mt-16 relative max-w-4xl mx-auto px-4">
-            <div className="bg-white rounded-2xl sm:rounded-3xl shadow-2xl p-6 sm:p-8 border border-gray-100">
-              <div className="flex items-center justify-center text-6xl sm:text-8xl mb-3 sm:mb-4">
-                🥘
+          {/* Tarjeta hero mejorada */}
+          <div className="mt-8 sm:mt-16 relative max-w-5xl mx-auto px-4">
+            <div className="relative bg-white/80 backdrop-blur-lg rounded-3xl sm:rounded-[2rem] shadow-2xl p-8 sm:p-12 border-2 border-white/50 overflow-hidden">
+              {/* Efecto de brillo */}
+              <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-purple-500 via-pink-500 to-orange-500"></div>
+              
+              {/* Contenido */}
+              <div className="relative">
+                <div className="flex items-center justify-center mb-6">
+                  <div className="relative">
+                    <div className="absolute inset-0 bg-gradient-to-r from-purple-400 to-orange-400 rounded-full blur-2xl opacity-50 animate-pulse"></div>
+                    <div className="relative text-7xl sm:text-9xl animate-bounce-slow">
+                      🥘
+                    </div>
+                  </div>
+                </div>
+                
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mb-3">
+                  Miles de restaurantes cerca de ti
+                </h3>
+                <p className="text-base sm:text-lg text-gray-600 leading-relaxed max-w-2xl mx-auto">
+                  con packs sorpresa disponibles
+                </p>
+
+                {/* Stats rápidos */}
+                <div className="grid grid-cols-3 gap-4 sm:gap-8 mt-8 pt-8 border-t border-gray-200">
+                  <div className="text-center">
+                    <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-purple-600 to-orange-500 bg-clip-text text-transparent">
+                      5K+
+                    </div>
+                    <div className="text-xs sm:text-sm text-gray-600 mt-1">Usuarios activos</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-500 bg-clip-text text-transparent">
+                      150+
+                    </div>
+                    <div className="text-xs sm:text-sm text-gray-600 mt-1">Restaurantes</div>
+                  </div>
+                  <div className="text-center">
+                    <div className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-orange-600 to-pink-500 bg-clip-text text-transparent">
+                      4.9★
+                    </div>
+                    <div className="text-xs sm:text-sm text-gray-600 mt-1">Valoración</div>
+                  </div>
+                </div>
               </div>
-              <p className="text-gray-600 text-base sm:text-lg">
-                Miles de restaurantes cerca de ti con packs sorpresa disponibles
-              </p>
             </div>
           </div>
         </div>
