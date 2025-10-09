@@ -29,7 +29,7 @@ export default function NotificationButton() {
       <button
         onClick={handleToggle}
         disabled={isLoading || permission === 'denied'}
-        className={`flex items-center gap-2 px-3 py-2 rounded-xl bg-zinc-100 dark:bg-zinc-800 hover:bg-emerald-500 hover:text-white transition text-zinc-700 dark:text-zinc-200 ${
+        className={`flex items-center gap-2 px-4 py-2 bg-gray-100 hover:bg-emerald-500 hover:text-white text-gray-800 rounded-xl transition font-medium ${
           isLoading || permission === 'denied' ? 'opacity-50 cursor-not-allowed' : ''
         }`}
         title={permission === 'denied' ? 'Permisos de notificación denegados' : ''}

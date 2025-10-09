@@ -27,49 +27,50 @@ export default function Navigation() {
   }
 
   return (
-    <nav className="flex items-center justify-between px-8 py-3 backdrop-blur-md bg-white/70 dark:bg-zinc-900/70 border-b border-zinc-200 dark:border-zinc-800 shadow-sm sticky top-0 z-50 transition-all">
-      {/* Left side */}
-      <div className="flex items-center gap-6">
+    <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-white/80 border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+        {/* Left side */}
+        <div className="flex items-center gap-8">
         <Link 
           href={session?.user?.role === 'ESTABLISHMENT' ? '/dashboard' : session?.user?.role === 'ADMIN' ? '/admin' : session ? '/packs' : '/'}
           className="flex items-center text-2xl font-bold text-emerald-500 tracking-tight"
         >
-          🌿 <span className="ml-1 text-zinc-800 dark:text-white">Zavo</span>
+          🌿 <span className="ml-1 text-gray-900">Zavo</span>
         </Link>
 
-        <div className="hidden md:flex items-center gap-6 text-sm font-medium">
-          <Link href="/landing" className="text-zinc-700 dark:text-zinc-200 hover:text-emerald-500 transition">
+        <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-700">
+          <Link href="/landing" className="hover:text-emerald-600 transition">
             Home
           </Link>
           
           {session?.user?.role === 'ADMIN' ? (
-            <Link href="/admin" className="flex items-center gap-1 text-zinc-700 dark:text-zinc-200 hover:text-emerald-500 transition">
+            <Link href="/admin" className="flex items-center gap-1 hover:text-emerald-600 transition">
               🔧 Admin Panel
             </Link>
           ) : session?.user?.role === 'ESTABLISHMENT' ? (
-            <Link href="/dashboard" className="flex items-center gap-1 text-zinc-700 dark:text-zinc-200 hover:text-emerald-500 transition">
+            <Link href="/dashboard" className="flex items-center gap-1 hover:text-emerald-600 transition">
               📊 Dashboard
             </Link>
           ) : (
             <>
-              <Link href="/packs" className="flex items-center gap-1 text-zinc-700 dark:text-zinc-200 hover:text-emerald-500 transition">
+              <Link href="/packs" className="flex items-center gap-1 hover:text-emerald-600 transition">
                 📦 Find Packs
               </Link>
-              <Link href="/restaurants" className="flex items-center gap-1 text-zinc-700 dark:text-zinc-200 hover:text-emerald-500 transition">
+              <Link href="/restaurants" className="flex items-center gap-1 hover:text-emerald-600 transition">
                 🏪 Restaurants
               </Link>
-              <Link href="/feed" className="flex items-center gap-1 text-zinc-700 dark:text-zinc-200 hover:text-emerald-500 transition">
+              <Link href="/feed" className="flex items-center gap-1 hover:text-emerald-600 transition">
                 📱 Feed
               </Link>
               {session && (
-                <Link href="/profile" className="flex items-center gap-1 text-zinc-700 dark:text-zinc-200 hover:text-emerald-500 transition">
+                <Link href="/profile" className="flex items-center gap-1 hover:text-emerald-600 transition">
                   📦 My Orders
                 </Link>
               )}
             </>
           )}
           
-          <Link href="/how-it-works" className="text-zinc-700 dark:text-zinc-200 hover:text-emerald-500 transition">
+          <Link href="/how-it-works" className="hover:text-emerald-600 transition">
             How it Works
           </Link>
         </div>
@@ -82,148 +83,55 @@ export default function Navigation() {
         {session && <NotificationButton />}
         
         {status === 'loading' ? (
-          <div className="animate-pulse bg-zinc-200 dark:bg-zinc-700 h-9 w-20 rounded-full"></div>
+          <div className="animate-pulse bg-gray-200 h-9 w-20 rounded-full"></div>
         ) : session ? (
-          <div className="relative">
-            <button
-              onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-              className="flex items-center gap-2 bg-zinc-100 dark:bg-zinc-800 px-3 py-2 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-700 transition cursor-pointer"
-            >
-              <div className="bg-gradient-to-tr from-emerald-400 to-blue-500 text-white w-9 h-9 flex items-center justify-center rounded-full font-semibold">
+          <div className="relative group">
+            <button className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 rounded-full px-3 py-2 transition">
+              <div className="w-9 h-9 bg-gradient-to-tr from-emerald-400 to-blue-500 text-white rounded-full flex items-center justify-center font-semibold">
                 {getUserInitials(session.user?.name, session.user?.email)}
               </div>
-              <div className="hidden sm:flex flex-col leading-tight">
-                <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-100">
+              <div className="hidden sm:flex flex-col leading-tight text-left">
+                <span className="text-sm font-semibold text-gray-800">
                   {getFirstName(session.user?.name)}
                 </span>
-                <span className="text-xs text-zinc-500 dark:text-zinc-400">
+                <span className="text-xs text-gray-500">
                   {getRoleDisplay(session.user?.role)}
                 </span>
               </div>
             </button>
 
             {/* Dropdown Menu */}
-            {isUserMenuOpen && (
-              <>
-                <div 
-                  className="fixed inset-0 z-40" 
-                  onClick={() => setIsUserMenuOpen(false)}
-                ></div>
-                
-                <div className="absolute right-0 mt-2 w-64 bg-white dark:bg-zinc-800 rounded-lg shadow-xl border border-zinc-200 dark:border-zinc-700 z-50">
-                  <div className="p-4 border-b border-zinc-200 dark:border-zinc-700">
-                    <div className="flex items-center gap-3">
-                      <div className="bg-gradient-to-tr from-emerald-400 to-blue-500 text-white w-12 h-12 flex items-center justify-center rounded-full font-bold">
-                        {getUserInitials(session.user?.name, session.user?.email)}
-                      </div>
-                      <div>
-                        <div className="font-semibold text-zinc-900 dark:text-zinc-100">
-                          {getFirstName(session.user?.name)}
-                        </div>
-                        <div className="text-sm text-zinc-500 dark:text-zinc-400">
-                          {session.user?.email}
-                        </div>
-                        <div className="text-xs text-emerald-600 dark:text-emerald-400 font-medium">
-                          {getRoleDisplay(session.user?.role)}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="p-2">
-                    {session.user?.role === 'ADMIN' ? (
-                      <Link
-                        href="/admin"
-                        className="flex items-center gap-3 px-4 py-3 text-zinc-700 dark:text-zinc-200 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-lg transition-colors"
-                      >
-                        <span className="text-lg">🔧</span>
-                        <div>
-                          <div className="font-medium">Admin Panel</div>
-                          <div className="text-xs text-zinc-500 dark:text-zinc-400">
-                            Gestionar plataforma
-                          </div>
-                        </div>
-                      </Link>
-                    ) : session.user?.role === 'ESTABLISHMENT' ? (
-                      <>
-                        <Link
-                          href="/dashboard"
-                          className="flex items-center gap-3 px-4 py-3 text-zinc-700 dark:text-zinc-200 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-lg transition-colors"
-                        >
-                          <span className="text-lg">📊</span>
-                          <div>
-                            <div className="font-medium">Dashboard</div>
-                            <div className="text-xs text-zinc-500 dark:text-zinc-400">
-                              Gestionar tu restaurante
-                            </div>
-                          </div>
-                        </Link>
-                        <Link
-                          href="/profile"
-                          className="flex items-center gap-3 px-4 py-3 text-zinc-700 dark:text-zinc-200 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-lg transition-colors"
-                        >
-                          <span className="text-lg">👤</span>
-                          <div>
-                            <div className="font-medium">Mi Perfil</div>
-                            <div className="text-xs text-zinc-500 dark:text-zinc-400">
-                              Configuración de cuenta
-                            </div>
-                          </div>
-                        </Link>
-                      </>
-                    ) : (
-                      <>
-                        <Link
-                          href="/packs"
-                          className="flex items-center gap-3 px-4 py-3 text-zinc-700 dark:text-zinc-200 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-lg transition-colors"
-                        >
-                          <span className="text-lg">🍽️</span>
-                          <div>
-                            <div className="font-medium">Explorar Packs</div>
-                            <div className="text-xs text-zinc-500 dark:text-zinc-400">
-                              Encuentra ofertas cerca
-                            </div>
-                          </div>
-                        </Link>
-                        <Link
-                          href="/profile"
-                          className="flex items-center gap-3 px-4 py-3 text-zinc-700 dark:text-zinc-200 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 rounded-lg transition-colors"
-                        >
-                          <span className="text-lg">📦</span>
-                          <div>
-                            <div className="font-medium">Mis Órdenes</div>
-                            <div className="text-xs text-zinc-500 dark:text-zinc-400">
-                              Historial y reservas
-                            </div>
-                          </div>
-                        </Link>
-                      </>
-                    )}
-
-                    <hr className="my-2 border-zinc-200 dark:border-zinc-700" />
-
-                    <button
-                      onClick={() => signOut()}
-                      className="flex items-center gap-3 px-4 py-3 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors w-full text-left"
-                    >
-                      <span className="text-lg">🚪</span>
-                      <div>
-                        <div className="font-medium">Cerrar Sesión</div>
-                        <div className="text-xs text-red-500 dark:text-red-400">
-                          Salir de la cuenta
-                        </div>
-                      </div>
-                    </button>
-                  </div>
-                </div>
-              </>
-            )}
+            <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 shadow-xl rounded-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-1 group-hover:translate-y-0">
+              <div className="px-4 py-3 border-b border-gray-100">
+                <span className="block text-sm font-semibold text-gray-800">
+                  {getFirstName(session.user?.name)}
+                </span>
+                <span className="block text-xs text-gray-500 truncate">
+                  {session.user?.email}
+                </span>
+              </div>
+              <div className="p-2 text-sm text-gray-700">
+                <Link href="/packs" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                  🍽️ Explorar Packs
+                </Link>
+                <Link href="/profile" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                  📦 Mis Órdenes
+                </Link>
+                <div className="border-t border-gray-100 mt-2"></div>
+                <button
+                  onClick={() => signOut()}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-red-100 text-red-600 transition w-full text-left"
+                >
+                  🚪 Cerrar Sesión
+                </button>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="flex items-center gap-2">
             <button
               onClick={() => signIn()}
-              className="text-zinc-700 dark:text-zinc-200 hover:text-emerald-500 px-3 py-2 rounded-md text-sm font-medium transition"
+              className="text-gray-700 hover:text-emerald-600 px-3 py-2 rounded-md text-sm font-medium transition"
             >
               Iniciar Sesión
             </button>
@@ -235,6 +143,7 @@ export default function Navigation() {
             </Link>
           </div>
         )}
+      </div>
       </div>
     </nav>
   )
