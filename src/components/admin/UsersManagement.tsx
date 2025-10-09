@@ -98,6 +98,31 @@ export default function UsersManagement() {
     }
   }
 
+  const verifyUser = async (userId: string) => {
+    if (!confirm('¿Verificar este usuario manualmente?')) {
+      return
+    }
+
+    try {
+      const res = await fetch('/api/admin/users/verify', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId }),
+      })
+      const data = await res.json()
+      
+      if (data.success) {
+        alert('Usuario verificado exitosamente')
+        fetchUsers()
+      } else {
+        alert(data.message || 'Error al verificar usuario')
+      }
+    } catch (error) {
+      console.error('Error verifying user:', error)
+      alert('Error al verificar usuario')
+    }
+  }
+
   const createUser = async (e: React.FormEvent) => {
     e.preventDefault()
 
@@ -277,12 +302,21 @@ export default function UsersManagement() {
                 <td className="px-6 py-4 whitespace-nowrap">
                   {user.emailVerified ? (
                     <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                      Verificado
+                      ✓ Verificado
                     </span>
                   ) : (
-                    <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
-                      Sin verificar
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-yellow-100 text-yellow-800">
+                        Sin verificar
+                      </span>
+                      <button
+                        onClick={() => verifyUser(user.id)}
+                        className="text-xs bg-green-500 hover:bg-green-600 text-white px-2 py-1 rounded"
+                        title="Verificar manualmente"
+                      >
+                        ✓ Verificar
+                      </button>
+                    </div>
                   )}
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
