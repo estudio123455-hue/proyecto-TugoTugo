@@ -28,19 +28,17 @@ export async function GET(request: NextRequest) {
       case 'users': {
         const users = await prisma.user.findMany({
           select: {
-            id: true,
             name: true,
             email: true,
             role: true,
-            emailVerified: true,
-            createdAt: true,
           },
           orderBy: { createdAt: 'desc' },
         })
         
-        csvData = 'ID,Nombre,Email,Rol,Verificado,Fecha Creación\n'
+        csvData = 'Nombre,Email,Tipo\n'
         users.forEach((user) => {
-          csvData += `"${user.id}","${user.name || ''}","${user.email}","${user.role}","${user.emailVerified ? 'Sí' : 'No'}","${user.createdAt.toISOString()}"\n`
+          const tipo = user.role === 'ESTABLISHMENT' ? 'Restaurante' : user.role === 'CUSTOMER' ? 'Cliente' : user.role
+          csvData += `"${user.name || ''}","${user.email}","${tipo}"\n`
         })
         filename = 'usuarios.csv'
         break
