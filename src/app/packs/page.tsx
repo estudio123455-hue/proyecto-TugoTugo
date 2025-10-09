@@ -239,7 +239,7 @@ export default function PacksExplorer() {
       <div className="min-h-screen bg-gray-50">
         <Navigation />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" role="main">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-8" role="main">
         {/* Hero Section with Impact - Brand Identity */}
         <header className="text-center mb-8 sm:mb-12" role="banner">
           {/* Slogan de impacto */}
