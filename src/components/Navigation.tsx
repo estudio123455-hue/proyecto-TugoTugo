@@ -27,24 +27,24 @@ export default function Navigation() {
   }
 
   return (
-    <nav className="bg-white dark:bg-gray-900 shadow-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 overflow-visible">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 overflow-visible">
-        <div className="flex justify-between items-center h-14 sm:h-16">
+    <nav className="bg-[#1a1d29] shadow-lg sticky top-0 z-40 overflow-visible">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
+        <div className="flex justify-between items-center h-16">
           <div className="flex items-center min-w-0">
             <Link 
               href={session?.user?.role === 'ESTABLISHMENT' ? '/dashboard' : session?.user?.role === 'ADMIN' ? '/admin' : session ? '/packs' : '/'}
               className="flex-shrink-0 flex items-center"
             >
-              <span className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 dark:text-green-400 whitespace-nowrap">
-                🍃 Zavo
+              <span className="text-xl font-bold text-white whitespace-nowrap flex items-center gap-2">
+                🍃 <span className="text-white">Zavo</span>
               </span>
             </Link>
 
             <div className="hidden md:block ml-10">
-              <div className="flex items-baseline space-x-4">
+              <div className="flex items-center space-x-1">
                 <Link
                   href="/landing"
-                  className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-gray-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/10"
                 >
                   Home
                 </Link>
@@ -53,7 +53,7 @@ export default function Navigation() {
                   // Admin ve: Admin Panel
                   <Link
                     href="/admin"
-                    className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                    className="text-gray-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/10 flex items-center gap-2"
                   >
                     🔧 Admin Panel
                   </Link>
@@ -61,7 +61,7 @@ export default function Navigation() {
                   // Restaurante ve: Dashboard
                   <Link
                     href="/dashboard"
-                    className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                    className="text-gray-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/10 flex items-center gap-2"
                   >
                     📊 Dashboard
                   </Link>
@@ -70,26 +70,26 @@ export default function Navigation() {
                   <>
                     <Link
                       href="/packs"
-                      className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                      className="text-gray-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/10 flex items-center gap-2"
                     >
-                      🗺️ Find Packs
+                      📦 Find Packs
                     </Link>
                     <Link
                       href="/restaurants"
-                      className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                      className="text-gray-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/10 flex items-center gap-2"
                     >
-                      🍽️ Restaurants
+                      🏪 Restaurants
                     </Link>
                     <Link
                       href="/feed"
-                      className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                      className="text-gray-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/10 flex items-center gap-2"
                     >
                       📱 Feed
                     </Link>
                     {session && (
                       <Link
                         href="/profile"
-                        className="text-gray-700 hover:text-green-600 px-3 py-2 rounded-md text-sm font-medium flex items-center"
+                        className="text-gray-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/10 flex items-center gap-2"
                       >
                         📦 My Orders
                       </Link>
@@ -98,7 +98,7 @@ export default function Navigation() {
                 )}
                 <Link
                   href="/how-it-works"
-                  className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-3 py-2 rounded-md text-sm font-medium"
+                  className="text-gray-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/10"
                 >
                   How it Works
                 </Link>
@@ -114,24 +114,24 @@ export default function Navigation() {
             {session && <NotificationButton />}
             
             {status === 'loading' ? (
-              <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-8 w-16 sm:w-20 rounded"></div>
+              <div className="animate-pulse bg-gray-700 h-8 w-16 sm:w-20 rounded"></div>
             ) : session ? (
               <div className="flex items-center space-x-1 sm:space-x-2 lg:space-x-4">
                 {/* User Menu Dropdown */}
                 <div className="relative">
-                  <button 
+                  <button
                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                    className="flex items-center space-x-1 sm:space-x-2 lg:space-x-3 text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-all"
+                    className="flex items-center space-x-1 sm:space-x-2 lg:space-x-3 text-gray-300 hover:text-white px-2 sm:px-3 py-2 rounded-lg hover:bg-white/10 transition-all"
                   >
                     {/* User Avatar */}
                     <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-xs sm:text-sm">
                       {getUserInitials(session.user?.name, session.user?.email)}
                     </div>
                     <div className="hidden lg:block text-left">
-                      <div className="text-sm font-medium text-gray-900 dark:text-gray-100">
+                      <div className="text-sm font-medium text-white">
                         {getFirstName(session.user?.name)}
                       </div>
-                      <div className="text-xs text-gray-500 dark:text-gray-400">
+                      <div className="text-xs text-gray-400">
                         {getRoleDisplay(session.user?.role)}
                       </div>
                     </div>
@@ -287,14 +287,14 @@ export default function Navigation() {
               <div className="flex items-center space-x-1 sm:space-x-2">
                 <button
                   onClick={() => signIn()}
-                  className="text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium"
+                  className="text-gray-300 hover:text-white px-2 sm:px-3 py-2 rounded-md text-xs sm:text-sm font-medium transition-colors"
                 >
                   <span className="hidden sm:inline">Iniciar Sesión</span>
                   <span className="sm:hidden">Entrar</span>
                 </button>
                 <Link
                   href="/packs"
-                  className="bg-green-500 hover:bg-green-600 text-white px-3 sm:px-4 lg:px-6 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all shadow-lg whitespace-nowrap"
+                  className="bg-orange-500 hover:bg-orange-600 text-white px-3 sm:px-4 lg:px-6 py-2 rounded-lg text-xs sm:text-sm font-bold transition-all shadow-lg whitespace-nowrap"
                 >
                   <span className="hidden sm:inline">🗺️ Encuentra Packs</span>
                   <span className="sm:hidden">🗺️ Packs</span>
