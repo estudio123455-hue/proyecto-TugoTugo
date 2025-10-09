@@ -119,43 +119,46 @@ export default function Navigation() {
             </button>
 
             {/* Dropdown Menu */}
-            <div className={`absolute right-0 mt-2 w-64 sm:w-56 bg-white border border-gray-200 shadow-xl rounded-2xl transition-all transform ${
+            <div className={`absolute right-0 mt-2 w-72 sm:w-64 bg-white border border-gray-200 shadow-xl rounded-2xl transition-all transform z-50 ${
               isUserMenuOpen 
                 ? 'opacity-100 visible translate-y-0' 
                 : 'opacity-0 invisible translate-y-1'
             } md:group-hover:opacity-100 md:group-hover:visible md:group-hover:translate-y-0`}>
-              <div className="px-4 py-3 border-b border-gray-100">
-                <span className="block text-sm font-semibold text-gray-800">
+              <div className="px-5 py-4 border-b border-gray-100">
+                <span className="block text-base font-semibold text-gray-800 mb-1">
                   {getFirstName(session.user?.name)}
                 </span>
-                <span className="block text-xs text-gray-500 break-all">
+                <span className="block text-sm text-gray-500 break-all leading-relaxed">
                   {session.user?.email}
                 </span>
               </div>
-              <div className="p-2 text-sm text-gray-700">
+              <div className="p-3 text-base text-gray-700">
                 <Link 
                   href="/packs" 
                   onClick={() => setIsUserMenuOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition"
                 >
-                  🍽️ Explorar Packs
+                  <span className="text-xl">🍽️</span>
+                  <span className="font-medium">Explorar Packs</span>
                 </Link>
                 <Link 
                   href="/profile" 
                   onClick={() => setIsUserMenuOpen(false)}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition"
                 >
-                  📦 Mis Órdenes
+                  <span className="text-xl">📦</span>
+                  <span className="font-medium">Mis Órdenes</span>
                 </Link>
-                <div className="border-t border-gray-100 mt-2"></div>
+                <div className="border-t border-gray-100 my-2"></div>
                 <button
                   onClick={() => {
                     setIsUserMenuOpen(false)
                     signOut()
                   }}
-                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-red-100 text-red-600 transition w-full text-left"
+                  className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-50 active:bg-red-100 text-red-600 transition w-full text-left"
                 >
-                  🚪 Cerrar Sesión
+                  <span className="text-xl">🚪</span>
+                  <span className="font-medium">Cerrar Sesión</span>
                 </button>
               </div>
             </div>
