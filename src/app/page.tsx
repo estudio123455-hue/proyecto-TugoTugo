@@ -10,14 +10,17 @@ export default function Home() {
   const router = useRouter()
   const { data: session, status } = useSession()
   const [mounted, setMounted] = useState(false)
+  const [hasRedirected, setHasRedirected] = useState(false)
 
   useEffect(() => {
     setMounted(true)
   }, [])
 
   useEffect(() => {
-    // Si hay sesión, redirigir según el rol (usando replace para evitar loop)
-    if (status === 'authenticated' && session?.user && mounted) {
+    // Si hay sesión, redirigir según el rol (solo una vez)
+    if (status === 'authenticated' && session?.user && mounted && !hasRedirected) {
+      setHasRedirected(true)
+      
       if (session.user.role === 'ESTABLISHMENT') {
         router.replace('/dashboard')
       } else if (session.user.role === 'ADMIN') {
@@ -26,7 +29,7 @@ export default function Home() {
         router.replace('/packs')
       }
     }
-  }, [status, session, router, mounted])
+  }, [status, session, router, mounted, hasRedirected])
 
   // Mostrar loading mientras se verifica la sesión
   if (status === 'loading' || !mounted) {
