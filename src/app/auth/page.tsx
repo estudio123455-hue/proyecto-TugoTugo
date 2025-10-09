@@ -244,12 +244,12 @@ export default function AuthPage() {
                 <div className="mb-8">
                   <div className="flex items-center gap-3 mb-6">
                     <span className="text-4xl">🍃</span>
-                    <span className="text-3xl font-bold">FoodSave</span>
+                    <span className="text-3xl font-bold">Zavo</span>
                   </div>
                   <h1 className="text-4xl lg:text-5xl font-bold mb-4 leading-tight">
                     {activeTab === 'signin' 
                       ? '¡Bienvenido de vuelta!' 
-                      : '¡Únete a FoodSave!'
+                      : '¡Únete a Zavo!'
                     }
                   </h1>
                   <p className="text-lg lg:text-xl text-white/90 leading-relaxed">

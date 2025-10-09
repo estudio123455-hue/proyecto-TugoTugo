@@ -139,7 +139,7 @@ export default function AuthLanding() {
                 <div className="mb-8">
                   <div className="flex items-center gap-3 mb-6">
                     <span className="text-4xl">🍃</span>
-                    <span className="text-3xl font-bold">FoodSave</span>
+                    <span className="text-3xl font-bold">Zavo</span>
                   </div>
                   <h1 className="text-4xl lg:text-5xl font-bold mb-4 leading-tight">
                     Salva comida, ahorra dinero, ayuda al planeta

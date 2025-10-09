@@ -84,7 +84,7 @@ export default function SignUpNew() {
               <div className="lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center text-white">
                 <div className="mb-8">
                   <h1 className="text-4xl lg:text-5xl font-bold mb-4 leading-tight">
-                    Únete a FoodSave
+                    Únete a Zavo
                   </h1>
                   <p className="text-lg lg:text-xl text-white/90 leading-relaxed">
                     Crea tu cuenta y empieza a hacer la diferencia. 
@@ -122,7 +122,7 @@ export default function SignUpNew() {
                       Crear Cuenta
                     </h2>
                     <p className="text-gray-600">
-                      Únete a la comunidad FoodSave
+                      Únete a la comunidad Zavo
                     </p>
                   </div>
                   

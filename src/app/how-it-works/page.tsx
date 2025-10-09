@@ -102,7 +102,7 @@ export default function HowItWorksPage() {
         {/* Hero Section */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-6">
-            ¿Cómo Funciona <span className="text-green-600">FoodSave</span>?
+            ¿Cómo Funciona <span className="text-green-600">Zavo</span>?
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto leading-relaxed">
             Descubre cómo nuestra plataforma conecta a clientes con restaurantes para reducir el desperdicio alimentario, 
@@ -218,7 +218,7 @@ export default function HowItWorksPage() {
         <div className="mb-16">
           <div className="text-center mb-12">
             <h2 className="text-3xl font-bold text-gray-900 mb-4">
-              ¿Por Qué Elegir FoodSave?
+              ¿Por Qué Elegir Zavo?
             </h2>
             <p className="text-gray-600 max-w-2xl mx-auto">
               Más que una plataforma, somos un movimiento hacia un futuro más sostenible

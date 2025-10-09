@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Crear Cuenta - FoodSave',
-  description: 'Crea tu cuenta en FoodSave',
+  title: 'Crear Cuenta - Zavo',
+  description: 'Crea tu cuenta en Zavo',
 }
 
 export default function SignUpLayout({

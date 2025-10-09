@@ -15,9 +15,9 @@ const faqData: FAQItem[] = [
   // Compradores
   {
     id: '1',
-    question: '¿Cómo funciona FoodSave?',
+    question: '¿Cómo funciona Zavo?',
     answer:
-      'FoodSave conecta a consumidores con restaurantes locales que tienen excedente de comida. Los restaurantes crean "packs sorpresa" con comida fresca que de otra manera se desperdiciaría, y tú puedes comprarlos con hasta 50% de descuento.',
+      'Zavo conecta a consumidores con restaurantes locales que tienen excedente de comida. Los restaurantes crean "packs sorpresa" con comida fresca que de otra manera se desperdiciaría, y tú puedes comprarlos con hasta 50% de descuento.',
     category: 'compradores',
   },
   {
@@ -59,14 +59,14 @@ const faqData: FAQItem[] = [
   // Comerciantes
   {
     id: '7',
-    question: '¿Cómo puedo unir mi restaurante a FoodSave?',
+    question: '¿Cómo puedo unir mi restaurante a Zavo?',
     answer:
       'Es gratis y fácil: 1) Regístrate como establecimiento en nuestra plataforma, 2) Completa la información de tu negocio, 3) Configura tus horarios y tipos de packs, 4) ¡Empieza a vender y reduce tu desperdicio!',
     category: 'comerciantes',
   },
   {
     id: '8',
-    question: '¿Cuánto cuesta usar FoodSave para mi restaurante?',
+    question: '¿Cuánto cuesta usar Zavo para mi restaurante?',
     answer:
       'Registrarse es completamente gratis. Solo cobramos una pequeña comisión del 15% sobre cada pack vendido. No hay costos mensuales ni tarifas ocultas. Solo pagas cuando vendes.',
     category: 'comerciantes',
@@ -103,7 +103,7 @@ const faqData: FAQItem[] = [
   },
   {
     id: '13',
-    question: '¿Es seguro pagar en FoodSave?',
+    question: '¿Es seguro pagar en Zavo?',
     answer:
       'Absolutamente. Utilizamos Stripe, uno de los procesadores de pagos más seguros del mundo. Nunca almacenamos tu información de tarjeta de crédito en nuestros servidores. Todos los pagos están encriptados y protegidos.',
     category: 'pagos',
@@ -225,7 +225,7 @@ export default function FAQ() {
             Preguntas Frecuentes
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            Encuentra respuestas a las preguntas más comunes sobre FoodSave
+            Encuentra respuestas a las preguntas más comunes sobre Zavo
           </p>
         </div>
 
@@ -404,7 +404,7 @@ export default function FAQ() {
                 Enviar Email
               </a>
               <a
-                href="https://wa.me/573214596837?text=Hola! Tengo una pregunta sobre FoodSave"
+                href="https://wa.me/573214596837?text=Hola! Tengo una pregunta sobre Zavo"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex items-center bg-green-600 hover:bg-green-700 text-white px-6 py-3 rounded-xl font-semibold transition-all shadow-lg hover:shadow-xl"

@@ -35,7 +35,7 @@ export default function WelcomeSimple() {
 
           {/* Main Welcome Message */}
           <h1 className="text-4xl font-bold text-gray-900 mb-6">
-            ¡Bienvenido a FoodSave, {session?.user?.name?.split(' ')[0]}!
+            ¡Bienvenido a Zavo, {session?.user?.name?.split(' ')[0]}!
           </h1>
 
           {/* Subtitle */}

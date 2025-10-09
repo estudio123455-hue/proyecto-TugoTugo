@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Iniciar Sesión - FoodSave',
-  description: 'Inicia sesión en FoodSave',
+  title: 'Iniciar Sesión - Zavo',
+  description: 'Inicia sesión en Zavo',
 }
 
 export default function SignInLayout({

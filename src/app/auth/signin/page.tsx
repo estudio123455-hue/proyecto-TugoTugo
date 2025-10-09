@@ -101,7 +101,7 @@ export default function SignInNew() {
               <div className="lg:w-1/2 p-8 lg:p-12 flex flex-col justify-center text-white">
                 <div className="mb-8">
                   <h1 className="text-4xl lg:text-5xl font-bold mb-4 leading-tight">
-                    Bienvenido a FoodSave
+                    Bienvenido a Zavo
                   </h1>
                   <p className="text-lg lg:text-xl text-white/90 leading-relaxed">
                     Únete a la revolución contra el desperdicio de comida. 

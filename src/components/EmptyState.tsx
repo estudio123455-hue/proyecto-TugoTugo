@@ -79,7 +79,7 @@ export default function EmptyState({
                 en tu Zona!
               </h2>
               <p className="text-xl text-gray-600 mb-8 leading-relaxed">
-                Cuando se unan más restaurantes a FoodSave, serás el primero en
+                Cuando se unan más restaurantes a Zavo, serás el primero en
                 enterarte de los mejores packs sorpresa.
               </p>
 
@@ -258,7 +258,7 @@ export default function EmptyState({
             ))}
           </div>
           <p className="text-gray-500 text-sm mt-6 text-center">
-            Estos restaurantes ya forman parte de FoodSave en otras ciudades
+            Estos restaurantes ya forman parte de Zavo en otras ciudades
           </p>
         </div>
       </div>

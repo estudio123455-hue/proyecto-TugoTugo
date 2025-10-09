@@ -36,7 +36,7 @@ export default function Navigation() {
               className="flex-shrink-0 flex items-center"
             >
               <span className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 dark:text-green-400 whitespace-nowrap">
-                🍃 FoodSave
+                🍃 Zavo
               </span>
             </Link>
 

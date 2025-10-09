@@ -9,7 +9,7 @@ import BottomNavigation from '@/components/mobile/BottomNavigation'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'FoodSave - Reduce Food Waste',
+  title: 'Zavo - Reduce Food Waste',
   description:
     'Discover surprise food packs from local restaurants and reduce food waste',
   viewport: 'width=device-width, initial-scale=1, maximum-scale=1',

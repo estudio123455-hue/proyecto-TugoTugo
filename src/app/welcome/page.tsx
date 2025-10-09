@@ -90,7 +90,7 @@ export default function Welcome() {
             <>
               <div className="text-6xl mb-6">🌱</div>
               <h1 className="text-3xl font-bold text-gray-900 mb-4">
-                ¡Bienvenido a FoodSave, {session?.user?.name?.split(' ')[0]}!
+                ¡Bienvenido a Zavo, {session?.user?.name?.split(' ')[0]}!
               </h1>
               <p className="text-lg text-gray-600 mb-8 leading-relaxed">
                 Descubre packs sorpresa y empieza a ahorrar mientras ayudas a

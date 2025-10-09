@@ -42,7 +42,7 @@ export default function PrivacyPolicy() {
               </h2>
               <div className="prose prose-gray max-w-none">
                 <p className="text-gray-700 leading-relaxed">
-                  En FoodSave, nos comprometemos a proteger tu privacidad y ser
+                  En Zavo, nos comprometemos a proteger tu privacidad y ser
                   transparentes sobre cómo recopilamos, usamos y compartimos tu
                   información personal. Esta Política de Privacidad describe
                   nuestras prácticas de datos cuando utilizas nuestros servicios
@@ -50,7 +50,7 @@ export default function PrivacyPolicy() {
                   servicios relacionados.
                 </p>
                 <p className="text-gray-700 leading-relaxed mt-4">
-                  Al usar FoodSave, aceptas las prácticas descritas en esta
+                  Al usar Zavo, aceptas las prácticas descritas en esta
                   política. Si no estás de acuerdo con alguna parte de esta
                   política, por favor no uses nuestros servicios.
                 </p>

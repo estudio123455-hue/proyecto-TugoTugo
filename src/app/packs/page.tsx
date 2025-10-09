@@ -223,13 +223,13 @@ export default function PacksExplorer() {
   return (
     <>
       <Head>
-        <title>Packs Sorpresa Disponibles - FoodSave Bogotá | Reduce el Desperdicio de Comida</title>
+        <title>Packs Sorpresa Disponibles - Zavo Bogotá | Reduce el Desperdicio de Comida</title>
         <meta 
           name="description" 
           content="Descubre packs sorpresa con hasta 70% de descuento en restaurantes de Bogotá. Salva comida, ahorra dinero y ayuda al planeta. ¡Más de 2,847 kg salvados este mes!" 
         />
         <meta name="keywords" content="comida, descuento, bogotá, restaurantes, sostenibilidad, desperdicio alimentario" />
-        <meta property="og:title" content="Packs Sorpresa - FoodSave Bogotá" />
+        <meta property="og:title" content="Packs Sorpresa - Zavo Bogotá" />
         <meta property="og:description" content="Comida deliciosa con hasta 70% de descuento. Ayuda a reducir el desperdicio alimentario en Bogotá." />
         <meta property="og:type" content="website" />
         <meta name="twitter:card" content="summary_large_image" />

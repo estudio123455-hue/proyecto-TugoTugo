@@ -134,13 +134,13 @@ export async function sendOrderConfirmationEmail(
           
           <p style="font-size: 16px; color: #374151; margin-top: 20px;">
             Saludos cordiales,<br>
-            <strong style="color: #10b981;">El Equipo de FoodSave</strong> 🍃
+            <strong style="color: #10b981;">El Equipo de Zavo</strong> 🍃
           </p>
         </div>
         
         <div style="background-color: #f8fafc; padding: 20px; text-align: center; font-size: 12px; color: #6b7280; border-radius: 0 0 12px 12px;">
           <p style="margin: 5px 0;">Este email fue enviado a ${data.to}</p>
-          <p style="margin: 5px 0; font-weight: bold; color: #10b981;">🍃 FoodSave - Salvando comida, un pack a la vez</p>
+          <p style="margin: 5px 0; font-weight: bold; color: #10b981;">🍃 Zavo - Salvando comida, un pack a la vez</p>
           <p style="margin: 10px 0 5px 0;">¿Necesitas ayuda? Visita nuestro <a href="#" style="color: #10b981;">centro de ayuda</a></p>
         </div>
       </div>
@@ -212,7 +212,7 @@ export async function sendPickupReminderEmail(data: PickupReminderEmailData) {
           </div>
 
           <div style="background: linear-gradient(135deg, #e0e7ff 0%, #c7d2fe 100%); border: 2px solid #6366f1; padding: 20px; border-radius: 12px; margin: 25px 0; text-align: center;">
-            <h3 style="margin: 0 0 10px 0; color: #3730a3; font-size: 16px;">💡 Consejo FoodSave</h3>
+            <h3 style="margin: 0 0 10px 0; color: #3730a3; font-size: 16px;">💡 Consejo Zavo</h3>
             <p style="margin: 0; color: #374151; font-size: 14px;">
               Si tienes algún problema para llegar, contacta al restaurante lo antes posible. 
               ¡Ellos estarán encantados de ayudarte!
@@ -226,13 +226,13 @@ export async function sendPickupReminderEmail(data: PickupReminderEmailData) {
           
           <p style="font-size: 16px; color: #374151; margin-top: 20px;">
             ¡Que disfrutes tu pack!<br>
-            <strong style="color: #f59e0b;">El Equipo de FoodSave</strong> 🍃
+            <strong style="color: #f59e0b;">El Equipo de Zavo</strong> 🍃
           </p>
         </div>
         
         <div style="background-color: #f8fafc; padding: 20px; text-align: center; font-size: 12px; color: #6b7280; border-radius: 0 0 12px 12px;">
           <p style="margin: 5px 0;">Este recordatorio fue enviado a ${data.to}</p>
-          <p style="margin: 5px 0; font-weight: bold; color: #f59e0b;">🍃 FoodSave - Salvando comida, un pack a la vez</p>
+          <p style="margin: 5px 0; font-weight: bold; color: #f59e0b;">🍃 Zavo - Salvando comida, un pack a la vez</p>
           <p style="margin: 10px 0 5px 0;">¿Tienes preguntas? Visita nuestro <a href="#" style="color: #f59e0b;">centro de ayuda</a></p>
         </div>
       </div>
@@ -253,8 +253,8 @@ export async function sendVerificationEmail(data: EmailVerificationData) {
     switch (data.type) {
       case 'REGISTRATION':
         return {
-          subject: '🔐 Verifica tu cuenta - FoodSave',
-          title: '¡Bienvenido a FoodSave!',
+          subject: '🔐 Verifica tu cuenta - Zavo',
+          title: '¡Bienvenido a Zavo!',
           subtitle: 'Verifica tu cuenta para comenzar',
           message: 'Para completar tu registro y empezar a ahorrar en comida deliciosa, necesitamos verificar tu dirección de email.',
           codeLabel: 'Tu código de verificación es:',
@@ -263,20 +263,20 @@ export async function sendVerificationEmail(data: EmailVerificationData) {
         }
       case 'LOGIN':
         return {
-          subject: '🔐 Código de acceso - FoodSave',
+          subject: '🔐 Código de acceso - Zavo',
           title: '¡Hola de nuevo!',
           subtitle: 'Código de verificación para iniciar sesión',
-          message: 'Alguien está intentando iniciar sesión en tu cuenta de FoodSave. Si fuiste tú, usa el código de abajo.',
+          message: 'Alguien está intentando iniciar sesión en tu cuenta de Zavo. Si fuiste tú, usa el código de abajo.',
           codeLabel: 'Tu código de acceso es:',
           instructions: 'Ingresa este código para completar el inicio de sesión.',
           footer: 'Si no fuiste tú, ignora este email y tu cuenta permanecerá segura.'
         }
       case 'PASSWORD_RESET':
         return {
-          subject: '🔑 Restablece tu contraseña - FoodSave',
+          subject: '🔑 Restablece tu contraseña - Zavo',
           title: 'Restablecer Contraseña',
           subtitle: 'Código para cambiar tu contraseña',
-          message: 'Recibimos una solicitud para restablecer la contraseña de tu cuenta de FoodSave.',
+          message: 'Recibimos una solicitud para restablecer la contraseña de tu cuenta de Zavo.',
           codeLabel: 'Tu código de restablecimiento es:',
           instructions: 'Ingresa este código para crear una nueva contraseña.',
           footer: 'Si no solicitaste este cambio, ignora este email.'
@@ -320,7 +320,7 @@ export async function sendVerificationEmail(data: EmailVerificationData) {
             <ul style="margin: 15px 0; padding-left: 20px; color: #374151; line-height: 1.8;">
               <li style="margin: 5px 0;">⏰ <strong>El código expira en 15 minutos</strong></li>
               <li style="margin: 5px 0;">🔒 <strong>No compartas este código</strong> con nadie</li>
-              <li style="margin: 5px 0;">💻 <strong>Úsalo solo en el sitio oficial</strong> de FoodSave</li>
+              <li style="margin: 5px 0;">💻 <strong>Úsalo solo en el sitio oficial</strong> de Zavo</li>
             </ul>
           </div>
 
@@ -339,13 +339,13 @@ export async function sendVerificationEmail(data: EmailVerificationData) {
           
           <p style="font-size: 16px; color: #374151; margin-top: 20px;">
             Saludos cordiales,<br>
-            <strong style="color: #6366f1;">El Equipo de FoodSave</strong> 🍃
+            <strong style="color: #6366f1;">El Equipo de Zavo</strong> 🍃
           </p>
         </div>
         
         <div style="background-color: #f8fafc; padding: 20px; text-align: center; font-size: 12px; color: #6b7280; border-radius: 0 0 12px 12px;">
           <p style="margin: 5px 0;">Este código fue enviado a ${data.to}</p>
-          <p style="margin: 5px 0; font-weight: bold; color: #6366f1;">🍃 FoodSave - Salvando comida, un pack a la vez</p>
+          <p style="margin: 5px 0; font-weight: bold; color: #6366f1;">🍃 Zavo - Salvando comida, un pack a la vez</p>
           <p style="margin: 10px 0 5px 0;">¿Problemas? Visita nuestro <a href="#" style="color: #6366f1;">centro de ayuda</a></p>
         </div>
       </div>

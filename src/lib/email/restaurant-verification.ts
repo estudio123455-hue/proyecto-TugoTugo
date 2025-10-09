@@ -55,13 +55,13 @@ export async function sendRestaurantConfirmation(
     <body>
       <div class="container">
         <div class="header">
-          <h1>🍃 FoodSave</h1>
+          <h1>🍃 Zavo</h1>
           <h2>Solicitud de Restaurante Recibida</h2>
         </div>
         <div class="content">
           <p>Hola <strong>${user.name || 'Estimado usuario'}</strong>,</p>
           
-          <p>¡Gracias por registrar tu restaurante en FoodSave! Hemos recibido tu solicitud correctamente.</p>
+          <p>¡Gracias por registrar tu restaurante en Zavo! Hemos recibido tu solicitud correctamente.</p>
           
           <div class="info-box">
             <h3>📋 RESUMEN DE TU SOLICITUD</h3>
@@ -102,7 +102,7 @@ export async function sendRestaurantConfirmation(
           <p>¿Tienes preguntas? Responde a este email y te ayudaremos.</p>
           
           <div class="footer">
-            <p>Saludos,<br><strong>Equipo FoodSave</strong></p>
+            <p>Saludos,<br><strong>Equipo Zavo</strong></p>
             <p style="font-size: 12px; color: #999;">
               Este es un email automático. Por favor no respondas a este mensaje.
             </p>
@@ -114,11 +114,11 @@ export async function sendRestaurantConfirmation(
   `
 
   const textContent = `
-FoodSave - Solicitud de Restaurante Recibida
+Zavo - Solicitud de Restaurante Recibida
 
 Hola ${user.name || 'Estimado usuario'},
 
-¡Gracias por registrar tu restaurante en FoodSave!
+¡Gracias por registrar tu restaurante en Zavo!
 
 RESUMEN DE TU SOLICITUD:
 - Nombre: ${establishment.name}
@@ -136,7 +136,7 @@ PRÓXIMOS PASOS:
 3. Tus clientes podrán encontrarte
 
 Saludos,
-Equipo FoodSave
+Equipo Zavo
   `
 
   try {
@@ -144,7 +144,7 @@ Equipo FoodSave
     console.log('📧 [Restaurant Confirmation] From:', process.env.SMTP_USER)
     
     const result = await transporter.sendMail({
-      from: `"FoodSave" <${process.env.SMTP_USER}>`,
+      from: `"Zavo" <${process.env.SMTP_USER}>`,
       to: user.email,
       subject: `✅ Solicitud de Restaurante Recibida - ${establishment.name}`,
       text: textContent,
@@ -190,7 +190,7 @@ export async function sendRestaurantApproval(
           
           <div class="success-box">
             <h3>✅ ¡Excelentes noticias!</h3>
-            <p>Tu restaurante <strong>${establishment.name}</strong> ha sido aprobado y ya está activo en FoodSave.</p>
+            <p>Tu restaurante <strong>${establishment.name}</strong> ha sido aprobado y ya está activo en Zavo.</p>
           </div>
           
           <h3>🚀 YA PUEDES:</h3>
@@ -215,7 +215,7 @@ export async function sendRestaurantApproval(
           </div>
           
           <div class="footer">
-            <p>Bienvenido a FoodSave,<br><strong>Equipo FoodSave</strong></p>
+            <p>Bienvenido a Zavo,<br><strong>Equipo Zavo</strong></p>
           </div>
         </div>
       </div>
@@ -225,7 +225,7 @@ export async function sendRestaurantApproval(
 
   try {
     await transporter.sendMail({
-      from: `"FoodSave" <${process.env.SMTP_USER}>`,
+      from: `"Zavo" <${process.env.SMTP_USER}>`,
       to: user.email,
       subject: `🎉 ¡Tu Restaurante Ha Sido Aprobado! - ${establishment.name}`,
       html: htmlContent,
@@ -281,7 +281,7 @@ export async function sendRestaurantRejection(
           <p>Si tienes preguntas, no dudes en contactarnos respondiendo a este email.</p>
           
           <div class="footer">
-            <p>Saludos,<br><strong>Equipo FoodSave</strong></p>
+            <p>Saludos,<br><strong>Equipo Zavo</strong></p>
           </div>
         </div>
       </div>
@@ -291,7 +291,7 @@ export async function sendRestaurantRejection(
 
   try {
     await transporter.sendMail({
-      from: `"FoodSave" <${process.env.SMTP_USER}>`,
+      from: `"Zavo" <${process.env.SMTP_USER}>`,
       to: user.email,
       subject: `Actualización de Solicitud - ${establishment.name}`,
       html: htmlContent,

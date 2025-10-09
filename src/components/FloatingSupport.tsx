@@ -42,11 +42,11 @@ export default function FloatingSupport() {
 
   const handleEmailSupport = () => {
     const subject = session
-      ? `Soporte FoodSave - ${getCleanUserName(session.user?.name)}`
-      : 'Soporte FoodSave'
+      ? `Soporte Zavo - ${getCleanUserName(session.user?.name)}`
+      : 'Soporte Zavo'
     const body = session
       ? `Hola, necesito ayuda con mi cuenta: ${session.user?.email}\n\nMi consulta es:\n\n`
-      : 'Hola, necesito ayuda con FoodSave.\n\nMi consulta es:\n\n'
+      : 'Hola, necesito ayuda con Zavo.\n\nMi consulta es:\n\n'
 
     window.open(
       `mailto:estudio.123455@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
@@ -55,8 +55,8 @@ export default function FloatingSupport() {
 
   const handleWhatsApp = () => {
     const message = session
-      ? `Hola! Necesito ayuda con FoodSave. Mi cuenta es: ${session.user?.email}`
-      : 'Hola! Necesito ayuda con FoodSave'
+      ? `Hola! Necesito ayuda con Zavo. Mi cuenta es: ${session.user?.email}`
+      : 'Hola! Necesito ayuda con Zavo'
 
     window.open(
       `https://wa.me/573214596837?text=${encodeURIComponent(message)}`
@@ -274,7 +274,7 @@ export default function FloatingSupport() {
                       Video Tutorial
                     </div>
                     <div className="text-sm text-gray-500">
-                      Cómo usar FoodSave
+                      Cómo usar Zavo
                     </div>
                   </div>
                 </div>
@@ -319,7 +319,7 @@ export default function FloatingSupport() {
           <div className="relative bg-white rounded-2xl shadow-2xl max-w-2xl w-full">
             <div className="flex justify-between items-center p-6 border-b border-gray-200">
               <h3 className="text-xl font-bold text-gray-900">
-                🎥 Tutorial de FoodSave
+                🎥 Tutorial de Zavo
               </h3>
               <button
                 onClick={() => setShowVideoModal(false)}

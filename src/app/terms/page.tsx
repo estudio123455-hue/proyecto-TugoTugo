@@ -19,7 +19,7 @@ export default function TermsAndConditions() {
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
             Estas son las reglas y condiciones que rigen el uso de los servicios
-            de FoodSave.
+            de Zavo.
           </p>
           <div className="mt-4 text-sm text-gray-500">
             Última actualización:{' '}
@@ -42,7 +42,7 @@ export default function TermsAndConditions() {
               </h2>
               <div className="bg-fresh-50 rounded-xl p-6">
                 <p className="text-gray-700 leading-relaxed">
-                  Al acceder y usar FoodSave, aceptas estar legalmente vinculado
+                  Al acceder y usar Zavo, aceptas estar legalmente vinculado
                   por estos Términos y Condiciones. Si no estás de acuerdo con
                   alguna parte de estos términos, no debes usar nuestros
                   servicios.
@@ -65,10 +65,10 @@ export default function TermsAndConditions() {
               <div className="space-y-6">
                 <div className="bg-warm-50 rounded-xl p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                    ¿Qué es FoodSave?
+                    ¿Qué es Zavo?
                   </h3>
                   <p className="text-gray-700 leading-relaxed">
-                    FoodSave es una plataforma digital que conecta a
+                    Zavo es una plataforma digital que conecta a
                     consumidores con establecimientos de alimentos para la venta
                     de excedentes de comida fresca a precios reducidos,
                     contribuyendo así a la reducción del desperdicio
@@ -280,7 +280,7 @@ export default function TermsAndConditions() {
               <div className="space-y-6">
                 <div className="bg-gray-50 rounded-xl p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                    🔹 Responsabilidades de FoodSave:
+                    🔹 Responsabilidades de Zavo:
                   </h3>
                   <ul className="space-y-2 text-gray-700">
                     <li>• Mantener la plataforma funcionando</li>
@@ -405,14 +405,14 @@ export default function TermsAndConditions() {
 
               <div className="bg-gray-50 rounded-xl p-6">
                 <p className="text-gray-700 mb-4">
-                  Todos los contenidos de la plataforma FoodSave, incluyendo
+                  Todos los contenidos de la plataforma Zavo, incluyendo
                   pero no limitándose a textos, gráficos, logos, iconos,
                   imágenes, clips de audio, descargas digitales y software, son
-                  propiedad de FoodSave o sus proveedores de contenido.
+                  propiedad de Zavo o sus proveedores de contenido.
                 </p>
                 <p className="text-gray-700">
                   Los usuarios mantienen los derechos sobre el contenido que
-                  publican (reseñas, fotos), pero otorgan a FoodSave una
+                  publican (reseñas, fotos), pero otorgan a Zavo una
                   licencia no exclusiva para usar dicho contenido en la
                   plataforma.
                 </p>
@@ -440,7 +440,7 @@ export default function TermsAndConditions() {
 
                 <div className="bg-red-50 rounded-xl p-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-3">
-                    🏢 Por parte de FoodSave:
+                    🏢 Por parte de Zavo:
                   </h3>
                   <ul className="space-y-2 text-gray-700">
                     <li>• Violación de términos</li>
@@ -470,7 +470,7 @@ export default function TermsAndConditions() {
                       directamente con el establecimiento
                     </li>
                     <li>
-                      <strong>Soporte FoodSave:</strong> Contacta nuestro equipo
+                      <strong>Soporte Zavo:</strong> Contacta nuestro equipo
                       de soporte
                     </li>
                     <li>
@@ -478,7 +478,7 @@ export default function TermsAndConditions() {
                       las partes
                     </li>
                     <li>
-                      <strong>Decisión final:</strong> FoodSave toma decisión
+                      <strong>Decisión final:</strong> Zavo toma decisión
                       basada en evidencia
                     </li>
                   </ol>
@@ -490,7 +490,7 @@ export default function TermsAndConditions() {
                   </h3>
                   <p className="text-gray-700">
                     Estos términos se rigen por las leyes del país donde opera
-                    FoodSave. Cualquier disputa que no pueda resolverse mediante
+                    Zavo. Cualquier disputa que no pueda resolverse mediante
                     nuestro proceso interno estará sujeta a la jurisdicción de
                     los tribunales competentes.
                   </p>
