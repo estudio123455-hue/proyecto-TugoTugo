@@ -29,10 +29,8 @@ export default function NotificationButton() {
       <button
         onClick={handleToggle}
         disabled={isLoading || permission === 'denied'}
-        className={`flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 rounded-lg font-medium transition-colors text-sm ${
-          isSubscribed
-            ? 'bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 hover:bg-green-200 dark:hover:bg-green-900/50'
-            : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
+        className={`p-2 rounded-lg bg-transparent hover:bg-white/10 hover:scale-110 transition-all duration-250 ${
+          isSubscribed ? 'text-green-400' : 'text-gray-100'
         } ${isLoading || permission === 'denied' ? 'opacity-50 cursor-not-allowed' : ''}`}
         title={permission === 'denied' ? 'Permisos de notificación denegados' : ''}
       >

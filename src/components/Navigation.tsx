@@ -27,9 +27,9 @@ export default function Navigation() {
   }
 
   return (
-    <nav className="bg-[#1a1d29] shadow-lg sticky top-0 z-40 overflow-visible">
+    <nav className="bg-white/5 backdrop-blur-md border-b border-white/10 shadow-[0_2px_10px_rgba(0,0,0,0.25)] sticky top-0 z-40 overflow-visible">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 overflow-visible">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-14">
           <div className="flex items-center min-w-0">
             <Link 
               href={session?.user?.role === 'ESTABLISHMENT' ? '/dashboard' : session?.user?.role === 'ADMIN' ? '/admin' : session ? '/packs' : '/'}
@@ -41,10 +41,10 @@ export default function Navigation() {
             </Link>
 
             <div className="hidden md:block ml-10">
-              <div className="flex items-center space-x-1">
+              <div className="flex items-center gap-7">
                 <Link
                   href="/landing"
-                  className="text-gray-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/10"
+                  className="relative text-gray-100 font-medium text-sm transition-all duration-250 hover:text-green-400 after:content-[''] after:absolute after:bottom-[-6px] after:left-0 after:w-0 after:h-[2px] after:bg-green-400 after:rounded-full after:transition-all after:duration-300 hover:after:w-full"
                 >
                   Home
                 </Link>
@@ -53,7 +53,7 @@ export default function Navigation() {
                   // Admin ve: Admin Panel
                   <Link
                     href="/admin"
-                    className="text-gray-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/10 flex items-center gap-2"
+                    className="relative text-gray-100 font-medium text-sm transition-all duration-250 hover:text-green-400 after:content-[''] after:absolute after:bottom-[-6px] after:left-0 after:w-0 after:h-[2px] after:bg-green-400 after:rounded-full after:transition-all after:duration-300 hover:after:w-full flex items-center gap-2"
                   >
                     🔧 Admin Panel
                   </Link>
@@ -61,7 +61,7 @@ export default function Navigation() {
                   // Restaurante ve: Dashboard
                   <Link
                     href="/dashboard"
-                    className="text-gray-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/10 flex items-center gap-2"
+                    className="relative text-gray-100 font-medium text-sm transition-all duration-250 hover:text-green-400 after:content-[''] after:absolute after:bottom-[-6px] after:left-0 after:w-0 after:h-[2px] after:bg-green-400 after:rounded-full after:transition-all after:duration-300 hover:after:w-full flex items-center gap-2"
                   >
                     📊 Dashboard
                   </Link>
@@ -70,26 +70,26 @@ export default function Navigation() {
                   <>
                     <Link
                       href="/packs"
-                      className="text-gray-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/10 flex items-center gap-2"
+                      className="relative text-gray-100 font-medium text-sm transition-all duration-250 hover:text-green-400 after:content-[''] after:absolute after:bottom-[-6px] after:left-0 after:w-0 after:h-[2px] after:bg-green-400 after:rounded-full after:transition-all after:duration-300 hover:after:w-full flex items-center gap-2"
                     >
                       📦 Find Packs
                     </Link>
                     <Link
                       href="/restaurants"
-                      className="text-gray-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/10 flex items-center gap-2"
+                      className="relative text-gray-100 font-medium text-sm transition-all duration-250 hover:text-green-400 after:content-[''] after:absolute after:bottom-[-6px] after:left-0 after:w-0 after:h-[2px] after:bg-green-400 after:rounded-full after:transition-all after:duration-300 hover:after:w-full flex items-center gap-2"
                     >
                       🏪 Restaurants
                     </Link>
                     <Link
                       href="/feed"
-                      className="text-gray-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/10 flex items-center gap-2"
+                      className="relative text-gray-100 font-medium text-sm transition-all duration-250 hover:text-green-400 after:content-[''] after:absolute after:bottom-[-6px] after:left-0 after:w-0 after:h-[2px] after:bg-green-400 after:rounded-full after:transition-all after:duration-300 hover:after:w-full flex items-center gap-2"
                     >
                       📱 Feed
                     </Link>
                     {session && (
                       <Link
                         href="/profile"
-                        className="text-gray-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/10 flex items-center gap-2"
+                        className="relative text-gray-100 font-medium text-sm transition-all duration-250 hover:text-green-400 after:content-[''] after:absolute after:bottom-[-6px] after:left-0 after:w-0 after:h-[2px] after:bg-green-400 after:rounded-full after:transition-all after:duration-300 hover:after:w-full flex items-center gap-2"
                       >
                         📦 My Orders
                       </Link>
@@ -98,7 +98,7 @@ export default function Navigation() {
                 )}
                 <Link
                   href="/how-it-works"
-                  className="text-gray-300 hover:text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors hover:bg-white/10"
+                  className="relative text-gray-100 font-medium text-sm transition-all duration-250 hover:text-green-400 after:content-[''] after:absolute after:bottom-[-6px] after:left-0 after:w-0 after:h-[2px] after:bg-green-400 after:rounded-full after:transition-all after:duration-300 hover:after:w-full"
                 >
                   How it Works
                 </Link>
@@ -121,7 +121,7 @@ export default function Navigation() {
                 <div className="relative">
                   <button
                     onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-                    className="flex items-center space-x-1 sm:space-x-2 lg:space-x-3 text-gray-300 hover:text-white px-2 sm:px-3 py-2 rounded-lg hover:bg-white/10 transition-all"
+                    className="flex items-center gap-2 bg-white/5 rounded-full px-3 py-2 hover:bg-white/12 transition-all duration-250"
                   >
                     {/* User Avatar */}
                     <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-xs sm:text-sm">
