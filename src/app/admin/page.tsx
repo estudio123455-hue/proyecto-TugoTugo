@@ -1,6 +1,6 @@
 'use client'
 
-import { useSession } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
@@ -80,13 +80,22 @@ export default function AdminDashboard() {
       {/* Header */}
       <div className="bg-white shadow">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="py-6">
-            <h1 className="text-3xl font-bold text-gray-900">
-              🔧 Panel de Administración
-            </h1>
-            <p className="mt-1 text-sm text-gray-600">
-              Gestiona usuarios, restaurantes, posts, packs y órdenes
-            </p>
+          <div className="py-6 flex justify-between items-center">
+            <div>
+              <h1 className="text-3xl font-bold text-gray-900">
+                🔧 Panel de Administración
+              </h1>
+              <p className="mt-1 text-sm text-gray-600">
+                Gestiona usuarios, restaurantes, posts, packs y órdenes
+              </p>
+            </div>
+            <button
+              onClick={() => signOut()}
+              className="flex items-center space-x-2 px-4 py-2 bg-red-500 hover:bg-red-600 text-white rounded-lg transition-colors shadow-md"
+            >
+              <span className="text-lg">🚪</span>
+              <span className="font-medium">Cerrar Sesión</span>
+            </button>
           </div>
         </div>
       </div>
