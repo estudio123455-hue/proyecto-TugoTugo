@@ -106,7 +106,16 @@ export default function PacksExplorer() {
     }
   }
 
-  const filterPacks = useCallback(() => {
+  useEffect(() => {
+    fetchPacks()
+
+    // Auto-refresh every 30 seconds
+    const interval = setInterval(fetchPacks, 30000)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
     let filteredPacksData = packs
     let filteredPostsData = posts
 
@@ -177,19 +186,6 @@ export default function PacksExplorer() {
     setFilteredPacks(filteredPacksData)
     setFilteredPosts(filteredPostsData)
   }, [packs, posts, selectedCategory, searchQuery])
-
-  useEffect(() => {
-    fetchPacks()
-
-    // Auto-refresh every 30 seconds
-    const interval = setInterval(fetchPacks, 30000)
-
-    return () => clearInterval(interval)
-  }, [])
-
-  useEffect(() => {
-    filterPacks()
-  }, [filterPacks])
 
   const handleReservePack = async (packId: string, quantity: number) => {
     if (!session) {
