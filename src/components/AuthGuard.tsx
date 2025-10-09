@@ -1,9 +1,8 @@
 'use client'
 
 import { useSession } from 'next-auth/react'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 import { ReactNode } from 'react'
-import AuthLanding from './AuthLanding'
 
 interface AuthGuardProps {
   children: ReactNode
@@ -27,6 +26,7 @@ const publicRoutes = [
 export default function AuthGuard({ children }: AuthGuardProps) {
   const { data: session, status } = useSession()
   const pathname = usePathname()
+  const router = useRouter()
 
   // Si está cargando, mostrar loading
   if (status === 'loading') {
@@ -45,9 +45,17 @@ export default function AuthGuard({ children }: AuthGuardProps) {
     return <>{children}</>
   }
 
-  // Si no está autenticado y no está en ruta pública, mostrar landing de auth
+  // Si no está autenticado y no está en ruta pública, redirigir a auth
   if (!session) {
-    return <AuthLanding />
+    router.push('/auth')
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-purple-600 via-purple-500 to-orange-400 flex items-center justify-center">
+        <div className="text-center text-white">
+          <div className="animate-spin rounded-full h-16 w-16 border-b-2 border-white mx-auto mb-4"></div>
+          <p className="text-xl font-semibold">Redirigiendo...</p>
+        </div>
+      </div>
+    )
   }
 
   // Si está autenticado, mostrar contenido normal
