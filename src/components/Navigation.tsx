@@ -48,13 +48,13 @@ export default function Navigation() {
   }
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-[100] backdrop-blur-md bg-white/80 border-b border-gray-200">
-      <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
+    <nav className="fixed top-0 left-0 right-0 w-full z-[100] backdrop-blur-md bg-white/80 border-b border-gray-200">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
         {/* Left side */}
-        <div className="flex items-center gap-8">
+        <div className="flex items-center gap-4 md:gap-8">
         <Link 
           href={session?.user?.role === 'ESTABLISHMENT' ? '/dashboard' : session?.user?.role === 'ADMIN' ? '/admin' : session ? '/packs' : '/'}
-          className="flex items-center text-2xl font-bold text-emerald-500 tracking-tight"
+          className="flex items-center text-xl sm:text-2xl font-bold text-emerald-500 tracking-tight"
         >
           🌿 <span className="ml-1 text-gray-900">Zavo</span>
         </Link>
@@ -98,7 +98,7 @@ export default function Navigation() {
       </div>
 
       {/* Right side */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-2 sm:gap-3">
         {session && <NotificationButton />}
         
         {status === 'loading' ? (
@@ -107,9 +107,9 @@ export default function Navigation() {
           <div className="relative group user-menu-container">
             <button 
               onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-              className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 rounded-full px-3 py-2 transition"
+              className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 rounded-full px-2 sm:px-3 py-1.5 sm:py-2 transition"
             >
-              <div className="w-9 h-9 bg-gradient-to-tr from-emerald-400 to-blue-500 text-white rounded-full flex items-center justify-center font-semibold">
+              <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-tr from-emerald-400 to-blue-500 text-white rounded-full flex items-center justify-center font-semibold text-sm">
                 {getUserInitials(session.user?.name, session.user?.email)}
               </div>
               <div className="hidden sm:flex flex-col leading-tight text-left">
