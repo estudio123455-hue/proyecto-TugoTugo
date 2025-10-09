@@ -27,8 +27,8 @@ export default function Navigation() {
   }
 
   return (
-    <nav className="bg-white dark:bg-gray-900 shadow-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40">
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+    <nav className="bg-white dark:bg-gray-900 shadow-lg border-b border-gray-200 dark:border-gray-700 sticky top-0 z-40 overflow-visible">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 overflow-visible">
         <div className="flex justify-between items-center h-14 sm:h-16">
           <div className="flex items-center min-w-0">
             <Link 
@@ -159,7 +159,7 @@ export default function Navigation() {
                         onClick={() => setIsUserMenuOpen(false)}
                       ></div>
                       
-                      <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-600 z-50">
+                      <div className="fixed right-4 top-16 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-600 z-[100]">
                     <div className="p-4 border-b border-gray-100 dark:border-gray-700">
                       <div className="flex items-center space-x-3">
                         <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white font-bold">
