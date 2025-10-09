@@ -55,82 +55,31 @@ export default function AuthPage() {
     setError('')
 
     try {
-      console.log('🔐 [SignIn] Starting login process for:', formData.email)
-      
-      // First verify credentials
       const result = await signIn('credentials', {
         email: formData.email,
         password: formData.password,
         redirect: false,
       })
 
-      console.log('🔐 [SignIn] Credentials result:', result)
-
       if (result?.error) {
-        console.error('❌ [SignIn] Invalid credentials')
         setError('Email o contraseña incorrectos')
         setIsLoading(false)
         return
       }
 
+      // Redirect based on role
       const session = await getSession()
       const userRole = session?.user?.role
-      console.log('👤 [SignIn] User role:', userRole)
 
-      // Si es ADMIN, permitir acceso directo sin verificación
       if (userRole === 'ADMIN') {
-        console.log('🔧 [SignIn] Admin user - skipping verification')
         window.location.href = '/admin'
-        return
-      }
-
-      // Para otros usuarios, requerir verificación por email
-      console.log('🔓 [SignIn] Signing out temporarily to send verification code')
-      await signOut({ redirect: false })
-      
-      console.log('📧 [SignIn] Sending verification code to:', formData.email)
-      
-      // Send verification code using simple system
-      const verificationResponse = await fetch('/api/auth/simple-verify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          action: 'send',
-          email: formData.email,
-          type: 'LOGIN',
-          userData: {
-            role: userRole,
-            accountType: accountType,
-          },
-        }),
-      })
-
-      console.log('📡 [SignIn] Verification response status:', verificationResponse.status)
-      const verificationData = await verificationResponse.json()
-      console.log('📦 [SignIn] Verification data:', verificationData)
-
-      if (verificationResponse.ok) {
-        console.log('✅ [SignIn] Code sent successfully, redirecting to verification page')
-        
-        // Redirect to verification page
-        const params = new URLSearchParams()
-        params.append('email', formData.email)
-        params.append('type', 'LOGIN')
-        params.append('role', userRole || 'CUSTOMER')
-        params.append('accountType', accountType)
-
-        const redirectUrl = `/auth/verify-login?${params.toString()}`
-        console.log('🔄 [SignIn] Redirecting to:', redirectUrl)
-        
-        window.location.href = redirectUrl
+      } else if (userRole === 'ESTABLISHMENT') {
+        window.location.href = '/dashboard'
       } else {
-        console.error('❌ [SignIn] Error sending verification code:', verificationData.message)
-        setError(verificationData.message || 'Error al enviar código de verificación. Inténtalo de nuevo.')
+        window.location.href = '/packs'
       }
     } catch (error) {
-      console.error('❌ [SignIn] Exception:', error)
+      console.error('Error:', error)
       setError('Ocurrió un error. Inténtalo de nuevo.')
     } finally {
       setIsLoading(false)
@@ -158,53 +107,46 @@ export default function AuthPage() {
     try {
       const role = accountType === 'restaurant' ? 'ESTABLISHMENT' : 'CUSTOMER'
       
-      console.log('📧 [SignUp] Sending verification code to:', formData.email)
-      
-      // Send verification code using simple reliable system
-      const response = await fetch('/api/auth/simple-verify', {
+      // Register user directly
+      const response = await fetch('/api/auth/register', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          action: 'send',
+          name: formData.name,
           email: formData.email,
-          type: 'REGISTRATION',
-          userData: {
-            name: formData.name,
-            password: formData.password,
-            role: role,
-          },
+          password: formData.password,
+          role: role,
         }),
       })
 
-      console.log('📡 [SignUp] Response status:', response.status)
       const data = await response.json()
-      console.log('📦 [SignUp] Response data:', data)
 
       if (response.ok) {
-        console.log('✅ [SignUp] Code sent successfully, redirecting to verification page')
-        
-        // Redirect to verification page with user data
-        const userData = {
-          name: formData.name,
-          password: formData.password,
-          role: role,
-        }
-        
-        const params = new URLSearchParams({
+        // Auto sign in after registration
+        const signInResult = await signIn('credentials', {
           email: formData.email,
-          type: 'REGISTRATION',
-          userData: encodeURIComponent(JSON.stringify(userData)),
+          password: formData.password,
+          redirect: false,
         })
 
-        window.location.href = `/auth/verify?${params.toString()}`
+        if (signInResult?.ok) {
+          // Redirect based on role
+          if (role === 'ESTABLISHMENT') {
+            window.location.href = '/dashboard'
+          } else {
+            window.location.href = '/packs'
+          }
+        } else {
+          setSuccess('Cuenta creada exitosamente. Por favor inicia sesión.')
+          setActiveTab('signin')
+        }
       } else {
-        console.error('❌ [SignUp] Error sending code:', data.message)
-        setError(data.message || 'Error al enviar código de verificación')
+        setError(data.message || 'Error al crear la cuenta')
       }
     } catch (error) {
-      console.error('❌ [SignUp] Exception:', error)
+      console.error('Error:', error)
       setError('Ocurrió un error. Por favor intenta de nuevo.')
     } finally {
       setIsLoading(false)

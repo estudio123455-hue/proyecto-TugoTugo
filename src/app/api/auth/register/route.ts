@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { sendVerificationCodePersistent } from '@/lib/verification-persistent'
+import { hash } from 'bcryptjs'
+import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
   try {
@@ -8,39 +9,57 @@ export async function POST(request: NextRequest) {
     // Validate input
     if (!name || !email || !password || !role) {
       return NextResponse.json(
-        { message: 'Missing required fields' },
+        { message: 'Faltan campos requeridos' },
         { status: 400 }
       )
     }
 
     if (password.length < 6) {
       return NextResponse.json(
-        { message: 'Password must be at least 6 characters long' },
+        { message: 'La contraseña debe tener al menos 6 caracteres' },
         { status: 400 }
       )
     }
 
-    // Send verification code instead of creating user directly
-    const result = await sendVerificationCodePersistent(email, name, 'REGISTRATION')
-    
-    if (!result.success) {
+    // Check if user already exists
+    const existingUser = await prisma.user.findUnique({
+      where: { email }
+    })
+
+    if (existingUser) {
       return NextResponse.json(
-        { message: result.message },
+        { message: 'Este email ya está registrado' },
         { status: 400 }
       )
     }
 
-    // Return success with instruction to verify
+    // Hash password
+    const hashedPassword = await hash(password, 12)
+
+    // Create user directly
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        role,
+      }
+    })
+
     return NextResponse.json({
-      message: 'Código de verificación enviado. Revisa tu email.',
+      message: 'Cuenta creada exitosamente',
       success: true,
-      requiresVerification: true,
-      userData: { name, email, password, role }
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      }
     })
   } catch (error) {
     console.error('Registration error:', error)
     return NextResponse.json(
-      { message: 'Internal server error' },
+      { message: 'Error interno del servidor' },
       { status: 500 }
     )
   }
