@@ -2,7 +2,7 @@
 
 import { signIn, signOut } from 'next-auth/react'
 import Link from 'next/link'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { getFirstName, getUserInitials } from '@/lib/user-utils'
 import { useCleanSession } from '@/hooks/useCleanSession'
 import NotificationButton from './NotificationButton'
@@ -11,6 +11,24 @@ export default function Navigation() {
   const { data: session, status } = useCleanSession()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
+
+  // Close menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as HTMLElement
+      if (isUserMenuOpen && !target.closest('.user-menu-container')) {
+        setIsUserMenuOpen(false)
+      }
+    }
+
+    if (isUserMenuOpen) {
+      document.addEventListener('click', handleClickOutside)
+    }
+
+    return () => {
+      document.removeEventListener('click', handleClickOutside)
+    }
+  }, [isUserMenuOpen])
 
   const getRoleDisplay = (role?: string) => {
     switch (role) {
@@ -82,8 +100,11 @@ export default function Navigation() {
         {status === 'loading' ? (
           <div className="animate-pulse bg-gray-200 h-9 w-20 rounded-full"></div>
         ) : session ? (
-          <div className="relative group">
-            <button className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 rounded-full px-3 py-2 transition">
+          <div className="relative group user-menu-container">
+            <button 
+              onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+              className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 rounded-full px-3 py-2 transition"
+            >
               <div className="w-9 h-9 bg-gradient-to-tr from-emerald-400 to-blue-500 text-white rounded-full flex items-center justify-center font-semibold">
                 {getUserInitials(session.user?.name, session.user?.email)}
               </div>
@@ -98,7 +119,11 @@ export default function Navigation() {
             </button>
 
             {/* Dropdown Menu */}
-            <div className="absolute right-0 mt-2 w-64 sm:w-56 bg-white border border-gray-200 shadow-xl rounded-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-1 group-hover:translate-y-0">
+            <div className={`absolute right-0 mt-2 w-64 sm:w-56 bg-white border border-gray-200 shadow-xl rounded-2xl transition-all transform ${
+              isUserMenuOpen 
+                ? 'opacity-100 visible translate-y-0' 
+                : 'opacity-0 invisible translate-y-1'
+            } md:group-hover:opacity-100 md:group-hover:visible md:group-hover:translate-y-0`}>
               <div className="px-4 py-3 border-b border-gray-100">
                 <span className="block text-sm font-semibold text-gray-800">
                   {getFirstName(session.user?.name)}
@@ -108,15 +133,26 @@ export default function Navigation() {
                 </span>
               </div>
               <div className="p-2 text-sm text-gray-700">
-                <Link href="/packs" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                <Link 
+                  href="/packs" 
+                  onClick={() => setIsUserMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
+                >
                   🍽️ Explorar Packs
                 </Link>
-                <Link href="/profile" className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition">
+                <Link 
+                  href="/profile" 
+                  onClick={() => setIsUserMenuOpen(false)}
+                  className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-gray-100 transition"
+                >
                   📦 Mis Órdenes
                 </Link>
                 <div className="border-t border-gray-100 mt-2"></div>
                 <button
-                  onClick={() => signOut()}
+                  onClick={() => {
+                    setIsUserMenuOpen(false)
+                    signOut()
+                  }}
                   className="flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-red-100 text-red-600 transition w-full text-left"
                 >
                   🚪 Cerrar Sesión
