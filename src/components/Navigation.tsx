@@ -2,50 +2,11 @@
 
 import { signIn, signOut } from 'next-auth/react'
 import Link from 'next/link'
-import { useState, useEffect } from 'react'
-import { getFirstName, getUserInitials } from '@/lib/user-utils'
 import { useCleanSession } from '@/hooks/useCleanSession'
 import NotificationButton from './NotificationButton'
 
 export default function Navigation() {
   const { data: session, status } = useCleanSession()
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
-
-  // Close menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as HTMLElement
-      if (isUserMenuOpen && !target.closest('.user-menu-container')) {
-        setIsUserMenuOpen(false)
-      }
-    }
-
-    if (isUserMenuOpen) {
-      // Add a small delay to prevent immediate closing
-      const timer = setTimeout(() => {
-        document.addEventListener('mousedown', handleClickOutside)
-      }, 100)
-      
-      return () => {
-        clearTimeout(timer)
-        document.removeEventListener('mousedown', handleClickOutside)
-      }
-    }
-  }, [isUserMenuOpen])
-
-  const getRoleDisplay = (role?: string) => {
-    switch (role) {
-      case 'CUSTOMER':
-        return '🛒 Cliente'
-      case 'ESTABLISHMENT':
-        return '🏪 Restaurante'
-      case 'ADMIN':
-        return '🔧 Admin'
-      default:
-        return '👤 Usuario'
-    }
-  }
 
   return (
     <nav className="fixed top-0 left-0 right-0 w-full z-[100] backdrop-blur-md bg-white/80 border-b border-gray-200">
@@ -104,69 +65,13 @@ export default function Navigation() {
         {status === 'loading' ? (
           <div className="animate-pulse bg-gray-200 h-9 w-20 rounded-full"></div>
         ) : session ? (
-          <div className="relative group user-menu-container">
-            <button 
-              onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
-              className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 rounded-full px-2 sm:px-3 py-1.5 sm:py-2 transition"
-            >
-              <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-tr from-emerald-400 to-blue-500 text-white rounded-full flex items-center justify-center font-semibold text-sm">
-                {getUserInitials(session.user?.name, session.user?.email)}
-              </div>
-              <div className="hidden sm:flex flex-col leading-tight text-left">
-                <span className="text-sm font-semibold text-gray-800">
-                  {getFirstName(session.user?.name)}
-                </span>
-                <span className="text-xs text-gray-500">
-                  {getRoleDisplay(session.user?.role)}
-                </span>
-              </div>
-            </button>
-
-            {/* Dropdown Menu */}
-            <div className={`absolute right-0 mt-2 w-56 bg-white border border-gray-200 shadow-xl rounded-xl transition-all transform z-[110] ${
-              isUserMenuOpen 
-                ? 'opacity-100 visible translate-y-0 pointer-events-auto' 
-                : 'opacity-0 invisible translate-y-1 pointer-events-none'
-            } md:group-hover:opacity-100 md:group-hover:visible md:group-hover:translate-y-0 md:group-hover:pointer-events-auto`}>
-              <div className="px-4 py-3 border-b border-gray-100">
-                <span className="block text-sm font-semibold text-gray-800 mb-0.5">
-                  {session.user?.name || 'Usuario'}
-                </span>
-                <span className="block text-xs text-gray-500 truncate">
-                  {session.user?.email}
-                </span>
-              </div>
-              <div className="py-2">
-                <Link 
-                  href="/packs" 
-                  onClick={() => setIsUserMenuOpen(false)}
-                  className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition"
-                >
-                  <span>🍽️</span>
-                  <span>Explorar Packs</span>
-                </Link>
-                <Link 
-                  href="/profile" 
-                  onClick={() => setIsUserMenuOpen(false)}
-                  className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition"
-                >
-                  <span>📦</span>
-                  <span>Mis Órdenes</span>
-                </Link>
-                <div className="border-t border-gray-100 my-1"></div>
-                <button
-                  onClick={() => {
-                    setIsUserMenuOpen(false)
-                    signOut()
-                  }}
-                  className="flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 active:bg-red-100 transition w-full text-left"
-                >
-                  <span>🚪</span>
-                  <span>Cerrar Sesión</span>
-                </button>
-              </div>
-            </div>
-          </div>
+          <button
+            onClick={() => signOut()}
+            className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-3 sm:px-4 py-2 rounded-lg text-sm font-medium transition shadow-sm"
+          >
+            <span>🚪</span>
+            <span className="hidden sm:inline">Cerrar Sesión</span>
+          </button>
         ) : (
           <div className="flex items-center gap-2">
             <button
