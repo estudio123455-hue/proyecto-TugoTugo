@@ -75,7 +75,7 @@ export default function PacksExplorer() {
     return Array.from(restaurantMap.values())
   }
 
-  const fetchPacks = async () => {
+  const fetchPacks = useCallback(async () => {
     console.log('🔄 Fetching packs and posts from API...')
     try {
       // Fetch packs
@@ -104,7 +104,7 @@ export default function PacksExplorer() {
     } finally {
       setIsLoading(false)
     }
-  }
+  }, [])
 
   useEffect(() => {
     fetchPacks()
@@ -113,7 +113,7 @@ export default function PacksExplorer() {
     const interval = setInterval(fetchPacks, 30000)
 
     return () => clearInterval(interval)
-  }, [])
+  }, [fetchPacks])
 
   useEffect(() => {
     let filteredPacksData = packs
