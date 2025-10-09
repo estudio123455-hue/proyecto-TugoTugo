@@ -90,7 +90,7 @@ export default function Navigation() {
               <div className="w-9 h-9 bg-gradient-to-tr from-emerald-400 to-blue-500 text-white rounded-full flex items-center justify-center font-semibold">
                 {getUserInitials(session.user?.name, session.user?.email)}
               </div>
-              <div className="hidden sm:flex flex-col leading-tight text-left">
+              <div className="flex flex-col leading-tight text-left">
                 <span className="text-sm font-semibold text-gray-800">
                   {getFirstName(session.user?.name)}
                 </span>
