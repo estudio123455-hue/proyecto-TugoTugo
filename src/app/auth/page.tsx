@@ -373,19 +373,6 @@ export default function AuthPage() {
                       </div>
                     </div>
 
-                    {/* Información de Seguridad (siempre activa) */}
-                    {activeTab === 'signin' && (
-                      <div className="p-4 bg-blue-50 rounded-xl border border-blue-200">
-                        <div className="flex items-center gap-2 mb-2">
-                          <span className="text-blue-600">🔒</span>
-                          <span className="font-semibold text-blue-800">Verificación de Seguridad</span>
-                        </div>
-                        <p className="text-blue-600 text-sm">
-                          Por tu seguridad, te enviaremos un código de verificación por email después de validar tus credenciales.
-                        </p>
-                      </div>
-                    )}
-
                     {/* Confirmar Contraseña (solo para registro) */}
                     {activeTab === 'signup' && (
                       <div>
