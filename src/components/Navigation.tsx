@@ -98,12 +98,12 @@ export default function Navigation() {
             </button>
 
             {/* Dropdown Menu */}
-            <div className="absolute right-0 mt-2 w-56 bg-white border border-gray-200 shadow-xl rounded-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-1 group-hover:translate-y-0">
+            <div className="absolute right-0 mt-2 w-64 sm:w-56 bg-white border border-gray-200 shadow-xl rounded-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all transform translate-y-1 group-hover:translate-y-0">
               <div className="px-4 py-3 border-b border-gray-100">
                 <span className="block text-sm font-semibold text-gray-800">
                   {getFirstName(session.user?.name)}
                 </span>
-                <span className="block text-xs text-gray-500 truncate">
+                <span className="block text-xs text-gray-500 break-all">
                   {session.user?.email}
                 </span>
               </div>
