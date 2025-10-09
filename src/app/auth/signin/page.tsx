@@ -10,6 +10,7 @@ export default function SignInNew() {
   const [verificationCode, setVerificationCode] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
+  const [successMessage, setSuccessMessage] = useState('')
   const [loginType, setLoginType] = useState<'customer' | 'restaurant'>('customer')
   const [showPassword, setShowPassword] = useState(false)
   const [mounted, setMounted] = useState(false)
@@ -18,6 +19,16 @@ export default function SignInNew() {
 
   useEffect(() => {
     setMounted(true)
+    
+    // Check if coming from registration
+    const params = new URLSearchParams(window.location.search)
+    if (params.get('registered') === 'true') {
+      setSuccessMessage('¡Registro exitoso! Por favor inicia sesión.')
+      const emailParam = params.get('email')
+      if (emailParam) {
+        setEmail(decodeURIComponent(emailParam))
+      }
+    }
   }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -190,6 +201,12 @@ export default function SignInNew() {
                       </button>
                     </div>
                   </div>
+
+                  {successMessage && (
+                    <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">
+                      <p className="text-green-700 text-sm text-center font-medium">{successMessage}</p>
+                    </div>
+                  )}
 
                   {error && (
                     <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-xl">

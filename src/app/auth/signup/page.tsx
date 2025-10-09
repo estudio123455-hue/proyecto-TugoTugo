@@ -71,23 +71,8 @@ export default function SignUpNew() {
         })
 
         if (response.ok) {
-          // Auto sign in after successful registration
-          const result = await signIn('credentials', {
-            email: formData.email,
-            password: formData.password,
-            redirect: false,
-          })
-
-          if (result?.error) {
-            setError(
-              'Registro exitoso pero falló el login. Por favor inicia sesión manualmente.'
-            )
-          } else {
-            // Wait for session to update before redirecting
-            setTimeout(() => {
-              window.location.href = formData.role === 'ESTABLISHMENT' ? '/dashboard' : '/welcome'
-            }, 1000)
-          }
+          // Redirigir a login con mensaje de éxito
+          window.location.href = `/auth/signin?registered=true&email=${encodeURIComponent(formData.email)}`
         } else {
           const data = await response.json()
           setError(data.message || 'Código de verificación inválido')
