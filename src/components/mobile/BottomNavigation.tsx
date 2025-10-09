@@ -21,7 +21,7 @@ export default function BottomNavigation() {
     {
       name: 'Inicio',
       icon: Home,
-      href: '/',
+      href: '/landing',
     },
     {
       name: 'Mapa',
@@ -55,8 +55,8 @@ export default function BottomNavigation() {
   }
 
   const isActive = (href: string) => {
-    if (href === '/') {
-      return pathname === '/'
+    if (href === '/landing') {
+      return pathname === '/' || pathname === '/landing'
     }
     return pathname.startsWith(href)
   }
