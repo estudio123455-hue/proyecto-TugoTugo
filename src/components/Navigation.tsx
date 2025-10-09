@@ -11,6 +11,7 @@ import NotificationButton from './NotificationButton'
 export default function Navigation() {
   const { data: session, status } = useCleanSession()
   const [isMenuOpen, setIsMenuOpen] = useState(false)
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false)
 
   const getRoleDisplay = (role?: string) => {
     switch (role) {
@@ -117,8 +118,11 @@ export default function Navigation() {
             ) : session ? (
               <div className="flex items-center space-x-1 sm:space-x-2 lg:space-x-4">
                 {/* User Menu Dropdown */}
-                <div className="relative group">
-                  <button className="flex items-center space-x-1 sm:space-x-2 lg:space-x-3 text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-all">
+                <div className="relative">
+                  <button 
+                    onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                    className="flex items-center space-x-1 sm:space-x-2 lg:space-x-3 text-gray-700 dark:text-gray-300 hover:text-green-600 dark:hover:text-green-400 px-2 sm:px-3 py-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-all"
+                  >
                     {/* User Avatar */}
                     <div className="w-8 h-8 sm:w-9 sm:h-9 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white font-semibold text-xs sm:text-sm">
                       {getUserInitials(session.user?.name, session.user?.email)}
@@ -132,7 +136,7 @@ export default function Navigation() {
                       </div>
                     </div>
                     <svg
-                      className="w-4 h-4 text-gray-400"
+                      className={`w-4 h-4 text-gray-400 transition-transform ${isUserMenuOpen ? 'rotate-180' : ''}`}
                       fill="none"
                       stroke="currentColor"
                       viewBox="0 0 24 24"
@@ -147,7 +151,15 @@ export default function Navigation() {
                   </button>
 
                   {/* Dropdown Menu */}
-                  <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-600 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50">
+                  {isUserMenuOpen && (
+                    <>
+                      {/* Backdrop para cerrar al hacer click fuera */}
+                      <div 
+                        className="fixed inset-0 z-40" 
+                        onClick={() => setIsUserMenuOpen(false)}
+                      ></div>
+                      
+                      <div className="absolute right-0 top-full mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-xl border border-gray-200 dark:border-gray-600 z-50">
                     <div className="p-4 border-b border-gray-100 dark:border-gray-700">
                       <div className="flex items-center space-x-3">
                         <div className="w-12 h-12 bg-gradient-to-r from-green-400 to-blue-500 rounded-full flex items-center justify-center text-white font-bold">
@@ -267,6 +279,8 @@ export default function Navigation() {
                       </button>
                     </div>
                   </div>
+                    </>
+                  )}
                 </div>
               </div>
             ) : (
