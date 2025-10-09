@@ -30,7 +30,10 @@ export default function Navigation() {
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
         <div className="flex justify-between items-center h-14 sm:h-16">
           <div className="flex items-center min-w-0">
-            <Link href="/" className="flex-shrink-0 flex items-center">
+            <Link 
+              href={session?.user?.role === 'ESTABLISHMENT' ? '/dashboard' : session?.user?.role === 'ADMIN' ? '/admin' : session ? '/packs' : '/'}
+              className="flex-shrink-0 flex items-center"
+            >
               <span className="text-lg sm:text-xl lg:text-2xl font-bold text-green-600 dark:text-green-400 whitespace-nowrap">
                 🍃 FoodSave
               </span>

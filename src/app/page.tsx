@@ -16,17 +16,17 @@ export default function Home() {
   }, [])
 
   useEffect(() => {
-    // Si hay sesión, redirigir según el rol
-    if (status === 'authenticated' && session?.user) {
+    // Si hay sesión, redirigir según el rol (usando replace para evitar loop)
+    if (status === 'authenticated' && session?.user && mounted) {
       if (session.user.role === 'ESTABLISHMENT') {
-        router.push('/dashboard')
+        router.replace('/dashboard')
       } else if (session.user.role === 'ADMIN') {
-        router.push('/admin')
+        router.replace('/admin')
       } else {
-        router.push('/packs')
+        router.replace('/packs')
       }
     }
-  }, [status, session, router])
+  }, [status, session, router, mounted])
 
   // Mostrar loading mientras se verifica la sesión
   if (status === 'loading' || !mounted) {
