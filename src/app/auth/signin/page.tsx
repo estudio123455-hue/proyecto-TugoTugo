@@ -7,15 +7,12 @@ import Link from 'next/link'
 export default function SignInNew() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
-  const [verificationCode, setVerificationCode] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
   const [loginType, setLoginType] = useState<'customer' | 'restaurant'>('customer')
   const [showPassword, setShowPassword] = useState(false)
   const [mounted, setMounted] = useState(false)
-  const [step, setStep] = useState<'credentials' | 'verification'>('credentials')
-  const [codeSent, setCodeSent] = useState(false)
 
   useEffect(() => {
     setMounted(true)
@@ -37,73 +34,45 @@ export default function SignInNew() {
     setError('')
 
     try {
-      if (step === 'credentials') {
-        // Step 1: Verify credentials and send code
-        const response = await fetch('/api/auth/login-with-code', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email, password }),
-        })
+      // Login directo sin código de verificación
+      const result = await signIn('credentials', {
+        email,
+        password,
+        redirect: false,
+      })
 
-        const data = await response.json()
+      if (result?.error) {
+        setError('Email o contraseña incorrectos')
+        setIsLoading(false)
+        return
+      }
 
-        if (!response.ok) {
-          setError(data.message || 'Email o contraseña incorrectos')
-          setIsLoading(false)
-          return
-        }
+      const session = await getSession()
 
-        // Credentials valid, code sent
-        setStep('verification')
-        setCodeSent(true)
-        setError('')
+      // Verify that the user role matches the selected login type
+      if (
+        loginType === 'restaurant' &&
+        session?.user?.role !== 'ESTABLISHMENT'
+      ) {
+        setError('Esta cuenta no es de restaurante. Usa el login de cliente.')
+        setIsLoading(false)
+        return
+      }
+
+      if (
+        loginType === 'customer' &&
+        session?.user?.role === 'ESTABLISHMENT'
+      ) {
+        setError('Esta cuenta es de restaurante. Usa el login de restaurante.')
+        setIsLoading(false)
+        return
+      }
+
+      // Redirect based on actual role
+      if (session?.user?.role === 'ESTABLISHMENT') {
+        window.location.href = '/dashboard'
       } else {
-        // Step 2: Verify code and login
-        const result = await signIn('credentials', {
-          email,
-          password,
-          verificationCode,
-          redirect: false,
-        })
-
-        if (result?.error) {
-          setError('Código de verificación inválido')
-          setIsLoading(false)
-          return
-        }
-
-        const session = await getSession()
-
-        // Verify that the user role matches the selected login type
-        if (
-          loginType === 'restaurant' &&
-          session?.user?.role !== 'ESTABLISHMENT'
-        ) {
-          setError('Esta cuenta no es de restaurante. Usa el login de cliente.')
-          setIsLoading(false)
-          return
-        }
-
-        if (
-          loginType === 'customer' &&
-          session?.user?.role === 'ESTABLISHMENT'
-        ) {
-          setError('Esta cuenta es de restaurante. Usa el login de restaurante.')
-          setIsLoading(false)
-          return
-        }
-
-        // Show success message and redirect
-        setError('')
-        
-        // Redirect based on actual role
-        setTimeout(() => {
-          if (session?.user?.role === 'ESTABLISHMENT') {
-            window.location.href = '/dashboard'
-          } else {
-            window.location.href = '/packs'
-          }
-        }, 800)
+        window.location.href = '/packs'
       }
     } catch (error) {
       setError('Ocurrió un error. Inténtalo de nuevo.')
@@ -215,132 +184,67 @@ export default function SignInNew() {
                   )}
 
                   <form onSubmit={handleSubmit} className="space-y-6">
-                    {step === 'credentials' ? (
-                      <>
-                        <div>
-                          <label
-                            htmlFor="email"
-                            className="block text-sm font-semibold text-gray-700 mb-2"
-                          >
-                            Email
-                          </label>
-                          <input
-                            id="email"
-                            type="email"
-                            value={email}
-                            onChange={e => setEmail(e.target.value)}
-                            className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
-                            placeholder="tu@email.com"
-                            required
-                          />
-                        </div>
+                    <div>
+                      <label
+                        htmlFor="email"
+                        className="block text-sm font-semibold text-gray-700 mb-2"
+                      >
+                        Email
+                      </label>
+                      <input
+                        id="email"
+                        type="email"
+                        value={email}
+                        onChange={e => setEmail(e.target.value)}
+                        className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white"
+                        placeholder="tu@email.com"
+                        required
+                      />
+                    </div>
 
-                        <div>
-                          <label
-                            htmlFor="password"
-                            className="block text-sm font-semibold text-gray-700 mb-2"
-                          >
-                            Contraseña
-                          </label>
-                          <div className="relative">
-                            <input
-                              id="password"
-                              type={showPassword ? 'text' : 'password'}
-                              value={password}
-                              onChange={e => setPassword(e.target.value)}
-                              className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white pr-12"
-                              placeholder="••••••••"
-                              required
-                            />
-                            <button
-                              type="button"
-                              onClick={() => setShowPassword(!showPassword)}
-                              className="absolute inset-y-0 right-0 pr-4 flex items-center"
-                            >
-                              <span className="text-gray-400 hover:text-gray-600 text-lg">
-                                {showPassword ? '🙈' : '👁️'}
-                              </span>
-                            </button>
-                          </div>
-                        </div>
-
-                        <button
-                          type="submit"
-                          disabled={isLoading}
-                          className="w-full bg-gradient-to-r from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600 text-white py-4 px-6 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                        >
-                          {isLoading ? (
-                            <div className="flex items-center justify-center space-x-2">
-                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                              <span>Verificando...</span>
-                            </div>
-                          ) : (
-                            <span>CONTINUAR</span>
-                          )}
-                        </button>
-                      </>
-                    ) : (
-                      <>
-                        <div className="text-center mb-6">
-                          <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                            <span className="text-3xl">📧</span>
-                          </div>
-                          <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                            Código de Verificación
-                          </h3>
-                          <p className="text-sm text-gray-600">
-                            Hemos enviado un código de 6 dígitos a<br />
-                            <span className="font-semibold">{email}</span>
-                          </p>
-                        </div>
-
-                        <div>
-                          <label
-                            htmlFor="code"
-                            className="block text-sm font-semibold text-gray-700 mb-2"
-                          >
-                            Código de Verificación
-                          </label>
-                          <input
-                            id="code"
-                            type="text"
-                            value={verificationCode}
-                            onChange={e => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-                            className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white text-center text-2xl font-mono tracking-widest"
-                            placeholder="000000"
-                            maxLength={6}
-                            required
-                          />
-                        </div>
-
-                        <button
-                          type="submit"
-                          disabled={isLoading || verificationCode.length !== 6}
-                          className="w-full bg-gradient-to-r from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600 text-white py-4 px-6 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
-                        >
-                          {isLoading ? (
-                            <div className="flex items-center justify-center space-x-2">
-                              <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
-                              <span>Verificando...</span>
-                            </div>
-                          ) : (
-                            <span>VERIFICAR E INICIAR SESIÓN</span>
-                          )}
-                        </button>
-
+                    <div>
+                      <label
+                        htmlFor="password"
+                        className="block text-sm font-semibold text-gray-700 mb-2"
+                      >
+                        Contraseña
+                      </label>
+                      <div className="relative">
+                        <input
+                          id="password"
+                          type={showPassword ? 'text' : 'password'}
+                          value={password}
+                          onChange={e => setPassword(e.target.value)}
+                          className="w-full px-4 py-4 border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent transition-all bg-gray-50 focus:bg-white pr-12"
+                          placeholder="••••••••"
+                          required
+                        />
                         <button
                           type="button"
-                          onClick={() => {
-                            setStep('credentials')
-                            setVerificationCode('')
-                            setError('')
-                          }}
-                          className="w-full text-gray-600 hover:text-gray-900 py-2 text-sm font-medium"
+                          onClick={() => setShowPassword(!showPassword)}
+                          className="absolute inset-y-0 right-0 pr-4 flex items-center"
                         >
-                          ← Volver
+                          <span className="text-gray-400 hover:text-gray-600 text-lg">
+                            {showPassword ? '🙈' : '👁️'}
+                          </span>
                         </button>
-                      </>
-                    )}
+                      </div>
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={isLoading}
+                      className="w-full bg-gradient-to-r from-purple-600 to-orange-500 hover:from-purple-700 hover:to-orange-600 text-white py-4 px-6 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    >
+                      {isLoading ? (
+                        <div className="flex items-center justify-center space-x-2">
+                          <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                          <span>Iniciando sesión...</span>
+                        </div>
+                      ) : (
+                        <span>INICIAR SESIÓN</span>
+                      )}
+                    </button>
                   </form>
 
                   {/* Google OAuth */}
