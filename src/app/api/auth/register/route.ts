@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { sendVerificationCode } from '@/lib/verification'
+import { sendVerificationCodePersistent } from '@/lib/verification-persistent'
 
 export async function POST(request: NextRequest) {
   try {
@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Send verification code instead of creating user directly
-    const result = await sendVerificationCode(email, name, 'REGISTRATION')
+    const result = await sendVerificationCodePersistent(email, name, 'REGISTRATION')
     
     if (!result.success) {
       return NextResponse.json(
