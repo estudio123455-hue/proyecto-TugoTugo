@@ -123,46 +123,46 @@ export default function Navigation() {
             </button>
 
             {/* Dropdown Menu */}
-            <div className={`absolute right-0 mt-2 w-72 sm:w-64 bg-white border border-gray-200 shadow-xl rounded-2xl transition-all transform z-[110] ${
+            <div className={`absolute right-0 mt-2 w-56 bg-white border border-gray-200 shadow-xl rounded-xl transition-all transform z-[110] ${
               isUserMenuOpen 
                 ? 'opacity-100 visible translate-y-0 pointer-events-auto' 
                 : 'opacity-0 invisible translate-y-1 pointer-events-none'
             } md:group-hover:opacity-100 md:group-hover:visible md:group-hover:translate-y-0 md:group-hover:pointer-events-auto`}>
-              <div className="px-5 py-4 border-b border-gray-100">
-                <span className="block text-base font-semibold text-gray-800 mb-1">
-                  {getFirstName(session.user?.name)}
+              <div className="px-4 py-3 border-b border-gray-100">
+                <span className="block text-sm font-semibold text-gray-800 mb-0.5">
+                  {session.user?.name || 'Usuario'}
                 </span>
-                <span className="block text-sm text-gray-500 break-all leading-relaxed">
+                <span className="block text-xs text-gray-500 truncate">
                   {session.user?.email}
                 </span>
               </div>
-              <div className="p-3 text-base text-gray-700">
+              <div className="py-2">
                 <Link 
                   href="/packs" 
                   onClick={() => setIsUserMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition"
+                  className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition"
                 >
-                  <span className="text-xl">🍽️</span>
-                  <span className="font-medium">Explorar Packs</span>
+                  <span>🍽️</span>
+                  <span>Explorar Packs</span>
                 </Link>
                 <Link 
                   href="/profile" 
                   onClick={() => setIsUserMenuOpen(false)}
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-gray-100 active:bg-gray-200 transition"
+                  className="flex items-center gap-2 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition"
                 >
-                  <span className="text-xl">📦</span>
-                  <span className="font-medium">Mis Órdenes</span>
+                  <span>📦</span>
+                  <span>Mis Órdenes</span>
                 </Link>
-                <div className="border-t border-gray-100 my-2"></div>
+                <div className="border-t border-gray-100 my-1"></div>
                 <button
                   onClick={() => {
                     setIsUserMenuOpen(false)
                     signOut()
                   }}
-                  className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-red-50 active:bg-red-100 text-red-600 transition w-full text-left"
+                  className="flex items-center gap-2 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 active:bg-red-100 transition w-full text-left"
                 >
-                  <span className="text-xl">🚪</span>
-                  <span className="font-medium">Cerrar Sesión</span>
+                  <span>🚪</span>
+                  <span>Cerrar Sesión</span>
                 </button>
               </div>
             </div>
