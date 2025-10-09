@@ -189,7 +189,7 @@ export default function PacksExplorer() {
 
   useEffect(() => {
     filterPacks()
-  }, [packs, selectedCategory, searchQuery, filterPacks])
+  }, [filterPacks])
 
   const handleReservePack = async (packId: string, quantity: number) => {
     if (!session) {
