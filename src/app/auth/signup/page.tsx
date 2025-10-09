@@ -1,10 +1,19 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { signIn } from 'next-auth/react'
+import Head from 'next/head'
 
 export default function SignUpNew() {
+  // Force reload on iOS to avoid cache issues
+  useEffect(() => {
+    if (typeof window !== 'undefined' && window.performance) {
+      if (performance.navigation.type === 2) {
+        window.location.reload()
+      }
+    }
+  }, [])
   const [formData, setFormData] = useState({
     name: '',
     email: '',
