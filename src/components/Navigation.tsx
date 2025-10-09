@@ -9,10 +9,9 @@ export default function Navigation() {
   const { data: session, status } = useCleanSession()
 
   return (
-    <nav className="fixed top-0 left-0 right-0 w-full z-[100] backdrop-blur-md bg-white/80 border-b border-gray-200">
+    <nav className="fixed top-0 left-0 right-0 w-full z-[100] bg-white border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex justify-between items-center">
-        {/* Left side */}
-        <div className="flex items-center gap-4 md:gap-8">
+        {/* Left side - Logo */}
         <Link 
           href={session?.user?.role === 'ESTABLISHMENT' ? '/dashboard' : session?.user?.role === 'ADMIN' ? '/admin' : session ? '/packs' : '/'}
           className="flex items-center text-xl sm:text-2xl font-bold text-emerald-500 tracking-tight"
@@ -20,11 +19,8 @@ export default function Navigation() {
           🌿 <span className="ml-1 text-gray-900">Zavo</span>
         </Link>
 
-        <div className="hidden md:flex items-center gap-6 text-sm font-medium text-gray-700">
-          <Link href="/landing" className="hover:text-emerald-600 transition">
-            Home
-          </Link>
-          
+        {/* Center - Desktop Menu */}
+        <div className="hidden lg:flex items-center gap-6 text-sm font-medium text-gray-700">
           {session?.user?.role === 'ADMIN' ? (
             <Link href="/admin" className="flex items-center gap-1 hover:text-emerald-600 transition">
               🔧 Admin Panel
@@ -36,30 +32,22 @@ export default function Navigation() {
           ) : (
             <>
               <Link href="/packs" className="flex items-center gap-1 hover:text-emerald-600 transition">
-                📦 Find Packs
+                📦 Packs
               </Link>
               <Link href="/restaurants" className="flex items-center gap-1 hover:text-emerald-600 transition">
-                🏪 Restaurants
-              </Link>
-              <Link href="/feed" className="flex items-center gap-1 hover:text-emerald-600 transition">
-                📱 Feed
+                🏪 Restaurantes
               </Link>
               {session && (
                 <Link href="/profile" className="flex items-center gap-1 hover:text-emerald-600 transition">
-                  📦 My Orders
+                  📦 Mis Órdenes
                 </Link>
               )}
             </>
           )}
-          
-          <Link href="/how-it-works" className="hover:text-emerald-600 transition">
-            How it Works
-          </Link>
         </div>
-      </div>
 
-      {/* Right side */}
-      <div className="flex items-center gap-2 sm:gap-3">
+        {/* Right side */}
+        <div className="flex items-center gap-2 sm:gap-3">
         {session && <NotificationButton />}
         
         {status === 'loading' ? (
