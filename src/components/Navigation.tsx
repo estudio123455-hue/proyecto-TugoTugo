@@ -22,11 +22,15 @@ export default function Navigation() {
     }
 
     if (isUserMenuOpen) {
-      document.addEventListener('click', handleClickOutside)
-    }
-
-    return () => {
-      document.removeEventListener('click', handleClickOutside)
+      // Add a small delay to prevent immediate closing
+      const timer = setTimeout(() => {
+        document.addEventListener('mousedown', handleClickOutside)
+      }, 100)
+      
+      return () => {
+        clearTimeout(timer)
+        document.removeEventListener('mousedown', handleClickOutside)
+      }
     }
   }, [isUserMenuOpen])
 
@@ -44,7 +48,7 @@ export default function Navigation() {
   }
 
   return (
-    <nav className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-white/80 border-b border-gray-200">
+    <nav className="fixed top-0 left-0 w-full z-[100] backdrop-blur-md bg-white/80 border-b border-gray-200">
       <div className="max-w-7xl mx-auto px-6 py-3 flex justify-between items-center">
         {/* Left side */}
         <div className="flex items-center gap-8">
@@ -119,11 +123,11 @@ export default function Navigation() {
             </button>
 
             {/* Dropdown Menu */}
-            <div className={`absolute right-0 mt-2 w-72 sm:w-64 bg-white border border-gray-200 shadow-xl rounded-2xl transition-all transform z-50 ${
+            <div className={`absolute right-0 mt-2 w-72 sm:w-64 bg-white border border-gray-200 shadow-xl rounded-2xl transition-all transform z-[110] ${
               isUserMenuOpen 
-                ? 'opacity-100 visible translate-y-0' 
-                : 'opacity-0 invisible translate-y-1'
-            } md:group-hover:opacity-100 md:group-hover:visible md:group-hover:translate-y-0`}>
+                ? 'opacity-100 visible translate-y-0 pointer-events-auto' 
+                : 'opacity-0 invisible translate-y-1 pointer-events-none'
+            } md:group-hover:opacity-100 md:group-hover:visible md:group-hover:translate-y-0 md:group-hover:pointer-events-auto`}>
               <div className="px-5 py-4 border-b border-gray-100">
                 <span className="block text-base font-semibold text-gray-800 mb-1">
                   {getFirstName(session.user?.name)}
