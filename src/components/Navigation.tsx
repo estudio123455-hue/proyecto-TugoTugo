@@ -5,7 +5,6 @@ import Link from 'next/link'
 import { useState } from 'react'
 import { getFirstName, getUserInitials } from '@/lib/user-utils'
 import { useCleanSession } from '@/hooks/useCleanSession'
-import ThemeToggle from './ThemeToggle'
 import NotificationButton from './NotificationButton'
 
 export default function Navigation() {
@@ -78,8 +77,6 @@ export default function Navigation() {
 
       {/* Right side */}
       <div className="flex items-center gap-4">
-        <ThemeToggle />
-        
         {session && <NotificationButton />}
         
         {status === 'loading' ? (
