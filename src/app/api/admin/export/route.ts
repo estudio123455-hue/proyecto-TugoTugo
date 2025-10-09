@@ -35,10 +35,12 @@ export async function GET(request: NextRequest) {
           orderBy: { createdAt: 'desc' },
         })
         
-        csvData = 'Nombre,Email,Tipo\n'
+        // BOM para UTF-8 en Excel
+        csvData = '\uFEFF'
+        csvData += 'Nombre,Email,Tipo\n'
         users.forEach((user) => {
           const tipo = user.role === 'ESTABLISHMENT' ? 'Restaurante' : user.role === 'CUSTOMER' ? 'Cliente' : user.role
-          csvData += `"${user.name || ''}","${user.email}","${tipo}"\n`
+          csvData += `${user.name || ''},${user.email},${tipo}\n`
         })
         filename = 'usuarios.csv'
         break
@@ -57,9 +59,11 @@ export async function GET(request: NextRequest) {
           orderBy: { createdAt: 'desc' },
         })
         
-        csvData = 'ID,Nombre,Categoría,Dirección,Email,Teléfono,Estado Verificación,Activo,Usuario,Email Usuario,Fecha Creación\n'
+        // BOM para UTF-8 en Excel
+        csvData = '\uFEFF'
+        csvData += 'Nombre,Categoria,Direccion,Email,Telefono,Usuario,Email Usuario\n'
         establishments.forEach((est) => {
-          csvData += `"${est.id}","${est.name}","${est.category}","${est.address}","${est.email || ''}","${est.phone || ''}","${est.verificationStatus}","${est.isActive ? 'Sí' : 'No'}","${est.user.name || ''}","${est.user.email}","${est.createdAt.toISOString()}"\n`
+          csvData += `${est.name},${est.category},${est.address},${est.email || ''},${est.phone || ''},${est.user.name || ''},${est.user.email}\n`
         })
         filename = 'restaurantes.csv'
         break
