@@ -44,7 +44,7 @@ export default function LandingPage() {
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
               <Link
-                href="/auth/signup-new"
+                href="/packs"
                 className="group relative inline-flex items-center gap-3 bg-white text-purple-600 px-8 py-4 rounded-xl font-bold text-lg transition-all transform hover:scale-105 shadow-2xl hover:shadow-3xl w-full sm:w-auto"
               >
                 <span>🎉</span>
