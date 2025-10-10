@@ -31,6 +31,9 @@ export default function Navigation() {
             </Link>
           ) : (
             <>
+              <Link href="/" className="flex items-center gap-1 hover:text-emerald-600 transition">
+                🏠 Home
+              </Link>
               <Link href="/packs" className="flex items-center gap-1 hover:text-emerald-600 transition">
                 📦 Packs
               </Link>
