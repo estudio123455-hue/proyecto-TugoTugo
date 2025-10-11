@@ -910,6 +910,16 @@
     @apply text-green-500 focus:ring-green-500;
     @apply border-gray-300;
   }
+
+  /* Ocultar cualquier navegación lateral en móvil */
+  @media (max-width: 768px) {
+    aside,
+    [role="navigation"]:not(nav),
+    .sidebar,
+    .side-nav {
+      display: none !important;
+    }
+  }
 }
 
 /* ========================================
