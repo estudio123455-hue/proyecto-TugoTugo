@@ -1,11 +1,17 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useCallback, useRef } from 'react'
 
 interface CreateEstablishmentModalProps {
   isOpen: boolean
   onClose: () => void
   onSuccess: () => void
+}
+
+interface GeocodingResult {
+  lat: string
+  lon: string
+  display_name: string
 }
 
 export default function CreateEstablishmentModal({
@@ -26,6 +32,72 @@ export default function CreateEstablishmentModal({
     taxId: '',
   })
   const [loading, setLoading] = useState(false)
+  const [geocoding, setGeocoding] = useState(false)
+  const [suggestions, setSuggestions] = useState<GeocodingResult[]>([])
+  const [showSuggestions, setShowSuggestions] = useState(false)
+  const geocodingTimeout = useRef<NodeJS.Timeout | null>(null)
+
+  // Geocodificación con Nominatim (OpenStreetMap) - 100% gratis
+  const geocodeAddress = useCallback(async (address: string) => {
+    if (!address || address.length < 5) {
+      setSuggestions([])
+      return
+    }
+
+    setGeocoding(true)
+    try {
+      // Nominatim API - gratis, sin API key
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?` +
+        `q=${encodeURIComponent(address)}, Bogotá, Colombia&` +
+        `format=json&` +
+        `limit=5&` +
+        `addressdetails=1`,
+        {
+          headers: {
+            'User-Agent': 'TugoTugo-App', // Requerido por Nominatim
+          },
+        }
+      )
+
+      if (response.ok) {
+        const results: GeocodingResult[] = await response.json()
+        setSuggestions(results)
+        setShowSuggestions(results.length > 0)
+      }
+    } catch (error) {
+      console.error('Error geocoding:', error)
+    } finally {
+      setGeocoding(false)
+    }
+  }, [])
+
+  // Debounced geocoding
+  const handleAddressChange = (address: string) => {
+    setFormData({ ...formData, address })
+    
+    // Clear previous timeout
+    if (geocodingTimeout.current) {
+      clearTimeout(geocodingTimeout.current)
+    }
+
+    // Set new timeout
+    geocodingTimeout.current = setTimeout(() => {
+      geocodeAddress(address)
+    }, 500) // Wait 500ms after user stops typing
+  }
+
+  // Select suggestion
+  const selectSuggestion = (suggestion: GeocodingResult) => {
+    setFormData({
+      ...formData,
+      address: suggestion.display_name,
+      latitude: suggestion.lat,
+      longitude: suggestion.lon,
+    })
+    setShowSuggestions(false)
+    setSuggestions([])
+  }
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
@@ -158,20 +230,43 @@ export default function CreateEstablishmentModal({
               </div>
             </div>
 
-            <div>
+            <div className="relative">
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Dirección *
+                Dirección * {geocoding && <span className="text-xs text-blue-500">(buscando...)</span>}
               </label>
               <input
                 type="text"
                 required
                 value={formData.address}
-                onChange={(e) =>
-                  setFormData({ ...formData, address: e.target.value })
-                }
+                onChange={(e) => handleAddressChange(e.target.value)}
+                onFocus={() => suggestions.length > 0 && setShowSuggestions(true)}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
-                placeholder="Calle 123 #45-67, Bogotá"
+                placeholder="Ej: Calle 72 #10-34, Bogotá"
+                autoComplete="off"
               />
+              
+              {/* Suggestions Dropdown */}
+              {showSuggestions && suggestions.length > 0 && (
+                <div className="absolute z-50 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                  {suggestions.map((suggestion, index) => (
+                    <button
+                      key={index}
+                      type="button"
+                      onClick={() => selectSuggestion(suggestion)}
+                      className="w-full text-left px-3 py-2 hover:bg-green-50 border-b border-gray-100 last:border-b-0 transition-colors"
+                    >
+                      <div className="text-sm text-gray-900">{suggestion.display_name}</div>
+                      <div className="text-xs text-gray-500 mt-1">
+                        📍 {suggestion.lat}, {suggestion.lon}
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              )}
+              
+              <p className="text-xs text-gray-500 mt-1">
+                💡 Escribe la dirección y selecciona una sugerencia para autocompletar las coordenadas
+              </p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
