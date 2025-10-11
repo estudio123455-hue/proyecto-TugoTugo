@@ -17,6 +17,11 @@ export default function BottomNavigation() {
   const router = useRouter()
   const { data: session } = useSession()
 
+  // Ocultar la navegación completamente
+  return null
+
+  // Código original comentado por si lo necesitas después
+  /*
   // Ocultar la navegación en páginas de autenticación y dashboard
   const hideNavigation = 
     pathname?.startsWith('/auth') || 
@@ -26,6 +31,7 @@ export default function BottomNavigation() {
   if (hideNavigation) {
     return null
   }
+  */
 
   const navItems: NavItem[] = [
     {
