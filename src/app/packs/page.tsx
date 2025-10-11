@@ -49,14 +49,14 @@ interface Post {
 }
 
 const foodCategories = [
-  { id: 'all', name: 'Todos', emoji: '🍽️', color: 'bg-gray-100 text-gray-700' },
-  { id: 'bakery', name: 'Panadería', emoji: '🥖', color: 'bg-amber-100 text-amber-700' },
-  { id: 'lunch', name: 'Almuerzo', emoji: '🍛', color: 'bg-orange-100 text-orange-700' },
-  { id: 'dessert', name: 'Postres', emoji: '🍰', color: 'bg-pink-100 text-pink-700' },
-  { id: 'coffee', name: 'Café', emoji: '☕', color: 'bg-brown-100 text-brown-700' },
-  { id: 'healthy', name: 'Saludable', emoji: '🥗', color: 'bg-green-100 text-green-700' },
-  { id: 'pizza', name: 'Pizza', emoji: '🍕', color: 'bg-red-100 text-red-700' },
-  { id: 'asian', name: 'Asiática', emoji: '🥢', color: 'bg-yellow-100 text-yellow-700' },
+  { id: 'all', name: 'Todos', emoji: '🍽️', color: 'bg-gray-200 text-gray-900' },
+  { id: 'bakery', name: 'Panadería', emoji: '🥖', color: 'bg-amber-200 text-amber-900' },
+  { id: 'lunch', name: 'Almuerzo', emoji: '🍛', color: 'bg-orange-200 text-orange-900' },
+  { id: 'dessert', name: 'Postres', emoji: '🍰', color: 'bg-pink-200 text-pink-900' },
+  { id: 'coffee', name: 'Café', emoji: '☕', color: 'bg-amber-200 text-amber-900' },
+  { id: 'healthy', name: 'Saludable', emoji: '🥗', color: 'bg-green-200 text-green-900' },
+  { id: 'pizza', name: 'Pizza', emoji: '🍕', color: 'bg-red-200 text-red-900' },
+  { id: 'asian', name: 'Asiática', emoji: '🥢', color: 'bg-yellow-200 text-yellow-900' },
 ]
 
 export default function PacksExplorer() {
