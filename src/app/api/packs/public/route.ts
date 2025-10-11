@@ -40,6 +40,8 @@ export async function GET(request: NextRequest) {
             category: true,
             image: true,
             isActive: true,
+            latitude: true,
+            longitude: true,
           },
         },
       },

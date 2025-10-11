@@ -1,0 +1,76 @@
+/* Estilos personalizados para MapLibre */
+
+/* Popup personalizado */
+.maplibre-popup .maplibregl-popup-content {
+  padding: 0;
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+  max-width: 300px;
+}
+
+.maplibre-popup .maplibregl-popup-close-button {
+  font-size: 20px;
+  padding: 8px;
+  color: #6b7280;
+  transition: color 0.2s;
+}
+
+.maplibre-popup .maplibregl-popup-close-button:hover {
+  color: #10b981;
+  background-color: transparent;
+}
+
+.maplibre-popup .maplibregl-popup-tip {
+  border-top-color: white;
+}
+
+/* Controles de navegación personalizados */
+.maplibregl-ctrl-group {
+  border-radius: 8px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.maplibregl-ctrl-group button {
+  width: 36px;
+  height: 36px;
+}
+
+.maplibregl-ctrl-group button:hover {
+  background-color: #f3f4f6;
+}
+
+/* Control de geolocalización */
+.maplibregl-ctrl-geolocate {
+  border-radius: 8px;
+}
+
+.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active {
+  background-color: #10b981;
+}
+
+.maplibregl-ctrl-geolocate.maplibregl-ctrl-geolocate-active:hover {
+  background-color: #059669;
+}
+
+/* Atribución de OpenStreetMap - estilo minimalista */
+.maplibregl-ctrl-attrib {
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  font-size: 10px;
+}
+
+.maplibregl-ctrl-attrib a {
+  color: #6b7280;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .maplibre-popup .maplibregl-popup-content {
+    max-width: 250px;
+  }
+  
+  .maplibregl-ctrl-group button {
+    width: 32px;
+    height: 32px;
+  }
+}

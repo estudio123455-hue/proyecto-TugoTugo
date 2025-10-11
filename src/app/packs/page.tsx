@@ -4,9 +4,11 @@ import { useEffect, useState, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import Head from 'next/head'
 import Navigation from '@/components/Navigation'
+import MapLibreMap, { MapLocation } from '@/components/MapLibreMap'
 // import PackCard from '@/components/PackCard' // TODO: Use this component
 import EmptyState from '@/components/EmptyState'
 import PackSkeleton from '@/components/PackSkeleton'
+import { Map as MapIcon, List } from 'lucide-react'
 
 interface Pack {
   id: string
@@ -25,6 +27,8 @@ interface Pack {
     address: string
     category: string
     image?: string
+    latitude?: number
+    longitude?: number
   }
 }
 
@@ -63,6 +67,8 @@ export default function PacksExplorer() {
   const [isLoading, setIsLoading] = useState(true)
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [searchQuery, setSearchQuery] = useState('')
+  const [viewMode, setViewMode] = useState<'list' | 'map'>('list')
+  const [selectedPackOnMap, setSelectedPackOnMap] = useState<Pack | null>(null)
   const { data: session } = useSession()
 
   const getUniqueRestaurants = (packs: Pack[]) => {
@@ -220,6 +226,26 @@ export default function PacksExplorer() {
     }
   }
 
+  // Convertir packs a ubicaciones de mapa
+  const mapLocations: MapLocation[] = filteredPacks
+    .filter((pack) => pack.establishment?.latitude && pack.establishment?.longitude)
+    .map((pack) => ({
+      id: pack.id,
+      latitude: pack.establishment.latitude!,
+      longitude: pack.establishment.longitude!,
+      title: pack.establishment.name,
+      description: pack.title,
+      price: pack.discountedPrice,
+      image: pack.establishment.image,
+    }))
+
+  const handleLocationClick = (location: MapLocation) => {
+    const pack = filteredPacks.find((p) => p.id === location.id)
+    if (pack) {
+      setSelectedPackOnMap(pack)
+    }
+  }
+
   return (
     <>
       <Head>
@@ -329,22 +355,53 @@ export default function PacksExplorer() {
           </div>
         </div>
 
-        {/* Category Filters - Mobile Optimized */}
-        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6 sm:mb-10 px-2">
-          {foodCategories.map(category => (
-            <button
-              key={category.id}
-              onClick={() => setSelectedCategory(category.id)}
-              className={`inline-flex items-center px-3 py-2 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all transform hover:scale-105 ${
-                selectedCategory === category.id
-                  ? 'bg-green-500 text-white shadow-lg ring-2 ring-green-200'
-                  : `${category.color} hover:bg-green-50 border-2 border-gray-200 hover:border-green-300 shadow-sm`
-              }`}
-            >
-              <span className="text-base mr-1">{category.emoji}</span>
-              {category.name}
-            </button>
-          ))}
+        {/* View Toggle & Category Filters */}
+        <div className="space-y-4 mb-6 sm:mb-10">
+          {/* View Mode Toggle */}
+          <div className="flex justify-center">
+            <div className="inline-flex bg-white rounded-xl p-1 shadow-md border border-gray-200">
+              <button
+                onClick={() => setViewMode('list')}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all ${
+                  viewMode === 'list'
+                    ? 'bg-green-500 text-white shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <List className="w-4 h-4" />
+                <span className="text-sm font-medium">Lista</span>
+              </button>
+              <button
+                onClick={() => setViewMode('map')}
+                className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition-all ${
+                  viewMode === 'map'
+                    ? 'bg-green-500 text-white shadow-sm'
+                    : 'text-gray-600 hover:text-gray-900'
+                }`}
+              >
+                <MapIcon className="w-4 h-4" />
+                <span className="text-sm font-medium">Mapa</span>
+              </button>
+            </div>
+          </div>
+
+          {/* Category Filters */}
+          <div className="flex flex-wrap justify-center gap-2 sm:gap-3 px-2">
+            {foodCategories.map(category => (
+              <button
+                key={category.id}
+                onClick={() => setSelectedCategory(category.id)}
+                className={`inline-flex items-center px-3 py-2 sm:px-4 sm:py-2 rounded-full text-xs sm:text-sm font-semibold transition-all transform hover:scale-105 ${
+                  selectedCategory === category.id
+                    ? 'bg-green-500 text-white shadow-lg ring-2 ring-green-200'
+                    : `${category.color} hover:bg-green-50 border-2 border-gray-200 hover:border-green-300 shadow-sm`
+                }`}
+              >
+                <span className="text-base mr-1">{category.emoji}</span>
+                {category.name}
+              </button>
+            ))}
+          </div>
         </div>
 
         {/* Loading State with Skeletons */}
@@ -356,8 +413,78 @@ export default function PacksExplorer() {
           </div>
         )}
 
+        {/* Map View */}
+        {!isLoading && viewMode === 'map' && filteredPacks.length > 0 && (
+          <div className="space-y-6 px-2 sm:px-0">
+            <div className="mb-4 text-center">
+              <p className="text-gray-600">
+                {mapLocations.length} ubicación{mapLocations.length !== 1 ? 'es' : ''} en el mapa
+              </p>
+            </div>
+            
+            <MapLibreMap
+              locations={mapLocations}
+              onLocationClick={handleLocationClick}
+              height="600px"
+              showUserLocation={true}
+            />
+
+            {/* Selected Pack Details */}
+            {selectedPackOnMap && (
+              <div className="bg-white rounded-2xl shadow-xl p-6 border-2 border-green-500">
+                <div className="flex justify-between items-start mb-4">
+                  <div className="flex-1">
+                    <h3 className="text-2xl font-bold text-gray-900 mb-2">
+                      {selectedPackOnMap.establishment.name}
+                    </h3>
+                    <p className="text-gray-600 mb-2">{selectedPackOnMap.title}</p>
+                    <p className="text-sm text-gray-500 mb-3">
+                      {selectedPackOnMap.description}
+                    </p>
+                    <p className="text-sm text-gray-600">
+                      📍 {selectedPackOnMap.establishment.address}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => setSelectedPackOnMap(null)}
+                    className="text-gray-400 hover:text-gray-600"
+                  >
+                    ✕
+                  </button>
+                </div>
+                
+                <div className="flex items-center justify-between">
+                  <div>
+                    <div className="flex items-center gap-3 mb-2">
+                      <span className="text-sm text-gray-500 line-through">
+                        ${selectedPackOnMap.originalPrice.toFixed(2)}
+                      </span>
+                      <span className="text-3xl font-bold text-green-600">
+                        ${selectedPackOnMap.discountedPrice.toFixed(2)}
+                      </span>
+                      <span className="bg-green-100 text-green-700 px-2 py-1 rounded-full text-xs font-bold">
+                        {Math.round(((selectedPackOnMap.originalPrice - selectedPackOnMap.discountedPrice) / selectedPackOnMap.originalPrice) * 100)}% OFF
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-4 text-sm text-gray-600">
+                      <span>⏰ {selectedPackOnMap.pickupTimeStart.slice(0, 5)} - {selectedPackOnMap.pickupTimeEnd.slice(0, 5)}</span>
+                      <span>📦 {selectedPackOnMap.quantity} disponibles</span>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => handleReservePack(selectedPackOnMap.id, 1)}
+                    className="bg-green-500 hover:bg-green-600 text-white px-8 py-3 rounded-xl font-bold transition-all transform hover:scale-105 shadow-lg"
+                  >
+                    Reservar Ahora
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Restaurant Cards with Time Slots */}
-        {!isLoading && filteredPacks.length > 0 && (
+        {!isLoading && viewMode === 'list' && filteredPacks.length > 0 && (
           <>
             <div className="mb-6 text-center">
               <p className="text-gray-600">
