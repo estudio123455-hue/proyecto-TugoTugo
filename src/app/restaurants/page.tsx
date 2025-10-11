@@ -44,12 +44,12 @@ interface Restaurant {
 }
 
 const categories = [
-  { id: 'all', name: 'Todos', emoji: '🍽️', color: 'bg-gray-100 text-gray-700' },
-  { id: 'restaurant', name: 'Restaurante', emoji: '🍽️', color: 'bg-blue-100 text-blue-700' },
-  { id: 'bakery', name: 'Panadería', emoji: '🥖', color: 'bg-amber-100 text-amber-700' },
-  { id: 'cafe', name: 'Café', emoji: '☕', color: 'bg-brown-100 text-brown-700' },
-  { id: 'supermarket', name: 'Supermercado', emoji: '🛒', color: 'bg-green-100 text-green-700' },
-  { id: 'pizzeria', name: 'Pizzería', emoji: '🍕', color: 'bg-red-100 text-red-700' },
+  { id: 'all', name: 'Todos', emoji: '🍽️', color: 'bg-gray-200 text-gray-900' },
+  { id: 'restaurant', name: 'Restaurante', emoji: '🍽️', color: 'bg-blue-200 text-blue-900' },
+  { id: 'bakery', name: 'Panadería', emoji: '🥖', color: 'bg-amber-200 text-amber-900' },
+  { id: 'cafe', name: 'Café', emoji: '☕', color: 'bg-amber-200 text-amber-900' },
+  { id: 'supermarket', name: 'Supermercado', emoji: '🛒', color: 'bg-green-200 text-green-900' },
+  { id: 'pizzeria', name: 'Pizzería', emoji: '🍕', color: 'bg-red-200 text-red-900' },
 ]
 
 export default function RestaurantsPage() {
@@ -131,14 +131,21 @@ export default function RestaurantsPage() {
       <Navigation />
       <NotificationSystem />
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
         {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-4">
-            Restaurantes con Packs Disponibles
+        <div className="text-center mb-12">
+          <div className="inline-block mb-4">
+            <span className="bg-green-100 text-green-800 text-sm font-semibold px-4 py-2 rounded-full">
+              🌟 Descubre Restaurantes
+            </span>
+          </div>
+          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-6 leading-tight">
+            Restaurantes con
+            <br />
+            <span className="text-green-600">Packs Disponibles</span>
           </h1>
-          <p className="text-xl text-gray-600 mb-6">
-            Descubre los mejores packs sorpresa de restaurantes cerca de ti
+          <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Descubre los mejores packs sorpresa de restaurantes cerca de ti y ahorra hasta un 70%
           </p>
           
           {/* Connection status and last update */}
@@ -160,29 +167,36 @@ export default function RestaurantsPage() {
         {/* Filters */}
         <div className="mb-8">
           {/* Search */}
-          <div className="mb-6">
-            <input
-              type="text"
-              placeholder="Buscar restaurantes..."
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full max-w-md mx-auto block px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
-            />
+          <div className="mb-8">
+            <div className="relative max-w-2xl mx-auto">
+              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+              </div>
+              <input
+                type="text"
+                placeholder="🔍 Buscar restaurantes por nombre, ubicación o tipo de comida..."
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full pl-12 pr-4 py-4 text-base border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all shadow-sm hover:shadow-md"
+              />
+            </div>
           </div>
 
           {/* Category filters */}
-          <div className="flex flex-wrap justify-center gap-2 mb-4">
+          <div className="flex flex-wrap justify-center gap-3 mb-6">
             {categories.map(category => (
               <button
                 key={category.id}
                 onClick={() => setSelectedCategory(category.id)}
-                className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
+                className={`inline-flex items-center px-5 py-2.5 rounded-full text-sm font-semibold transition-all transform hover:scale-105 shadow-sm ${
                   selectedCategory === category.id
-                    ? category.color
-                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                    ? 'bg-green-500 text-white shadow-lg ring-2 ring-green-200'
+                    : `${category.color} hover:shadow-md`
                 }`}
               >
-                <span className="mr-2">{category.emoji}</span>
+                <span className="mr-2 text-lg">{category.emoji}</span>
                 {category.name}
               </button>
             ))}
@@ -190,30 +204,30 @@ export default function RestaurantsPage() {
 
           {/* Sort options */}
           <div className="flex justify-center">
-            <div className="flex bg-gray-100 rounded-lg p-1">
+            <div className="inline-flex bg-white rounded-xl p-1.5 shadow-md border border-gray-200">
               <button
                 onClick={() => setSortBy('newest')}
-                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                  sortBy === 'newest' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                  sortBy === 'newest' ? 'bg-green-500 text-white shadow-sm' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
-                Más recientes
+                🆕 Más recientes
               </button>
               <button
                 onClick={() => setSortBy('popular')}
-                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                  sortBy === 'popular' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                  sortBy === 'popular' ? 'bg-green-500 text-white shadow-sm' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
-                Más populares
+                🔥 Más populares
               </button>
               <button
                 onClick={() => setSortBy('name')}
-                className={`px-3 py-1 rounded-md text-sm font-medium transition-colors ${
-                  sortBy === 'name' ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
+                  sortBy === 'name' ? 'bg-green-500 text-white shadow-sm' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
                 }`}
               >
-                Por nombre
+                🔤 Por nombre
               </button>
             </div>
           </div>
@@ -249,32 +263,37 @@ export default function RestaurantsPage() {
           </div>
         ) : (
           <>
-            <div className="mb-6 text-center">
-              <p className="text-gray-600">
-                {filteredRestaurants.length} restaurante{filteredRestaurants.length !== 1 ? 's' : ''} con packs disponibles
-              </p>
+            <div className="mb-8 text-center">
+              <div className="inline-block bg-green-50 border border-green-200 rounded-full px-6 py-3">
+                <p className="text-green-800 font-semibold">
+                  ✨ {filteredRestaurants.length} restaurante{filteredRestaurants.length !== 1 ? 's' : ''} con packs disponibles
+                </p>
+              </div>
             </div>
 
-            <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
               {filteredRestaurants.map(restaurant => (
                 <div
                   key={restaurant.id}
-                  className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-shadow overflow-hidden"
+                  className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-1 overflow-hidden border border-gray-100"
                 >
                   {/* Restaurant Image */}
-                  <div className="h-48 bg-gradient-to-br from-green-100 to-blue-100 flex items-center justify-center">
-                    <span className="text-6xl">{restaurant.image || '🍽️'}</span>
+                  <div className="relative h-52 bg-gradient-to-br from-green-400 via-emerald-400 to-teal-400 flex items-center justify-center overflow-hidden">
+                    <div className="absolute inset-0 bg-black opacity-5"></div>
+                    <span className="text-7xl relative z-10 transform hover:scale-110 transition-transform">{restaurant.image || '🍽️'}</span>
+                    <div className="absolute top-4 right-4">
+                      <span className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-bold text-gray-900 shadow-lg">
+                        {restaurant.category}
+                      </span>
+                    </div>
                   </div>
 
                   {/* Restaurant Info */}
                   <div className="p-6">
-                    <div className="flex justify-between items-start mb-3">
-                      <h3 className="text-xl font-bold text-gray-900">
+                    <div className="mb-4">
+                      <h3 className="text-2xl font-bold text-gray-900 mb-2">
                         {restaurant.name}
                       </h3>
-                      <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                        {restaurant.category}
-                      </span>
                     </div>
 
                     <p className="text-gray-600 text-sm mb-4 line-clamp-2">
@@ -287,30 +306,30 @@ export default function RestaurantsPage() {
                     </div>
 
                     {/* Packs Summary */}
-                    <div className="bg-gray-50 rounded-lg p-4 mb-4">
-                      <div className="flex justify-between items-center mb-2">
-                        <span className="text-sm font-medium text-gray-700">Packs disponibles</span>
-                        <span className="text-sm text-gray-600">
+                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 mb-4 border border-green-100">
+                      <div className="flex justify-between items-center mb-3">
+                        <span className="text-sm font-bold text-green-900">📦 Packs disponibles</span>
+                        <span className="bg-green-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">
                           {getAvailablePacks(restaurant)} de {getTotalPacks(restaurant)}
                         </span>
                       </div>
                       
                       {restaurant.packs.slice(0, 2).map(pack => (
-                        <div key={pack.id} className="flex justify-between items-center text-sm">
-                          <span className="truncate">{pack.title}</span>
+                        <div key={pack.id} className="flex justify-between items-center text-sm mb-2 bg-white rounded-lg p-2">
+                          <span className="truncate font-medium text-gray-900">{pack.title}</span>
                           <div className="flex items-center space-x-2">
-                            <span className="text-green-600 font-semibold">
+                            <span className="text-green-600 font-bold text-base">
                               ${pack.discountedPrice}
                             </span>
-                            <span className="text-gray-400 line-through">
+                            <span className="text-gray-400 line-through text-xs">
                               ${pack.originalPrice}
                             </span>
-                            <span className="text-xs bg-red-100 text-red-800 px-1 rounded">
+                            <span className="text-xs bg-red-500 text-white font-bold px-2 py-0.5 rounded-full">
                               -{getDiscountPercentage(pack)}%
                             </span>
                           </div>
                         </div>
-                      ))}
+                      ))})
                       
                       {restaurant.packs.length > 2 && (
                         <p className="text-xs text-gray-500 mt-2">
@@ -320,16 +339,16 @@ export default function RestaurantsPage() {
                     </div>
 
                     {/* Actions */}
-                    <div className="flex space-x-2">
+                    <div className="flex space-x-3">
                       <Link
                         href={`/establecimiento/${restaurant.id}`}
-                        className="flex-1 bg-green-500 hover:bg-green-600 text-white text-center py-2 px-4 rounded-lg font-medium transition-colors"
+                        className="flex-1 bg-green-500 hover:bg-green-600 text-white text-center py-3 px-4 rounded-xl font-bold transition-all transform hover:scale-105 shadow-md hover:shadow-lg"
                       >
-                        Ver Packs
+                        🛍️ Ver Packs
                       </Link>
                       <Link
                         href={`/map?establishment=${restaurant.id}`}
-                        className="bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-lg font-medium transition-colors"
+                        className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-xl font-bold transition-all transform hover:scale-105 shadow-md hover:shadow-lg"
                       >
                         📍
                       </Link>
