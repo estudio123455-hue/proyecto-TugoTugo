@@ -48,11 +48,11 @@ export default function CreateEstablishmentModal({
     try {
       // Nominatim API - gratis, sin API key
       const response = await fetch(
-        `https://nominatim.openstreetmap.org/search?` +
+        'https://nominatim.openstreetmap.org/search?' +
         `q=${encodeURIComponent(address)}, Bogotá, Colombia&` +
-        `format=json&` +
-        `limit=5&` +
-        `addressdetails=1`,
+        'format=json&' +
+        'limit=5&' +
+        'addressdetails=1',
         {
           headers: {
             'User-Agent': 'TugoTugo-App', // Requerido por Nominatim
