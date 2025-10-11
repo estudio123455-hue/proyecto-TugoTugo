@@ -53,14 +53,14 @@ export default function MapFilters({
       <button
         onClick={() => setShowFilters(!showFilters)}
         className={`
-          flex items-center gap-2 px-4 py-2 rounded-lg shadow-lg font-medium transition-colors
-          ${hasActiveFilters ? 'bg-orange-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}
+          flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 rounded-lg shadow-lg font-medium transition-colors text-sm sm:text-base
+          ${hasActiveFilters ? 'bg-green-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}
         `}
       >
-        <Filter className="w-5 h-5" />
-        Filtros
+        <Filter className="w-4 h-4 sm:w-5 sm:h-5" />
+        <span className="hidden sm:inline">Filtros</span>
         {hasActiveFilters && (
-          <span className="bg-white text-orange-500 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+          <span className="bg-white text-green-600 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
             {(selectedDistance !== undefined ? 1 : 0) + (availableOnly ? 1 : 0)}
           </span>
         )}
@@ -104,7 +104,7 @@ export default function MapFilters({
                         px-3 py-2 rounded-lg text-sm font-medium transition-colors
                         ${
                           selectedDistance === dist.value
-                            ? 'bg-orange-500 text-white'
+                            ? 'bg-green-500 text-white'
                             : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                         }
                       `}
@@ -124,7 +124,7 @@ export default function MapFilters({
                 type="checkbox"
                 checked={availableOnly}
                 onChange={(e) => handleAvailableOnlyChange(e.target.checked)}
-                className="rounded border-gray-300 text-orange-500 focus:ring-orange-500"
+                className="rounded border-gray-300 text-green-500 focus:ring-green-500"
               />
               <span className="text-sm text-gray-700">
                 Solo mostrar con packs disponibles

@@ -276,6 +276,24 @@ function OptimizedMap({ establishments, userLocation, onEstablishmentSelect }: O
           </span>
         </div>
       </div>
+
+      {/* Mensaje cuando no hay establecimientos */}
+      {establishments.length === 0 && (
+        <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
+          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm mx-4 pointer-events-auto">
+            <div className="text-center">
+              <div className="text-4xl mb-3">🗺️</div>
+              <h3 className="text-lg font-bold text-gray-900 mb-2">
+                No hay ubicaciones
+              </h3>
+              <p className="text-sm text-gray-600">
+                Aún no hay restaurantes registrados con coordenadas.
+                Los establecimientos aparecerán aquí cuando se registren.
+              </p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }
