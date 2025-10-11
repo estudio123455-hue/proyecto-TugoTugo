@@ -41,6 +41,13 @@ export default function Profile() {
   const [stats, setStats] = useState<UserStats | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('orders')
+  const [notifications, setNotifications] = useState({
+    emailReminders: true,
+    newPackAlerts: true,
+    weeklySummary: false,
+  })
+  const [isSaving, setIsSaving] = useState(false)
+  const [saveMessage, setSaveMessage] = useState('')
 
   useEffect(() => {
     if (status === 'loading') return
@@ -124,6 +131,25 @@ export default function Profile() {
 
   const formatTime = (time: string) => {
     return time.slice(0, 5) // Convert "18:00:00" to "18:00"
+  }
+
+  const handleSaveSettings = async () => {
+    setIsSaving(true)
+    setSaveMessage('')
+    
+    try {
+      // Aquí puedes agregar la llamada a la API para guardar las preferencias
+      // Por ahora solo simulamos el guardado
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      setSaveMessage('✅ Cambios guardados exitosamente')
+      setTimeout(() => setSaveMessage(''), 3000)
+    } catch (error) {
+      setSaveMessage('❌ Error al guardar los cambios')
+      console.error('Error saving settings:', error)
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   if (status === 'loading' || isLoading) {
@@ -487,8 +513,14 @@ export default function Profile() {
                       <label className="flex items-center">
                         <input
                           type="checkbox"
-                          className="mr-3"
-                          defaultChecked
+                          className="mr-3 w-4 h-4"
+                          checked={notifications.emailReminders}
+                          onChange={(e) =>
+                            setNotifications({
+                              ...notifications,
+                              emailReminders: e.target.checked,
+                            })
+                          }
                         />
                         <span className="text-sm text-gray-700">
                           Email notifications for pickup reminders
@@ -497,15 +529,31 @@ export default function Profile() {
                       <label className="flex items-center">
                         <input
                           type="checkbox"
-                          className="mr-3"
-                          defaultChecked
+                          className="mr-3 w-4 h-4"
+                          checked={notifications.newPackAlerts}
+                          onChange={(e) =>
+                            setNotifications({
+                              ...notifications,
+                              newPackAlerts: e.target.checked,
+                            })
+                          }
                         />
                         <span className="text-sm text-gray-700">
                           New pack alerts in your area
                         </span>
                       </label>
                       <label className="flex items-center">
-                        <input type="checkbox" className="mr-3" />
+                        <input
+                          type="checkbox"
+                          className="mr-3 w-4 h-4"
+                          checked={notifications.weeklySummary}
+                          onChange={(e) =>
+                            setNotifications({
+                              ...notifications,
+                              weeklySummary: e.target.checked,
+                            })
+                          }
+                        />
                         <span className="text-sm text-gray-700">
                           Weekly impact summary
                         </span>
@@ -513,9 +561,23 @@ export default function Profile() {
                     </div>
                   </div>
 
+                  {saveMessage && (
+                    <div className={`p-3 rounded-md text-sm ${
+                      saveMessage.includes('✅') 
+                        ? 'bg-green-50 text-green-700 border border-green-200' 
+                        : 'bg-red-50 text-red-700 border border-red-200'
+                    }`}>
+                      {saveMessage}
+                    </div>
+                  )}
+
                   <div className="pt-4">
-                    <button className="bg-green-500 hover:bg-green-600 text-white px-6 py-2 rounded-md">
-                      Save Changes
+                    <button
+                      onClick={handleSaveSettings}
+                      disabled={isSaving}
+                      className="bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white px-6 py-2 rounded-md transition-colors font-medium"
+                    >
+                      {isSaving ? '⏳ Guardando...' : '💾 Save Changes'}
                     </button>
                   </div>
                 </div>
