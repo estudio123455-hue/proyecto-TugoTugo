@@ -43,12 +43,14 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
             ref={ref}
             className={`
               w-full px-4 py-2.5 text-base
+              bg-white text-gray-900
+              placeholder:text-gray-400
               ${leftIcon ? 'pl-10' : ''}
               ${rightIcon ? 'pr-10' : ''}
               border rounded-lg
-              ${error ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-primary-500'}
-              focus:ring-2 focus:border-transparent
-              disabled:bg-gray-100 disabled:cursor-not-allowed
+              ${error ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 focus:ring-green-500'}
+              focus:ring-2 focus:border-transparent focus:outline-none
+              disabled:bg-gray-100 disabled:cursor-not-allowed disabled:text-gray-500
               transition-colors
               ${className}
             `}
