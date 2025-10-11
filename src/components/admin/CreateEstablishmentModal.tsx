@@ -100,7 +100,8 @@ export default function CreateEstablishmentModal({
                   onChange={(e) =>
                     setFormData({ ...formData, name: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
+                  placeholder="Nombre del restaurante"
                 />
               </div>
 
@@ -115,7 +116,8 @@ export default function CreateEstablishmentModal({
                   onChange={(e) =>
                     setFormData({ ...formData, email: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
+                  placeholder="correo@ejemplo.com"
                 />
               </div>
 
@@ -129,7 +131,8 @@ export default function CreateEstablishmentModal({
                   onChange={(e) =>
                     setFormData({ ...formData, phone: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
+                  placeholder="3001234567"
                 />
               </div>
 
@@ -143,7 +146,7 @@ export default function CreateEstablishmentModal({
                   onChange={(e) =>
                     setFormData({ ...formData, category: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
                 >
                   <option value="RESTAURANT">Restaurante</option>
                   <option value="CAFE">Café</option>
@@ -166,7 +169,8 @@ export default function CreateEstablishmentModal({
                 onChange={(e) =>
                   setFormData({ ...formData, address: e.target.value })
                 }
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
+                placeholder="Calle 123 #45-67, Bogotá"
               />
             </div>
 
@@ -183,7 +187,8 @@ export default function CreateEstablishmentModal({
                   onChange={(e) =>
                     setFormData({ ...formData, latitude: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
+                  placeholder="4.7110"
                 />
               </div>
 
@@ -199,7 +204,8 @@ export default function CreateEstablishmentModal({
                   onChange={(e) =>
                     setFormData({ ...formData, longitude: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
+                  placeholder="-74.0721"
                 />
               </div>
             </div>
@@ -214,7 +220,8 @@ export default function CreateEstablishmentModal({
                   setFormData({ ...formData, description: e.target.value })
                 }
                 rows={3}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
+                placeholder="Descripción del restaurante..."
               />
             </div>
 
@@ -229,7 +236,8 @@ export default function CreateEstablishmentModal({
                   onChange={(e) =>
                     setFormData({ ...formData, businessType: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
+                  placeholder="Restaurante, Cafetería, etc."
                 />
               </div>
 
@@ -243,7 +251,8 @@ export default function CreateEstablishmentModal({
                   onChange={(e) =>
                     setFormData({ ...formData, taxId: e.target.value })
                   }
-                  className="w-full px-3 py-2 border border-gray-300 rounded-md"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent bg-white text-gray-900"
+                  placeholder="900123456-7"
                 />
               </div>
             </div>
