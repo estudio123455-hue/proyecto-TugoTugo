@@ -119,15 +119,6 @@ export default function EstablishmentSetup({
   return (
     <div className="max-w-2xl mx-auto">
       <div className="bg-white rounded-lg shadow-lg p-8">
-        <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
-            Welcome to Zavo!
-          </h1>
-          <p className="text-gray-600">
-            Let&apos;s set up your establishment profile to start reducing food waste
-          </p>
-        </div>
-
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
             <label

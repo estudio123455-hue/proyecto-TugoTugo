@@ -94,9 +94,19 @@ export default function Dashboard() {
     return (
       <div className="min-h-screen bg-gray-50">
         <Navigation />
-        <div className="max-w-4xl mx-auto pt-8 px-4">
+        <div className="max-w-4xl mx-auto pt-8 px-4 pb-20">
           <EstablishmentSetup onSetupComplete={fetchEstablishment} />
         </div>
+        
+        {/* Bottom Navigation - Solo Formulario */}
+        <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50 md:hidden safe-area-bottom">
+          <div className="flex items-center justify-center h-16">
+            <div className="flex flex-col items-center justify-center text-green-600">
+              <div className="text-2xl mb-1">📝</div>
+              <span className="text-xs font-semibold">Formulario</span>
+            </div>
+          </div>
+        </nav>
       </div>
     )
   }
