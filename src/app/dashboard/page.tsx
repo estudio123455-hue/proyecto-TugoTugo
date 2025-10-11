@@ -93,7 +93,7 @@ export default function Dashboard() {
   if (!establishment) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
+        {/* Sin Navigation - Vista limpia solo formulario */}
         <div className="max-w-4xl mx-auto pt-8 px-4 pb-20">
           <EstablishmentSetup onSetupComplete={fetchEstablishment} />
         </div>
