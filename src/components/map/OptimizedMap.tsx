@@ -1,23 +1,31 @@
 'use client'
 
-import { useEffect, useState, useCallback, memo } from 'react'
-import { MapContainer, TileLayer, Marker, Popup, useMap } from 'react-leaflet'
-import MarkerClusterGroup from 'react-leaflet-cluster'
-import L from 'leaflet'
-import 'leaflet/dist/leaflet.css'
+import { useEffect, useState, useCallback, memo, useRef } from 'react'
+import Map, { Marker, Popup, NavigationControl, GeolocateControl, ViewStateChangeEvent } from 'react-map-gl/maplibre'
+import { MapPin } from 'lucide-react'
+import 'maplibre-gl/dist/maplibre-gl.css'
+import '@/styles/maplibre-custom.css'
 import { formatDistance } from '@/lib/geolocation'
 
-// Fix for default markers
-if (typeof window !== 'undefined') {
-  delete (L.Icon.Default.prototype as any)._getIconUrl
-  L.Icon.Default.mergeOptions({
-    iconRetinaUrl:
-      'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
-    iconUrl:
-      'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
-    shadowUrl:
-      'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
-  })
+// Estilo de mapa usando OpenStreetMap tiles (100% gratis, sin token)
+const MAP_STYLE = {
+  version: 8 as const,
+  sources: {
+    osm: {
+      type: 'raster' as const,
+      tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+      tileSize: 256,
+      attribution: '&copy; OpenStreetMap Contributors',
+      maxzoom: 19,
+    },
+  },
+  layers: [
+    {
+      id: 'osm',
+      type: 'raster' as const,
+      source: 'osm',
+    },
+  ],
 }
 
 interface Establishment {
@@ -52,60 +60,54 @@ interface OptimizedMapProps {
   onEstablishmentSelect?: (establishment: Establishment) => void
 }
 
-// Componente para centrar el mapa - Memoizado para evitar re-renders
-const MapCenterController = memo(({ center }: { center: [number, number] }) => {
-  const map = useMap()
-
-  useEffect(() => {
-    map.setView(center, 13, { animate: true })
-  }, [center, map])
-
-  return null
-})
-
-MapCenterController.displayName = 'MapCenterController'
-
 // Componente de marcador memoizado
 const EstablishmentMarker = memo(
   ({
     establishment,
     onSelect,
+    selectedId,
+    setSelectedId,
   }: {
     establishment: Establishment
     onSelect?: (establishment: Establishment) => void
+    selectedId: string | null
+    setSelectedId: (id: string | null) => void
   }) => {
     const availablePacks = establishment.packs.filter((pack) => pack.quantity > 0)
     const hasAvailablePacks = availablePacks.length > 0
 
-    // Custom icons
-    const availableIcon = new L.Icon({
-      iconUrl:
-        'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
-      shadowUrl:
-        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      shadowSize: [41, 41],
-    })
-
-    const unavailableIcon = new L.Icon({
-      iconUrl:
-        'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
-      shadowUrl:
-        'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-      iconSize: [25, 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      shadowSize: [41, 41],
-    })
-
     return (
-      <Marker
-        position={[establishment.latitude, establishment.longitude]}
-        icon={hasAvailablePacks ? availableIcon : unavailableIcon}
-      >
-        <Popup maxWidth={300}>
+      <>
+        <Marker
+          longitude={establishment.longitude}
+          latitude={establishment.latitude}
+          anchor="bottom"
+        >
+          <button
+            onClick={() => setSelectedId(establishment.id)}
+            className="relative group cursor-pointer transform transition-transform hover:scale-110"
+          >
+            <div className={`${hasAvailablePacks ? 'bg-green-500' : 'bg-red-500'} rounded-full p-2 shadow-lg border-2 border-white`}>
+              <MapPin className="w-6 h-6 text-white" fill="white" />
+            </div>
+            {hasAvailablePacks && availablePacks.length > 0 && (
+              <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white px-2 py-1 rounded shadow-md text-xs font-bold text-green-600 whitespace-nowrap">
+                ${Math.min(...availablePacks.map((p) => p.discountedPrice)).toLocaleString('es-CO')}
+              </div>
+            )}
+          </button>
+        </Marker>
+
+        {selectedId === establishment.id && (
+          <Popup
+            longitude={establishment.longitude}
+            latitude={establishment.latitude}
+            anchor="top"
+            onClose={() => setSelectedId(null)}
+            closeButton={true}
+            closeOnClick={false}
+            className="maplibre-popup"
+          >
           <div className="p-3 min-w-[250px]">
             <h3 className="font-bold text-lg mb-2 text-gray-900">{establishment.name}</h3>
 
@@ -179,8 +181,9 @@ const EstablishmentMarker = memo(
               </div>
             )}
           </div>
-        </Popup>
-      </Marker>
+          </Popup>
+        )}
+      </>
     )
   }
 )
@@ -188,26 +191,24 @@ const EstablishmentMarker = memo(
 EstablishmentMarker.displayName = 'EstablishmentMarker'
 
 function OptimizedMap({ establishments, userLocation, onEstablishmentSelect }: OptimizedMapProps) {
-  const [isClient, setIsClient] = useState(false)
-
-  useEffect(() => {
-    setIsClient(true)
-  }, [])
-
-  // Memoizar el centro del mapa
-  const mapCenter: [number, number] = userLocation
-    ? [userLocation.lat, userLocation.lng]
-    : [4.711, -74.0721] // Bogotá por defecto
-
-  // Icono para la ubicación del usuario
-  const userLocationIcon = new L.Icon({
-    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-blue.png',
-    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
-    iconSize: [25, 41],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41],
+  const mapRef = useRef<any>(null)
+  const [selectedId, setSelectedId] = useState<string | null>(null)
+  const [viewState, setViewState] = useState({
+    longitude: userLocation?.lng || -74.0721,
+    latitude: userLocation?.lat || 4.711,
+    zoom: 13,
   })
+
+  // Actualizar centro cuando cambia la ubicación del usuario
+  useEffect(() => {
+    if (userLocation) {
+      setViewState({
+        longitude: userLocation.lng,
+        latitude: userLocation.lat,
+        zoom: 13,
+      })
+    }
+  }, [userLocation])
 
   // Callback memoizado para selección de establecimiento
   const handleEstablishmentSelect = useCallback(
@@ -217,76 +218,65 @@ function OptimizedMap({ establishments, userLocation, onEstablishmentSelect }: O
     [onEstablishmentSelect]
   )
 
-  if (!isClient) {
-    return (
-      <div className="h-full w-full bg-gray-200 animate-pulse flex items-center justify-center">
-        <div className="text-gray-500">Cargando mapa...</div>
-      </div>
-    )
-  }
-
   return (
-    <MapContainer
-      center={mapCenter}
-      zoom={13}
-      style={{ height: '100%', width: '100%' }}
-      className="z-0"
-      scrollWheelZoom={true}
-    >
-      <MapCenterController center={mapCenter} />
-
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        maxZoom={19}
-      />
-
-      {/* Marcador de ubicación del usuario */}
-      {userLocation && (
-        <Marker position={[userLocation.lat, userLocation.lng]} icon={userLocationIcon}>
-          <Popup>
-            <div className="p-2">
-              <p className="font-semibold text-blue-600">📍 Tu ubicación</p>
-            </div>
-          </Popup>
-        </Marker>
-      )}
-
-      {/* Marcadores de establecimientos con clustering */}
-      <MarkerClusterGroup
-        chunkedLoading
-        maxClusterRadius={50}
-        spiderfyOnMaxZoom={true}
-        showCoverageOnHover={false}
-        zoomToBoundsOnClick={true}
-        iconCreateFunction={(cluster: any) => {
-          const count = cluster.getChildCount()
-          let size: 'small' | 'medium' | 'large' = 'small'
-          if (count > 10) size = 'medium'
-          if (count > 50) size = 'large'
-
-          const sizeMap: Record<'small' | 'medium' | 'large', string> = {
-            small: 'w-10 h-10 text-sm',
-            medium: 'w-12 h-12 text-base',
-            large: 'w-14 h-14 text-lg',
-          }
-
-          return L.divIcon({
-            html: `<div class="${sizeMap[size]} bg-orange-500 rounded-full flex items-center justify-center text-white font-bold shadow-lg border-4 border-white">${count}</div>`,
-            className: 'custom-cluster-icon',
-            iconSize: L.point(40, 40, true),
-          })
-        }}
+    <div className="h-full w-full relative">
+      <Map
+        ref={mapRef}
+        {...viewState}
+        onMove={(evt: ViewStateChangeEvent) => setViewState(evt.viewState)}
+        mapStyle={MAP_STYLE}
+        style={{ width: '100%', height: '100%' }}
       >
+        {/* Controles de navegación */}
+        <NavigationControl position="top-right" />
+
+        {/* Control de geolocalización */}
+        <GeolocateControl
+          position="top-right"
+          trackUserLocation
+        />
+
+        {/* Marcador de ubicación del usuario */}
+        {userLocation && (
+          <Marker
+            longitude={userLocation.lng}
+            latitude={userLocation.lat}
+            anchor="bottom"
+          >
+            <div className="bg-blue-500 rounded-full p-2 shadow-lg border-2 border-white">
+              <MapPin className="w-6 h-6 text-white" fill="white" />
+            </div>
+          </Marker>
+        )}
+
+        {/* Marcadores de establecimientos */}
         {establishments.map((establishment) => (
           <EstablishmentMarker
             key={establishment.id}
             establishment={establishment}
             onSelect={handleEstablishmentSelect}
+            selectedId={selectedId}
+            setSelectedId={setSelectedId}
           />
         ))}
-      </MarkerClusterGroup>
-    </MapContainer>
+      </Map>
+
+      {/* Badge de OpenStreetMap */}
+      <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg shadow-md px-3 py-2 text-xs z-10">
+        <span className="text-gray-700 font-semibold">🗺️ OpenStreetMap</span>
+        <span className="text-gray-500 ml-1">• Gratis</span>
+      </div>
+
+      {/* Contador de establecimientos */}
+      <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-3 text-xs z-10">
+        <div className="flex items-center space-x-2">
+          <MapPin className="w-4 h-4 text-green-500" fill="currentColor" />
+          <span className="text-gray-700 font-medium">
+            {establishments.length} {establishments.length === 1 ? 'establecimiento' : 'establecimientos'}
+          </span>
+        </div>
+      </div>
+    </div>
   )
 }
 
