@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { useSession } from 'next-auth/react'
+import { useSession, signOut } from 'next-auth/react'
 
 interface EstablishmentSetupProps {
   onSetupComplete: () => void
@@ -119,6 +119,18 @@ export default function EstablishmentSetup({
   return (
     <div className="max-w-2xl mx-auto">
       <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8">
+        {/* Botón de cerrar sesión */}
+        <div className="flex justify-end mb-4">
+          <button
+            type="button"
+            onClick={() => signOut({ callbackUrl: '/' })}
+            className="flex items-center gap-2 text-red-600 hover:text-red-700 hover:bg-red-50 px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+          >
+            <span>🚪</span>
+            <span>Cerrar sesión</span>
+          </button>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-8">
           
           {/* 🏢 Información del negocio */}
