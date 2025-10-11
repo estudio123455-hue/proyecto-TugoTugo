@@ -916,7 +916,15 @@
     aside,
     [role="navigation"]:not(nav),
     .sidebar,
-    .side-nav {
+    .side-nav,
+    /* Ocultar elementos fijos en el lado izquierdo */
+    [style*="position: fixed"][style*="left"],
+    [style*="position:fixed"][style*="left"] {
+      display: none !important;
+    }
+    
+    /* Ocultar cualquier div con posición fija en los lados */
+    div[style*="position: fixed"] {
       display: none !important;
     }
   }
