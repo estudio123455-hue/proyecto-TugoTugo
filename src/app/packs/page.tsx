@@ -414,9 +414,21 @@ export default function PacksExplorer() {
         )}
 
         {/* Map View */}
-        {!isLoading && viewMode === 'map' && filteredPacks.length > 0 && (
+        {!isLoading && viewMode === 'map' && (
           <div className="space-y-6 px-2 sm:px-0">
-            {mapLocations.length === 0 ? (
+            {filteredPacks.length === 0 ? (
+              <div className="bg-white rounded-lg shadow-lg p-12 text-center">
+                <div className="text-6xl mb-4">📦</div>
+                <h3 className="text-2xl font-bold text-gray-900 mb-3">
+                  No hay packs disponibles
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  Aún no hay packs creados en el sistema.
+                  <br />
+                  Los restaurantes pueden crear packs desde su dashboard.
+                </p>
+              </div>
+            ) : mapLocations.length === 0 ? (
               <div className="bg-white rounded-lg shadow-lg p-12 text-center">
                 <div className="text-6xl mb-4">🗺️</div>
                 <h3 className="text-2xl font-bold text-gray-900 mb-3">
