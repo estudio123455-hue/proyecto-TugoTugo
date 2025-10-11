@@ -118,153 +118,178 @@ export default function EstablishmentSetup({
 
   return (
     <div className="max-w-2xl mx-auto">
-      <div className="bg-white rounded-lg shadow-lg p-8">
-        <form onSubmit={handleSubmit} className="space-y-6">
-          <div>
-            <label
-              htmlFor="name"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Business Name *
-            </label>
-            <input
-              type="text"
-              id="name"
-              required
-              value={formData.name}
-              onChange={e => setFormData({ ...formData, name: e.target.value })}
-              className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-green-500 focus:border-green-500"
-              placeholder="Ej: Restaurante El Buen Sabor"
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="category"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Category *
-            </label>
-            <select
-              id="category"
-              required
-              value={formData.category}
-              onChange={e =>
-                setFormData({ ...formData, category: e.target.value as any })
-              }
-              className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-green-500 focus:border-green-500"
-            >
-              {categories.map(category => (
-                <option key={category.value} value={category.value}>
-                  {category.label}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div>
-            <label
-              htmlFor="description"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Description
-            </label>
-            <textarea
-              id="description"
-              rows={3}
-              value={formData.description}
-              onChange={e =>
-                setFormData({ ...formData, description: e.target.value })
-              }
-              className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-green-500 focus:border-green-500"
-              placeholder="Tell customers about your business..."
-            />
-          </div>
-
-          <div>
-            <label
-              htmlFor="address"
-              className="block text-sm font-medium text-gray-700"
-            >
-              Address *
-            </label>
-            <input
-              type="text"
-              id="address"
-              required
-              value={formData.address}
-              onChange={e =>
-                setFormData({ ...formData, address: e.target.value })
-              }
-              className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-green-500 focus:border-green-500"
-              placeholder="Ej: Calle 85 #15-20, Bogotá"
-            />
-          </div>
-
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Location *
-            </label>
-            <div className="flex items-center space-x-4">
-              <button
-                type="button"
-                onClick={getLocation}
-                disabled={isGettingLocation}
-                className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white px-4 py-2 rounded-md text-sm"
-              >
-                {isGettingLocation
-                  ? 'Getting Location...'
-                  : 'Get Current Location'}
-              </button>
-              {formData.latitude && formData.longitude && (
-                <span className="text-sm text-green-600">
-                  ✓ Location set ({formData.latitude.toFixed(4)},{' '}
-                  {formData.longitude.toFixed(4)})
-                </span>
-              )}
+      <div className="bg-white rounded-lg shadow-lg p-6 sm:p-8">
+        <form onSubmit={handleSubmit} className="space-y-8">
+          
+          {/* 🏢 Información del negocio */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 pb-2 border-b-2 border-green-500">
+              <span className="text-2xl">🏢</span>
+              <h2 className="text-lg font-semibold text-gray-900">Información del negocio</h2>
             </div>
-            <p className="text-xs text-gray-500 mt-1">
-              We need your location to show your establishment on the map
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-2 gap-4">
+            
             <div>
               <label
-                htmlFor="phone"
-                className="block text-sm font-medium text-gray-700"
+                htmlFor="name"
+                className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Phone Number
+                Nombre del negocio *
               </label>
               <input
-                type="tel"
-                id="phone"
-                value={formData.phone}
-                onChange={e =>
-                  setFormData({ ...formData, phone: e.target.value })
-                }
+                type="text"
+                id="name"
+                required
+                value={formData.name}
+                onChange={e => setFormData({ ...formData, name: e.target.value })}
                 className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-green-500 focus:border-green-500"
-                placeholder="+57 321 459 6837"
+                placeholder="Ej: Restaurante El Buen Sabor"
               />
             </div>
 
             <div>
               <label
-                htmlFor="email"
-                className="block text-sm font-medium text-gray-700"
+                htmlFor="category"
+                className="block text-sm font-medium text-gray-700 mb-1"
               >
-                Contact Email
+                Categoría *
               </label>
-              <input
-                type="email"
-                id="email"
-                value={formData.email}
+              <select
+                id="category"
+                required
+                value={formData.category}
                 onChange={e =>
-                  setFormData({ ...formData, email: e.target.value })
+                  setFormData({ ...formData, category: e.target.value as any })
                 }
                 className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-green-500 focus:border-green-500"
-                placeholder="contacto@mirestaurante.com"
+              >
+                {categories.map(category => (
+                  <option key={category.value} value={category.value}>
+                    {category.label}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div>
+              <label
+                htmlFor="description"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Descripción
+              </label>
+              <textarea
+                id="description"
+                rows={3}
+                value={formData.description}
+                onChange={e =>
+                  setFormData({ ...formData, description: e.target.value })
+                }
+                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                placeholder="Cuéntale a tus clientes sobre tu negocio..."
               />
+            </div>
+          </div>
+
+          {/* 📍 Ubicación */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 pb-2 border-b-2 border-blue-500">
+              <span className="text-2xl">📍</span>
+              <h2 className="text-lg font-semibold text-gray-900">Ubicación</h2>
+            </div>
+            
+            <div>
+              <label
+                htmlFor="address"
+                className="block text-sm font-medium text-gray-700 mb-1"
+              >
+                Dirección *
+              </label>
+              <input
+                type="text"
+                id="address"
+                required
+                value={formData.address}
+                onChange={e =>
+                  setFormData({ ...formData, address: e.target.value })
+                }
+                className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                placeholder="Ej: Calle 85 #15-20, Bogotá"
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Coordenadas *
+              </label>
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                <button
+                  type="button"
+                  onClick={getLocation}
+                  disabled={isGettingLocation}
+                  className="bg-blue-500 hover:bg-blue-600 disabled:bg-gray-300 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors w-full sm:w-auto"
+                >
+                  {isGettingLocation
+                    ? '📍 Obteniendo ubicación...'
+                    : '📍 Obtener mi ubicación'}
+                </button>
+                {formData.latitude && formData.longitude && (
+                  <span className="text-sm text-green-600 font-medium">
+                    ✓ Ubicación establecida ({formData.latitude.toFixed(4)},{' '}
+                    {formData.longitude.toFixed(4)})
+                  </span>
+                )}
+              </div>
+              <p className="text-xs text-gray-500 mt-2">
+                💡 Necesitamos tu ubicación para mostrar tu negocio en el mapa
+              </p>
+            </div>
+          </div>
+
+          {/* ☎️ Contacto */}
+          <div className="space-y-4">
+            <div className="flex items-center gap-2 pb-2 border-b-2 border-purple-500">
+              <span className="text-2xl">☎️</span>
+              <h2 className="text-lg font-semibold text-gray-900">Contacto</h2>
+            </div>
+            
+            <div className="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label
+                  htmlFor="phone"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Teléfono
+                </label>
+                <input
+                  type="tel"
+                  id="phone"
+                  value={formData.phone}
+                  onChange={e =>
+                    setFormData({ ...formData, phone: e.target.value })
+                  }
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                  placeholder="+57 321 459 6837"
+                />
+              </div>
+
+              <div>
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-medium text-gray-700 mb-1"
+                >
+                  Email de contacto
+                </label>
+                <input
+                  type="email"
+                  id="email"
+                  value={formData.email}
+                  onChange={e =>
+                    setFormData({ ...formData, email: e.target.value })
+                  }
+                  className="mt-1 block w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-green-500 focus:border-green-500"
+                  placeholder="contacto@mirestaurante.com"
+                />
+              </div>
             </div>
           </div>
 
