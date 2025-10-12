@@ -49,9 +49,20 @@ export async function POST(request: Request) {
 
     console.log('🌱 Starting database seed...')
 
-    // Create a demo restaurant user
-    const hashedPassword = await bcrypt.hash('123456', 12)
+    // Test database connection first
+    try {
+      await prisma.$connect()
+      console.log('✅ Database connected successfully')
+    } catch (dbError) {
+      console.error('❌ Database connection failed:', dbError)
+      throw new Error(`Database connection failed: ${dbError instanceof Error ? dbError.message : 'Unknown error'}`)
+    }
 
+    // Create a demo restaurant user
+    console.log('Creating hashed password...')
+    const hashedPassword = await bcrypt.hash('123456', 10)
+
+    console.log('Creating demo user...')
     const demoUser = await prisma.user.upsert({
       where: { email: 'demo.restaurant@foodsave.com' },
       update: {},
@@ -62,8 +73,10 @@ export async function POST(request: Request) {
         role: 'ESTABLISHMENT',
       },
     })
+    console.log('✅ Demo user created:', demoUser.id)
 
     // Create a demo establishment
+    console.log('Creating demo establishment...')
     const demoEstablishment = await prisma.establishment.upsert({
       where: { userId: demoUser.id },
       update: {},
@@ -79,11 +92,15 @@ export async function POST(request: Request) {
         userId: demoUser.id,
       },
     })
+    console.log('✅ Demo establishment created:', demoEstablishment.id)
 
     // Create some demo packs (time slots)
+    console.log('Creating demo packs...')
     const today = new Date()
     const tomorrow = new Date(today)
     tomorrow.setDate(tomorrow.getDate() + 1)
+    console.log('Today:', today.toISOString())
+    console.log('Tomorrow:', tomorrow.toISOString())
 
     const demoPacks = [
       {
@@ -137,6 +154,7 @@ export async function POST(request: Request) {
     ]
 
     for (const packData of demoPacks) {
+      console.log('Creating pack:', packData.title)
       await prisma.pack.upsert({
         where: {
           id: `demo-${packData.pickupTimeStart}-${packData.availableFrom.toISOString().split('T')[0]}-${demoEstablishment.id}`,
@@ -149,7 +167,10 @@ export async function POST(request: Request) {
       })
     }
 
+    console.log('✅ Demo packs created')
+
     // Crear más restaurantes
+    console.log('Creating restaurant 2...')
     const restaurant2User = await prisma.user.upsert({
       where: { email: 'pizzeria@demo.com' },
       update: {},
@@ -181,7 +202,10 @@ export async function POST(request: Request) {
       },
     })
 
+    console.log('✅ Restaurant 2 created:', restaurant2.id)
+
     // Packs para pizzería
+    console.log('Creating pizza pack...')
     const pizzaPack = await prisma.pack.findFirst({
       where: {
         establishmentId: restaurant2.id,
@@ -206,7 +230,10 @@ export async function POST(request: Request) {
       })
     }
 
+    console.log('✅ Pizza pack created')
+
     // Crear usuario cliente de prueba
+    console.log('Creating customer user...')
     const customerUser = await prisma.user.upsert({
       where: { email: 'cliente@demo.com' },
       update: {},
@@ -218,6 +245,7 @@ export async function POST(request: Request) {
         emailVerified: new Date(),
       },
     })
+    console.log('✅ Customer user created:', customerUser.id)
 
     console.log('✅ Seed completed successfully!')
 
@@ -252,15 +280,35 @@ export async function POST(request: Request) {
       message: error instanceof Error ? error.message : 'Unknown error',
       stack: error instanceof Error ? error.stack : undefined,
       name: error instanceof Error ? error.name : undefined,
+      cause: error instanceof Error ? (error as any).cause : undefined,
     }
     
-    console.error('Error details:', errorDetails)
+    console.error('Error details:', JSON.stringify(errorDetails, null, 2))
+    
+    // Check for specific Prisma errors
+    let errorMessage = errorDetails.message
+    if (errorMessage.includes('P2002')) {
+      errorMessage = 'Unique constraint violation - data may already exist'
+    } else if (errorMessage.includes('P2025')) {
+      errorMessage = 'Record not found'
+    } else if (errorMessage.includes('P1001')) {
+      errorMessage = 'Cannot reach database server'
+    } else if (errorMessage.includes('P1002')) {
+      errorMessage = 'Database connection timeout'
+    } else if (errorMessage.includes('P1003')) {
+      errorMessage = 'Database does not exist'
+    }
     
     return NextResponse.json(
       {
         message: 'Error creating demo data',
-        error: errorDetails.message,
-        details: process.env.NODE_ENV === 'development' ? errorDetails : undefined,
+        error: errorMessage,
+        details: errorDetails,
+        environment: {
+          nodeEnv: process.env.NODE_ENV,
+          hasDatabaseUrl: !!process.env.DATABASE_URL,
+          databaseUrlPrefix: process.env.DATABASE_URL?.substring(0, 20) + '...',
+        },
       },
       { status: 500 }
     )
