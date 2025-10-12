@@ -44,14 +44,30 @@ model User {
   image         String?
   role          String    @default("CUSTOMER") // ADMIN, ESTABLISHMENT, CUSTOMER
   
-  // Verificación multi-capa (simplificada)
-  verificationStatus String @default("PENDING") // PENDING, EMAIL_VERIFIED, TRUSTED_USER
+  // Verificación multi-capa (expandida)
+  verificationStatus String @default("PENDING") // PENDING, EMAIL_VERIFIED, IDENTITY_VERIFIED, TRUSTED_USER
+  
+  // Identidad leve
+  profilePhoto      String?   // URL de foto de perfil
+  realName          String?   // Nombre real verificado
+  googleVerified    Boolean   @default(false) // Verificado con Google OAuth
+  socialConnections String[]  @default([]) // ["google", "facebook", etc.]
   
   // Análisis de comportamiento
-  trustScore        Float   @default(0.0) // 0.0 a 1.0
+  trustScore        Float     @default(0.0) // 0.0 a 1.0
   lastActivity      DateTime?
-  loginCount        Int     @default(0)
-  suspiciousActivity Boolean @default(false)
+  loginCount        Int       @default(0)
+  suspiciousActivity Boolean  @default(false)
+  
+  // Reputación cruzada
+  reputationScore   Float     @default(0.0) // 0.0 a 5.0 (como estrellas)
+  totalRatings      Int       @default(0)
+  positiveRatings   Int       @default(0)
+  negativeRatings   Int       @default(0)
+  
+  // Verificación temporal
+  lastVerification  DateTime? // Última verificación completa
+  verificationExpiry DateTime? // Cuándo expira la verificación actual
   
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
@@ -63,6 +79,11 @@ model User {
   reviews           Review[]
   favorites         Favorite[]
   pushSubscriptions PushSubscription[]
+  
+  // Relaciones de reputación
+  ratingsGiven      UserRating[] @relation("RaterUser")
+  ratingsReceived   UserRating[] @relation("RatedUser")
+  notifications     UserNotification[]
 }
 
 model VerificationToken {
@@ -203,6 +224,9 @@ model Order {
   packId String
   pack   Pack   @relation(fields: [packId], references: [id], onDelete: Cascade)
   
+  // Relación con ratings
+  ratings UserRating[]
+  
   @@index([verificationCode])
 }
 
@@ -311,7 +335,60 @@ model PushSubscription {
   @@index([userId])
 }
 
+model UserRating {
+  id        String   @id @default(cuid())
+  rating    Float    // 1.0 a 5.0
+  comment   String?
+  context   String   // "ORDER", "INTERACTION", "GENERAL"
+  
+  // Relaciones
+  raterId   String   // Quien califica
+  ratedId   String   // Quien es calificado
+  orderId   String?  // Orden relacionada (opcional)
+  
+  rater     User     @relation("RaterUser", fields: [raterId], references: [id], onDelete: Cascade)
+  rated     User     @relation("RatedUser", fields: [ratedId], references: [id], onDelete: Cascade)
+  order     Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([raterId, ratedId, orderId]) // Un usuario solo puede calificar una vez por orden
+  @@index([ratedId])
+  @@index([raterId])
+}
+
+model UserNotification {
+  id          String   @id @default(cuid())
+  userId      String
+  type        String   // "VERIFICATION_CHANGE", "REPUTATION_UPDATE", "TRUST_SCORE_CHANGE"
+  title       String
+  message     String
+  data        String?  // JSON con datos adicionales
+  read        Boolean  @default(false)
+  
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  createdAt   DateTime @default(now())
+  
+  @@index([userId])
+  @@index([read])
+}
+
+model SystemMetric {
+  id          String   @id @default(cuid())
+  metricType  String   // "TRUST_SCORE_AVG", "SUSPICIOUS_USERS", "VERIFICATION_RATE"
+  value       Float
+  metadata    String?  // JSON con detalles adicionales
+  
+  createdAt   DateTime @default(now())
+  
+  @@index([metricType])
+  @@index([createdAt])
+}
+
 // Removed enums for SQLite compatibility
 // UserRole: CUSTOMER, ESTABLISHMENT, ADMIN
 // EstablishmentCategory: RESTAURANT, CAFE, BAKERY, SUPERMARKET, GROCERY, OTHER  
 // OrderStatus: PENDING, CONFIRMED, READY_FOR_PICKUP, COMPLETED, CANCELLED
+// VerificationStatus: PENDING, EMAIL_VERIFIED, IDENTITY_VERIFIED, TRUSTED_USER

@@ -117,22 +117,65 @@ async function analyzeBehavior(userId: string) {
 
     // 6. VERIFICACIONES COMPLETADAS
     if (user.emailVerified) {
-      trustScore += 0.2
+      trustScore += 0.15
       reasons.push('Email verificado')
+    }
+
+    if (user.googleVerified) {
+      trustScore += 0.1
+      reasons.push('Google OAuth verificado')
+    }
+
+    if (user.profilePhoto) {
+      trustScore += 0.05
+      reasons.push('Foto de perfil agregada')
+    }
+
+    if (user.realName) {
+      trustScore += 0.05
+      reasons.push('Nombre real proporcionado')
+    }
+
+    // 7. REPUTACIÓN CRUZADA
+    if (user.totalRatings >= 5) {
+      if (user.reputationScore >= 4.5) {
+        trustScore += 0.2
+        reasons.push(`Excelente reputación (${user.reputationScore.toFixed(1)}/5.0)`)
+      } else if (user.reputationScore >= 4.0) {
+        trustScore += 0.15
+        reasons.push(`Buena reputación (${user.reputationScore.toFixed(1)}/5.0)`)
+      } else if (user.reputationScore >= 3.5) {
+        trustScore += 0.1
+        reasons.push(`Reputación aceptable (${user.reputationScore.toFixed(1)}/5.0)`)
+      } else if (user.reputationScore < 2.5) {
+        trustScore -= 0.15
+        penalties.push(`Reputación baja (${user.reputationScore.toFixed(1)}/5.0)`)
+      }
     }
 
     // Limitar trustScore entre 0 y 1
     trustScore = Math.max(0, Math.min(1, trustScore))
 
-    // Determinar nuevo estado basado en trustScore
+    // Determinar nuevo estado basado en trustScore y verificaciones
     let newStatus = user.verificationStatus
 
-    if (trustScore >= 0.8 && user.verificationStatus === 'EMAIL_VERIFIED') {
-      newStatus = 'TRUSTED_USER'
-      reasons.push('Alcanzó nivel de usuario confiable (80%+ confianza)')
-    } else if (trustScore >= 0.6 && user.verificationStatus === 'PENDING' && user.emailVerified) {
-      newStatus = 'EMAIL_VERIFIED' // Auto-promover si tiene email verificado
-      reasons.push('Auto-promovido por buen comportamiento')
+    // Lógica de promoción automática
+    if (trustScore >= 0.8) {
+      if (user.verificationStatus === 'IDENTITY_VERIFIED') {
+        newStatus = 'TRUSTED_USER'
+        reasons.push('Alcanzó nivel de usuario confiable (80%+ confianza)')
+      } else if (user.verificationStatus === 'EMAIL_VERIFIED' && (user.googleVerified || user.profilePhoto)) {
+        newStatus = 'IDENTITY_VERIFIED'
+        reasons.push('Promovido a identidad verificada por buen comportamiento')
+      }
+    } else if (trustScore >= 0.6) {
+      if (user.verificationStatus === 'PENDING' && user.emailVerified) {
+        newStatus = 'EMAIL_VERIFIED'
+        reasons.push('Auto-promovido por buen comportamiento')
+      } else if (user.verificationStatus === 'EMAIL_VERIFIED' && user.googleVerified && user.profilePhoto) {
+        newStatus = 'IDENTITY_VERIFIED'
+        reasons.push('Identidad verificada por múltiples factores')
+      }
     }
 
     return {
