@@ -82,8 +82,8 @@ export async function POST(request: Request) {
       )
     }
 
-    let verificationResult = {
-      status: 'PENDING',
+    const verificationResult = {
+      status: 'PENDING' as string,
       type: verificationType,
       googleVerified: false,
       locationVerified: false,
@@ -101,14 +101,20 @@ export async function POST(request: Request) {
       )
 
       if (googleResult.found) {
-        verificationResult.googleVerified = true
-        verificationResult.confidence = googleResult.confidence
-        verificationResult.notes = `Verificado automáticamente con Google Places. Confianza: ${(googleResult.confidence * 100).toFixed(1)}%`
+        const googleVerified = true
+        const confidence = googleResult.confidence
+        const notes = `Verificado automáticamente con Google Places. Confianza: ${(googleResult.confidence * 100).toFixed(1)}%`
         
         // Si la confianza es alta, aprobar automáticamente
-        if (googleResult.confidence >= 0.8) {
-          verificationResult.status = 'AUTO_VERIFIED'
-        }
+        const status = googleResult.confidence >= 0.8 ? 'AUTO_VERIFIED' : 'PENDING'
+        
+        // Actualizar el objeto
+        Object.assign(verificationResult, {
+          googleVerified,
+          confidence,
+          notes,
+          status
+        })
 
         // Actualizar el establecimiento con los datos de Google
         await prisma.establishment.update({
@@ -126,7 +132,8 @@ export async function POST(request: Request) {
 
         console.log('✅ Automatic verification completed:', verificationResult.status)
       } else {
-        verificationResult.notes = 'No se encontró en Google Places. Requiere verificación manual.'
+        const notes = 'No se encontró en Google Places. Requiere verificación manual.'
+        Object.assign(verificationResult, { notes })
         
         await prisma.establishment.update({
           where: { id: establishmentId },
@@ -134,7 +141,7 @@ export async function POST(request: Request) {
             verificationStatus: 'PENDING',
             verificationType: 'MANUAL',
             googleVerified: false,
-            verificationNotes: verificationResult.notes,
+            verificationNotes: notes,
           }
         })
 
@@ -145,7 +152,8 @@ export async function POST(request: Request) {
     // Verificación manual
     if (verificationType === 'MANUAL') {
       console.log('👨‍💼 Manual verification required')
-      verificationResult.notes = 'Pendiente de verificación manual por administrador.'
+      const notes = 'Pendiente de verificación manual por administrador.'
+      Object.assign(verificationResult, { notes })
     }
 
     // Crear log de auditoría
