@@ -85,7 +85,7 @@ export async function POST(request: Request) {
     let verificationStatus = 'PENDING'
     let verificationNotes = ''
     let googleVerified = false
-    let locationVerified = false
+    const locationVerified = false
     let confidence = 0
 
     // Verificación automática con Google Places
