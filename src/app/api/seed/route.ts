@@ -2,8 +2,24 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 
-export async function POST() {
+export async function POST(request: Request) {
   try {
+    // Verificar token de seguridad (opcional pero recomendado)
+    const { searchParams } = new URL(request.url)
+    const token = searchParams.get('token')
+    
+    // Puedes configurar un token secreto en las variables de entorno
+    const SEED_TOKEN = process.env.SEED_TOKEN || 'dev-seed-token-123'
+    
+    if (token !== SEED_TOKEN) {
+      return NextResponse.json(
+        { message: 'Unauthorized. Invalid token.' },
+        { status: 401 }
+      )
+    }
+
+    console.log('🌱 Starting database seed...')
+
     // Create a demo restaurant user
     const hashedPassword = await bcrypt.hash('123456', 12)
 
@@ -104,15 +120,91 @@ export async function POST() {
       })
     }
 
+    // Crear más restaurantes
+    const restaurant2User = await prisma.user.upsert({
+      where: { email: 'pizzeria@demo.com' },
+      update: {},
+      create: {
+        name: 'Pizzería Italiana',
+        email: 'pizzeria@demo.com',
+        password: hashedPassword,
+        role: 'ESTABLISHMENT',
+        emailVerified: new Date(),
+      },
+    })
+
+    const restaurant2 = await prisma.establishment.upsert({
+      where: { userId: restaurant2User.id },
+      update: {},
+      create: {
+        name: 'Pizzería Italiana',
+        description: 'Auténtica pizza napolitana con ingredientes frescos',
+        address: 'Calle 93 #13-24, Bogotá',
+        latitude: 4.6764,
+        longitude: -74.0537,
+        phone: '+57 310 555 1234',
+        email: 'pizzeria@demo.com',
+        category: 'RESTAURANT',
+        userId: restaurant2User.id,
+        image: 'https://images.unsplash.com/photo-1513104890138-7c749659a591?w=800',
+        verificationStatus: 'APPROVED',
+        approvedAt: new Date(),
+      },
+    })
+
+    // Packs para pizzería
+    await prisma.pack.create({
+      data: {
+        title: 'Pack Pizza Sorpresa',
+        description: 'Pizza grande con ingredientes del día',
+        originalPrice: 45000,
+        discountedPrice: 22000,
+        quantity: 6,
+        availableFrom: new Date(`${today.toISOString().split('T')[0]}T19:00:00`),
+        availableUntil: new Date(`${today.toISOString().split('T')[0]}T21:00:00`),
+        pickupTimeStart: '19:00',
+        pickupTimeEnd: '21:00',
+        establishmentId: restaurant2.id,
+      },
+    })
+
+    // Crear usuario cliente de prueba
+    const customerUser = await prisma.user.upsert({
+      where: { email: 'cliente@demo.com' },
+      update: {},
+      create: {
+        name: 'Cliente Demo',
+        email: 'cliente@demo.com',
+        password: hashedPassword,
+        role: 'CUSTOMER',
+        emailVerified: new Date(),
+      },
+    })
+
+    console.log('✅ Seed completed successfully!')
+
     return NextResponse.json({
-      message: 'Demo data created successfully!',
-      demoCredentials: {
-        restaurant: {
+      message: 'Database seeded successfully! 🎉',
+      data: {
+        users: 3,
+        establishments: 2,
+        packs: 4,
+      },
+      credentials: {
+        restaurant1: {
           email: 'demo.restaurant@foodsave.com',
           password: '123456',
-          dashboard: '/dashboard',
+        },
+        restaurant2: {
+          email: 'pizzeria@demo.com',
+          password: '123456',
+        },
+        customer: {
+          email: 'cliente@demo.com',
+          password: '123456',
         },
       },
+      instructions: 'Usa estas credenciales para iniciar sesión en tu aplicación',
     })
   } catch (error) {
     console.error('Error creating demo data:', error)
