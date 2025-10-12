@@ -2,6 +2,35 @@ import { NextResponse } from 'next/server'
 import { prisma } from '@/lib/prisma'
 import bcrypt from 'bcryptjs'
 
+// GET endpoint para verificar el estado
+export async function GET() {
+  try {
+    const userCount = await prisma.user.count()
+    const establishmentCount = await prisma.establishment.count()
+    const packCount = await prisma.pack.count()
+    
+    return NextResponse.json({
+      status: 'ok',
+      database: 'connected',
+      data: {
+        users: userCount,
+        establishments: establishmentCount,
+        packs: packCount,
+      },
+      message: 'Database is connected. Use POST with ?token=dev-seed-token-123 to seed data.',
+    })
+  } catch (error) {
+    return NextResponse.json(
+      {
+        status: 'error',
+        database: 'disconnected',
+        error: error instanceof Error ? error.message : 'Unknown error',
+      },
+      { status: 500 }
+    )
+  }
+}
+
 export async function POST(request: Request) {
   try {
     // Verificar token de seguridad (opcional pero recomendado)
@@ -216,11 +245,22 @@ export async function POST(request: Request) {
       instructions: 'Usa estas credenciales para iniciar sesión en tu aplicación',
     })
   } catch (error) {
-    console.error('Error creating demo data:', error)
+    console.error('❌ Error creating demo data:', error)
+    
+    // Log más detallado del error
+    const errorDetails = {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      stack: error instanceof Error ? error.stack : undefined,
+      name: error instanceof Error ? error.name : undefined,
+    }
+    
+    console.error('Error details:', errorDetails)
+    
     return NextResponse.json(
       {
         message: 'Error creating demo data',
-        error: error instanceof Error ? error.message : 'Unknown error',
+        error: errorDetails.message,
+        details: process.env.NODE_ENV === 'development' ? errorDetails : undefined,
       },
       { status: 500 }
     )
