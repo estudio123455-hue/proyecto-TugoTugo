@@ -251,12 +251,12 @@ function OptimizedMap({ establishments, userLocation, onEstablishmentSelect }: O
         mapStyle={MAP_STYLE}
         style={{ width: '100%', height: '100%' }}
       >
-        {/* Controles de navegación - Movidos a la izquierda */}
+        {/* Controles de navegación - Abajo a la derecha */}
         <NavigationControl position="bottom-right" showCompass={true} showZoom={true} />
 
-        {/* Control de geolocalización - Movido abajo */}
+        {/* Control de geolocalización - Arriba a la derecha, lejos del panel */}
         <GeolocateControl
-          position="bottom-right"
+          position="top-right"
           trackUserLocation
           showUserLocation
         />
@@ -286,8 +286,8 @@ function OptimizedMap({ establishments, userLocation, onEstablishmentSelect }: O
         ))}
       </Map>
 
-      {/* Panel de información compacto - superior izquierda */}
-      <div className="absolute top-4 left-4 z-10">
+      {/* Panel de información compacto - inferior izquierda para evitar sobreposición */}
+      <div className="absolute bottom-20 left-4 z-10">
         <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200 overflow-hidden" style={{ width: '200px' }}>
           {/* Header con estado */}
           <div className="bg-gradient-to-r from-green-500 to-emerald-600 px-3 py-2">
@@ -331,20 +331,29 @@ function OptimizedMap({ establishments, userLocation, onEstablishmentSelect }: O
       {/* Mensaje cuando no hay establecimientos */}
       {establishments.length === 0 && (
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none z-10">
-          <div className="bg-white rounded-lg shadow-xl p-6 max-w-sm mx-4 pointer-events-auto">
+          <div className="bg-white rounded-2xl shadow-2xl p-8 max-w-sm mx-4 pointer-events-auto border border-gray-200">
             <div className="text-center">
-              <div className="text-4xl mb-3">🗺️</div>
-              <h3 className="text-lg font-bold text-gray-900 mb-2">
+              <div className="text-6xl mb-4">🗺️</div>
+              <h3 className="text-xl font-bold text-gray-900 mb-3">
                 No hay ubicaciones
               </h3>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 mb-4">
                 Aún no hay restaurantes registrados con coordenadas.
+              </p>
+              <p className="text-xs text-gray-500">
                 Los establecimientos aparecerán aquí cuando se registren.
               </p>
             </div>
           </div>
         </div>
       )}
+      
+      {/* Indicador de atribución - esquina inferior derecha */}
+      <div className="absolute bottom-2 right-2 bg-white/80 backdrop-blur-sm rounded px-2 py-1 text-[8px] text-gray-500 z-10">
+        <a href="https://carto.com/attributions" target="_blank" rel="noopener noreferrer" className="hover:text-gray-700">
+          © CARTO
+        </a>
+      </div>
     </div>
   )
 }
