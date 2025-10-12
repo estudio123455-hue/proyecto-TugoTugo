@@ -153,20 +153,29 @@ export async function POST(request: Request) {
     })
 
     // Packs para pizzería
-    await prisma.pack.create({
-      data: {
-        title: 'Pack Pizza Sorpresa',
-        description: 'Pizza grande con ingredientes del día',
-        originalPrice: 45000,
-        discountedPrice: 22000,
-        quantity: 6,
-        availableFrom: new Date(`${today.toISOString().split('T')[0]}T19:00:00`),
-        availableUntil: new Date(`${today.toISOString().split('T')[0]}T21:00:00`),
-        pickupTimeStart: '19:00',
-        pickupTimeEnd: '21:00',
+    const pizzaPack = await prisma.pack.findFirst({
+      where: {
         establishmentId: restaurant2.id,
+        title: 'Pack Pizza Sorpresa',
       },
     })
+
+    if (!pizzaPack) {
+      await prisma.pack.create({
+        data: {
+          title: 'Pack Pizza Sorpresa',
+          description: 'Pizza grande con ingredientes del día',
+          originalPrice: 45000,
+          discountedPrice: 22000,
+          quantity: 6,
+          availableFrom: new Date(`${today.toISOString().split('T')[0]}T19:00:00`),
+          availableUntil: new Date(`${today.toISOString().split('T')[0]}T21:00:00`),
+          pickupTimeStart: '19:00',
+          pickupTimeEnd: '21:00',
+          establishmentId: restaurant2.id,
+        },
+      })
+    }
 
     // Crear usuario cliente de prueba
     const customerUser = await prisma.user.upsert({
