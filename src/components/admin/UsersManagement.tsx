@@ -51,25 +51,35 @@ export default function UsersManagement() {
   }
 
   const deleteUser = async (userId: string) => {
-    if (!confirm('¿Estás seguro de eliminar este usuario? Esta acción no se puede deshacer.')) {
+    const user = users.find(u => u.id === userId)
+    const userName = user?.name || user?.email || 'este usuario'
+    
+    if (!confirm(`¿Estás seguro de eliminar a ${userName}? Esta acción eliminará:\n\n• El usuario y su cuenta\n• Su establecimiento (si tiene uno)\n• Todos sus packs y posts\n• Todas sus órdenes\n• Todos los datos relacionados\n\nEsta acción NO se puede deshacer.`)) {
       return
     }
 
     try {
+      console.log('🗑️ Eliminando usuario:', userId)
+      
       const res = await fetch(`/api/admin/users?id=${userId}`, {
         method: 'DELETE',
       })
+      
+      if (!res.ok) {
+        throw new Error(`HTTP error! status: ${res.status}`)
+      }
+      
       const data = await res.json()
       
       if (data.success) {
-        alert('Usuario eliminado exitosamente')
-        fetchUsers()
+        alert('✅ Usuario eliminado exitosamente')
+        fetchUsers() // Recargar la lista
       } else {
-        alert(data.message || 'Error al eliminar usuario')
+        alert(`❌ Error: ${data.message || 'Error al eliminar usuario'}`)
       }
     } catch (error) {
-      console.error('Error deleting user:', error)
-      alert('Error al eliminar usuario')
+      console.error('❌ Error deleting user:', error)
+      alert(`❌ Error al eliminar usuario: ${error instanceof Error ? error.message : 'Error desconocido'}`)
     }
   }
 

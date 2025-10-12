@@ -89,9 +89,81 @@ export async function DELETE(request: NextRequest) {
       )
     }
 
-    await prisma.user.delete({
-      where: { id: userId },
+    // Eliminar datos relacionados en orden correcto
+    console.log('🗑️ Deleting user and related data:', userId)
+
+    // 1. Eliminar órdenes del usuario
+    await prisma.order.deleteMany({
+      where: { userId }
     })
+
+    // 2. Si es un establecimiento, eliminar todos sus datos
+    const establishment = await prisma.establishment.findUnique({
+      where: { userId }
+    })
+
+    if (establishment) {
+      // Eliminar packs del establecimiento
+      await prisma.pack.deleteMany({
+        where: { establishmentId: establishment.id }
+      })
+
+      // Eliminar posts del establecimiento
+      await prisma.post.deleteMany({
+        where: { establishmentId: establishment.id }
+      })
+
+      // Eliminar reviews del establecimiento
+      await prisma.review.deleteMany({
+        where: { establishmentId: establishment.id }
+      })
+
+      // Eliminar favoritos del establecimiento
+      await prisma.favorite.deleteMany({
+        where: { establishmentId: establishment.id }
+      })
+
+      // Eliminar menu items del establecimiento
+      await prisma.menuItem.deleteMany({
+        where: { establishmentId: establishment.id }
+      })
+
+      // Eliminar el establecimiento
+      await prisma.establishment.delete({
+        where: { id: establishment.id }
+      })
+    }
+
+    // 3. Eliminar reviews del usuario
+    await prisma.review.deleteMany({
+      where: { userId }
+    })
+
+    // 4. Eliminar favoritos del usuario
+    await prisma.favorite.deleteMany({
+      where: { userId }
+    })
+
+    // 5. Eliminar cuentas y sesiones del usuario
+    await prisma.account.deleteMany({
+      where: { userId }
+    })
+
+    await prisma.session.deleteMany({
+      where: { userId }
+    })
+
+    // 6. Eliminar suscripciones push del usuario
+    await prisma.pushSubscription.deleteMany({
+      where: { userId }
+    })
+
+    // 7. Finalmente, eliminar el usuario
+    await prisma.user.delete({
+      where: { id: userId }
+    })
+
+    console.log('✅ User and all related data deleted successfully')
 
     return NextResponse.json({
       success: true,
