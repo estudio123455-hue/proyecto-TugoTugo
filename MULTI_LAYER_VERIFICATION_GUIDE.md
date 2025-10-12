@@ -2,13 +2,12 @@
 
 ## 🎯 **Resumen del Sistema**
 
-Tu app ahora tiene un **sistema de verificación automático de 4 capas** que funciona completamente solo:
+Tu app ahora tiene un **sistema de verificación automático simplificado** que funciona completamente solo:
 
-### **📋 Estados de Verificación:**
+### **📋 Estados de Verificación (Simplificado):**
 1. **PENDING** → Usuario recién registrado
 2. **EMAIL_VERIFIED** → Email confirmado
-3. **PHONE_VERIFIED** → Teléfono confirmado
-4. **TRUSTED_USER** → Usuario confiable (80%+ trust score)
+3. **TRUSTED_USER** → Usuario confiable (80%+ trust score)
 
 ## 🚀 **Flujo Automático Completo**
 
@@ -18,18 +17,13 @@ Usuario se registra → Estado: PENDING
 Sistema envía email → Usuario hace clic → Estado: EMAIL_VERIFIED
 ```
 
-### **Capa 2: Verificación de Teléfono**
-```
-Usuario ingresa teléfono → Sistema envía SMS → Usuario ingresa código → Estado: PHONE_VERIFIED
-```
-
-### **Capa 3: Análisis de Comportamiento Automático**
+### **Capa 2: Análisis de Comportamiento Automático**
 ```
 Cada 5 logins → Sistema analiza comportamiento → Actualiza trust score automáticamente
 Trust score ≥ 80% → Estado: TRUSTED_USER
 ```
 
-### **Capa 4: Monitoreo Continuo**
+### **Capa 3: Monitoreo Continuo**
 ```
 Sistema detecta patrones sospechosos → Marca como suspicious_activity
 Sistema premia buen comportamiento → Aumenta trust score

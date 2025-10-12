@@ -105,25 +105,20 @@ async function analyzeBehavior(userId: string) {
 
     // 5. ANÁLISIS DE PATRONES DE LOGIN
     if (user.loginCount >= 10) {
-      trustScore += 0.1
+      trustScore += 0.15
       reasons.push(`${user.loginCount} inicios de sesión`)
     }
 
     // Verificar actividad reciente
     if (user.lastActivity && Date.now() - user.lastActivity.getTime() < 7 * 24 * 60 * 60 * 1000) {
-      trustScore += 0.05
+      trustScore += 0.1
       reasons.push('Actividad reciente en los últimos 7 días')
     }
 
     // 6. VERIFICACIONES COMPLETADAS
     if (user.emailVerified) {
-      trustScore += 0.1
+      trustScore += 0.2
       reasons.push('Email verificado')
-    }
-
-    if (user.phoneVerified) {
-      trustScore += 0.15
-      reasons.push('Teléfono verificado')
     }
 
     // Limitar trustScore entre 0 y 1
@@ -132,11 +127,11 @@ async function analyzeBehavior(userId: string) {
     // Determinar nuevo estado basado en trustScore
     let newStatus = user.verificationStatus
 
-    if (trustScore >= 0.8 && user.verificationStatus === 'PHONE_VERIFIED') {
+    if (trustScore >= 0.8 && user.verificationStatus === 'EMAIL_VERIFIED') {
       newStatus = 'TRUSTED_USER'
       reasons.push('Alcanzó nivel de usuario confiable (80%+ confianza)')
-    } else if (trustScore >= 0.6 && user.verificationStatus === 'EMAIL_VERIFIED') {
-      newStatus = 'PHONE_VERIFIED' // Auto-promover si tiene buena confianza
+    } else if (trustScore >= 0.6 && user.verificationStatus === 'PENDING' && user.emailVerified) {
+      newStatus = 'EMAIL_VERIFIED' // Auto-promover si tiene email verificado
       reasons.push('Auto-promovido por buen comportamiento')
     }
 
@@ -252,7 +247,6 @@ export async function GET(_request: NextRequest) {
         verificationStatus: true,
         trustScore: true,
         emailVerified: true,
-        phoneVerified: true,
         suspiciousActivity: true,
         lastActivity: true,
         loginCount: true,
@@ -271,7 +265,6 @@ export async function GET(_request: NextRequest) {
       verificationStatus: user.verificationStatus,
       trustScore: user.trustScore,
       emailVerified: !!user.emailVerified,
-      phoneVerified: !!user.phoneVerified,
       suspiciousActivity: user.suspiciousActivity,
       lastActivity: user.lastActivity,
       loginCount: user.loginCount,

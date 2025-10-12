@@ -43,12 +43,8 @@ model User {
   image         String?
   role          String    @default("CUSTOMER") // ADMIN, ESTABLISHMENT, CUSTOMER
   
-  // Verificación multi-capa
-  verificationStatus String @default("PENDING") // PENDING, EMAIL_VERIFIED, PHONE_VERIFIED, TRUSTED_USER
-  phone             String?
-  phoneVerified     DateTime?
-  phoneVerificationCode String?
-  phoneVerificationExpires DateTime?
+  // Verificación multi-capa (simplificada)
+  verificationStatus String @default("PENDING") // PENDING, EMAIL_VERIFIED, TRUSTED_USER
   
   // Análisis de comportamiento
   trustScore        Float   @default(0.0) // 0.0 a 1.0
