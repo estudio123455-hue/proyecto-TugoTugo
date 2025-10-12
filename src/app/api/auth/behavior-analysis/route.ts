@@ -162,7 +162,7 @@ async function analyzeBehavior(userId: string) {
 }
 
 // POST: Ejecutar análisis de comportamiento
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
     
@@ -185,7 +185,7 @@ export async function POST(request: NextRequest) {
         trustScore: analysis.trustScore,
         verificationStatus: analysis.status,
         lastActivity: new Date(),
-        suspiciousActivity: analysis.penalties.length > 0
+        suspiciousActivity: (analysis.penalties?.length || 0) > 0
       }
     })
 
@@ -200,7 +200,7 @@ export async function POST(request: NextRequest) {
         changes: JSON.stringify({
           trustScore: analysis.trustScore,
           verificationStatus: analysis.status,
-          suspiciousActivity: analysis.penalties.length > 0
+          suspiciousActivity: (analysis.penalties?.length || 0) > 0
         }),
         metadata: JSON.stringify({
           reasons: analysis.reasons,
@@ -235,7 +235,7 @@ export async function POST(request: NextRequest) {
 }
 
 // GET: Obtener estado actual de confianza
-export async function GET(request: NextRequest) {
+export async function GET(_request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
     
