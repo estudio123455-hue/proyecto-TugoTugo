@@ -322,11 +322,11 @@ export default function RestaurantsPage() {
                             </div>
                           </div>
 
-                          <p className="text-gray-600 text-xs mb-3 line-clamp-2">
+                          <p className="text-gray-700 text-sm mb-3 line-clamp-2 font-medium">
                             {restaurant.description}
                           </p>
 
-                          <div className="flex items-center text-xs text-gray-500 mb-3">
+                          <div className="flex items-center text-xs text-gray-600 mb-3">
                             <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
                               <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
                             </svg>
@@ -339,7 +339,7 @@ export default function RestaurantsPage() {
                       <div className="px-4 pb-4">
                         <div className="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-3 mb-3 border border-green-100">
                           <div className="flex items-center justify-between mb-2">
-                            <span className="text-xs font-semibold text-gray-700">Packs disponibles</span>
+                            <span className="text-sm font-bold text-gray-800">Packs disponibles</span>
                             <span className="bg-green-500 text-white text-xs font-bold px-2 py-1 rounded-full">
                               {getAvailablePacks(restaurant)}/{getTotalPacks(restaurant)}
                             </span>
@@ -347,13 +347,13 @@ export default function RestaurantsPage() {
                           
                           <div className="space-y-1.5">
                             {restaurant.packs.slice(0, 2).map(pack => (
-                              <div key={pack.id} className="flex justify-between items-center text-xs bg-white rounded-lg p-2">
-                                <span className="truncate font-medium text-gray-900 flex-1 mr-2">{pack.title}</span>
+                              <div key={pack.id} className="flex justify-between items-center text-xs bg-white rounded-lg p-2 shadow-sm">
+                                <span className="truncate font-semibold text-gray-800 flex-1 mr-2">{pack.title}</span>
                                 <div className="flex items-center gap-1.5">
-                                  <span className="text-green-600 font-bold">
+                                  <span className="text-green-600 font-bold text-sm">
                                     ${pack.discountedPrice}
                                   </span>
-                                  <span className="text-gray-400 line-through text-[10px]">
+                                  <span className="text-gray-500 line-through text-xs">
                                     ${pack.originalPrice}
                                   </span>
                                 </div>
