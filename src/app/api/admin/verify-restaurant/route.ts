@@ -82,14 +82,11 @@ export async function POST(request: Request) {
       )
     }
 
-    const verificationResult = {
-      status: 'PENDING' as string,
-      type: verificationType,
-      googleVerified: false,
-      locationVerified: false,
-      notes: '',
-      confidence: 0
-    }
+    let verificationStatus = 'PENDING'
+    let verificationNotes = ''
+    let googleVerified = false
+    let locationVerified = false
+    let confidence = 0
 
     // Verificación automática con Google Places
     if (verificationType === 'AUTO' || verificationType === 'HYBRID') {
@@ -101,47 +98,35 @@ export async function POST(request: Request) {
       )
 
       if (googleResult.found) {
-        const googleVerified = true
-        const confidence = googleResult.confidence
-        const notes = `Verificado automáticamente con Google Places. Confianza: ${(googleResult.confidence * 100).toFixed(1)}%`
+        googleVerified = true
+        confidence = googleResult.confidence
+        verificationNotes = `Verificado automáticamente con Google Places. Confianza: ${(googleResult.confidence * 100).toFixed(1)}%`
         
         // Si la confianza es alta, aprobar automáticamente
-        const status = googleResult.confidence >= 0.8 ? 'AUTO_VERIFIED' : 'PENDING'
-        
-        // Actualizar el objeto
-        Object.assign(verificationResult, {
-          googleVerified,
-          confidence,
-          notes,
-          status
-        })
+        if (googleResult.confidence >= 0.8) {
+          verificationStatus = 'AUTO_VERIFIED'
+        }
 
         // Actualizar el establecimiento con los datos de Google
         await prisma.establishment.update({
           where: { id: establishmentId },
           data: {
-            verificationStatus: verificationResult.status,
-            verificationType: verificationResult.type,
-            googlePlaceId: googleResult.placeId,
-            googleVerified: true,
-            verificationNotes: verificationResult.notes,
-            approvedAt: verificationResult.status === 'AUTO_VERIFIED' ? new Date() : null,
-            approvedBy: verificationResult.status === 'AUTO_VERIFIED' ? session.user.id : null,
+            verificationStatus: verificationStatus,
+            verificationNotes: verificationNotes,
+            approvedAt: verificationStatus === 'AUTO_VERIFIED' ? new Date() : null,
+            approvedBy: verificationStatus === 'AUTO_VERIFIED' ? session.user.id : null,
           }
         })
 
-        console.log('✅ Automatic verification completed:', verificationResult.status)
+        console.log('✅ Automatic verification completed:', verificationStatus)
       } else {
-        const notes = 'No se encontró en Google Places. Requiere verificación manual.'
-        Object.assign(verificationResult, { notes })
+        verificationNotes = 'No se encontró en Google Places. Requiere verificación manual.'
         
         await prisma.establishment.update({
           where: { id: establishmentId },
           data: {
             verificationStatus: 'PENDING',
-            verificationType: 'MANUAL',
-            googleVerified: false,
-            verificationNotes: notes,
+            verificationNotes: verificationNotes,
           }
         })
 
@@ -152,8 +137,7 @@ export async function POST(request: Request) {
     // Verificación manual
     if (verificationType === 'MANUAL') {
       console.log('👨‍💼 Manual verification required')
-      const notes = 'Pendiente de verificación manual por administrador.'
-      Object.assign(verificationResult, { notes })
+      verificationNotes = 'Pendiente de verificación manual por administrador.'
     }
 
     // Crear log de auditoría
@@ -165,10 +149,10 @@ export async function POST(request: Request) {
         userId: session.user.id,
         userName: session.user.name || session.user.email,
         changes: JSON.stringify({
-          verificationType: verificationResult.type,
-          status: verificationResult.status,
-          googleVerified: verificationResult.googleVerified,
-          confidence: verificationResult.confidence
+          verificationType: verificationType,
+          status: verificationStatus,
+          googleVerified: googleVerified,
+          confidence: confidence
         }),
         metadata: JSON.stringify({
           establishmentName: establishment.name,
@@ -182,13 +166,13 @@ export async function POST(request: Request) {
       message: 'Verificación completada',
       data: {
         establishmentId,
-        verificationStatus: verificationResult.status,
-        verificationType: verificationResult.type,
-        googleVerified: verificationResult.googleVerified,
-        locationVerified: verificationResult.locationVerified,
-        confidence: verificationResult.confidence,
-        notes: verificationResult.notes,
-        requiresManualReview: verificationResult.status === 'PENDING'
+        verificationStatus: verificationStatus,
+        verificationType: verificationType,
+        googleVerified: googleVerified,
+        locationVerified: locationVerified,
+        confidence: confidence,
+        notes: verificationNotes,
+        requiresManualReview: verificationStatus === 'PENDING'
       }
     })
   } catch (error) {
