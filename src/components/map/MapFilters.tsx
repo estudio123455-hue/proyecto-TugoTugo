@@ -48,17 +48,19 @@ export default function MapFilters({
   const hasActiveFilters = selectedDistance !== undefined || availableOnly
 
   return (
-    <div className="absolute top-4 right-4 z-[1000]">
+    <div className="absolute top-20 right-4 z-[999]">
       {/* Filter Button */}
       <button
         onClick={() => setShowFilters(!showFilters)}
         className={`
-          flex items-center gap-2 px-3 py-2 sm:px-4 sm:py-2 rounded-lg shadow-lg font-medium transition-colors text-sm sm:text-base
-          ${hasActiveFilters ? 'bg-green-500 text-white' : 'bg-white text-gray-700 hover:bg-gray-50'}
+          flex items-center gap-2 px-4 py-2.5 rounded-xl shadow-xl font-semibold transition-all text-sm border-2
+          ${hasActiveFilters 
+            ? 'bg-green-500 text-white border-green-600 hover:bg-green-600' 
+            : 'bg-white text-gray-700 hover:bg-gray-50 border-gray-200'}
         `}
       >
-        <Filter className="w-4 h-4 sm:w-5 sm:h-5" />
-        <span className="hidden sm:inline">Filtros</span>
+        <Filter className="w-4 h-4" />
+        <span>Filtros</span>
         {hasActiveFilters && (
           <span className="bg-white text-green-600 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
             {(selectedDistance !== undefined ? 1 : 0) + (availableOnly ? 1 : 0)}
@@ -68,12 +70,17 @@ export default function MapFilters({
 
       {/* Filters Panel */}
       {showFilters && (
-        <div className="absolute top-full right-0 mt-2 bg-white rounded-lg shadow-xl p-4 w-80 max-w-[calc(100vw-2rem)]">
-          <div className="flex items-center justify-between mb-4">
-            <h3 className="font-semibold text-gray-900">Filtros del Mapa</h3>
+        <div className="absolute top-full right-0 mt-3 bg-white rounded-2xl shadow-2xl p-5 w-80 max-w-[calc(100vw-2rem)] border border-gray-200">
+          <div className="flex items-center justify-between mb-5">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                <Filter className="w-4 h-4 text-green-600" />
+              </div>
+              <h3 className="font-bold text-gray-900">Filtros</h3>
+            </div>
             <button
               onClick={() => setShowFilters(false)}
-              className="text-gray-400 hover:text-gray-600"
+              className="text-gray-400 hover:text-gray-600 hover:bg-gray-100 rounded-lg p-1 transition-colors"
             >
               <X className="w-5 h-5" />
             </button>
