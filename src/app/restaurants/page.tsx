@@ -127,114 +127,131 @@ export default function RestaurantsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
       <Navigation />
       <NotificationSystem />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <div className="inline-block mb-4">
-            <span className="bg-green-100 text-green-800 text-sm font-semibold px-4 py-2 rounded-full">
-              🌟 Descubre Restaurantes
-            </span>
-          </div>
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-gray-900 mb-6 leading-tight">
-            Restaurantes con
-            <br />
-            <span className="text-green-600">Packs Disponibles</span>
-          </h1>
-          <p className="text-lg md:text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Descubre los mejores packs sorpresa de restaurantes cerca de ti y ahorra hasta un 70%
-          </p>
-          
-          {/* Connection status and last update */}
-          <div className="flex items-center justify-center space-x-4 text-sm">
-            <div className="flex items-center space-x-2">
-              <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500' : 'bg-red-500'}`}></div>
-              <span className="text-gray-500">
-                {isConnected ? 'Tiempo real activo' : 'Modo offline'}
-              </span>
+        {/* Header - Diseño completamente nuevo */}
+        <div className="mb-16">
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center shadow-lg">
+                  <span className="text-2xl">🏪</span>
+                </div>
+                <div>
+                  <p className="text-sm font-medium text-gray-500 uppercase tracking-wide">Directorio</p>
+                  <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
+                    Restaurantes Asociados
+                  </h1>
+                </div>
+              </div>
+              <p className="text-gray-600 max-w-2xl">
+                Explora nuestra red de restaurantes comprometidos con la reducción del desperdicio alimentario
+              </p>
             </div>
-            {lastUpdate && (
-              <span className="text-gray-500">
-                Última actualización: {new Date(lastUpdate).toLocaleString()}
-              </span>
-            )}
+            <div className="flex flex-col items-end gap-2">
+              <div className="flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-sm border border-gray-200">
+                <div className={`w-2 h-2 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`}></div>
+                <span className="text-xs font-medium text-gray-600">
+                  {isConnected ? 'En vivo' : 'Offline'}
+                </span>
+              </div>
+              {lastUpdate && (
+                <span className="text-xs text-gray-400">
+                  Actualizado: {new Date(lastUpdate).toLocaleTimeString()}
+                </span>
+              )}
+            </div>
           </div>
         </div>
 
-        {/* Filters */}
-        <div className="mb-8">
-          {/* Search */}
-          <div className="mb-8">
-            <div className="relative max-w-2xl mx-auto">
-              <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        {/* Filters - Diseño lateral */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mb-8">
+          {/* Sidebar con filtros */}
+          <div className="lg:col-span-1 space-y-4">
+            {/* Search */}
+            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">Buscar</label>
+              <div className="relative">
+                <input
+                  type="text"
+                  placeholder="Nombre, ubicación..."
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                />
+                <svg className="absolute left-3 top-3 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
-              <input
-                type="text"
-                placeholder="🔍 Buscar restaurantes por nombre, ubicación o tipo de comida..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-12 pr-4 py-4 text-base border-2 border-gray-200 rounded-xl focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all shadow-sm hover:shadow-md"
-              />
+            </div>
+
+            {/* Category filters */}
+            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">Categoría</label>
+              <div className="space-y-2">
+                {categories.map(category => (
+                  <button
+                    key={category.id}
+                    onClick={() => setSelectedCategory(category.id)}
+                    className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                      selectedCategory === category.id
+                        ? 'bg-gradient-to-r from-blue-500 to-purple-600 text-white shadow-md'
+                        : 'bg-gray-50 text-gray-700 hover:bg-gray-100'
+                    }`}
+                  >
+                    <span className="text-lg">{category.emoji}</span>
+                    <span className="flex-1 text-left">{category.name}</span>
+                    {selectedCategory === category.id && (
+                      <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
+                    )}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Sort options */}
+            <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
+              <label className="block text-sm font-semibold text-gray-700 mb-3">Ordenar por</label>
+              <div className="space-y-2">
+                <button
+                  onClick={() => setSortBy('newest')}
+                  className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    sortBy === 'newest' ? 'bg-blue-50 text-blue-700 border-2 border-blue-200' : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border-2 border-transparent'
+                  }`}
+                >
+                  <span>🆕</span>
+                  <span className="flex-1 text-left">Más recientes</span>
+                </button>
+                <button
+                  onClick={() => setSortBy('popular')}
+                  className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    sortBy === 'popular' ? 'bg-blue-50 text-blue-700 border-2 border-blue-200' : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border-2 border-transparent'
+                  }`}
+                >
+                  <span>🔥</span>
+                  <span className="flex-1 text-left">Más populares</span>
+                </button>
+                <button
+                  onClick={() => setSortBy('name')}
+                  className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-xl text-sm font-medium transition-all ${
+                    sortBy === 'name' ? 'bg-blue-50 text-blue-700 border-2 border-blue-200' : 'bg-gray-50 text-gray-700 hover:bg-gray-100 border-2 border-transparent'
+                  }`}
+                >
+                  <span>🔤</span>
+                  <span className="flex-1 text-left">Por nombre</span>
+                </button>
+              </div>
             </div>
           </div>
 
-          {/* Category filters */}
-          <div className="flex flex-wrap justify-center gap-3 mb-6">
-            {categories.map(category => (
-              <button
-                key={category.id}
-                onClick={() => setSelectedCategory(category.id)}
-                className={`inline-flex items-center px-5 py-2.5 rounded-full text-sm font-semibold transition-all transform hover:scale-105 shadow-sm ${
-                  selectedCategory === category.id
-                    ? 'bg-green-500 text-white shadow-lg ring-2 ring-green-200'
-                    : `${category.color} hover:shadow-md`
-                }`}
-              >
-                <span className="mr-2 text-lg">{category.emoji}</span>
-                {category.name}
-              </button>
-            ))}
-          </div>
-
-          {/* Sort options */}
-          <div className="flex justify-center">
-            <div className="inline-flex bg-white rounded-xl p-1.5 shadow-md border border-gray-200">
-              <button
-                onClick={() => setSortBy('newest')}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                  sortBy === 'newest' ? 'bg-green-500 text-white shadow-sm' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                }`}
-              >
-                🆕 Más recientes
-              </button>
-              <button
-                onClick={() => setSortBy('popular')}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                  sortBy === 'popular' ? 'bg-green-500 text-white shadow-sm' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                }`}
-              >
-                🔥 Más populares
-              </button>
-              <button
-                onClick={() => setSortBy('name')}
-                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-all ${
-                  sortBy === 'name' ? 'bg-green-500 text-white shadow-sm' : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
-                }`}
-              >
-                🔤 Por nombre
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Results */}
-        {filteredRestaurants.length === 0 ? (
+          {/* Main content area */}
+          <div className="lg:col-span-3">
+            {filteredRestaurants.length === 0 ? (
           <div className="text-center py-12">
             <div className="text-6xl mb-4">🔍</div>
             <h3 className="text-xl font-semibold text-gray-900 mb-2">
@@ -261,104 +278,125 @@ export default function RestaurantsPage() {
               </button>
             )}
           </div>
-        ) : (
-          <>
-            <div className="mb-8 text-center">
-              <div className="inline-block bg-green-50 border border-green-200 rounded-full px-6 py-3">
-                <p className="text-green-800 font-semibold">
-                  ✨ {filteredRestaurants.length} restaurante{filteredRestaurants.length !== 1 ? 's' : ''} con packs disponibles
-                </p>
-              </div>
-            </div>
-
-            <div className="grid gap-8 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-              {filteredRestaurants.map(restaurant => (
-                <div
-                  key={restaurant.id}
-                  className="bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all transform hover:-translate-y-1 overflow-hidden border border-gray-100"
-                >
-                  {/* Restaurant Image */}
-                  <div className="relative h-52 bg-gradient-to-br from-green-400 via-emerald-400 to-teal-400 flex items-center justify-center overflow-hidden">
-                    <div className="absolute inset-0 bg-black opacity-5"></div>
-                    <span className="text-7xl relative z-10 transform hover:scale-110 transition-transform">{restaurant.image || '🍽️'}</span>
-                    <div className="absolute top-4 right-4">
-                      <span className="bg-white/90 backdrop-blur-sm px-3 py-1.5 rounded-full text-xs font-bold text-gray-900 shadow-lg">
-                        {restaurant.category}
-                      </span>
+            ) : (
+              <>
+                <div className="mb-6 flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-xl flex items-center justify-center">
+                      <span className="text-white font-bold text-sm">{filteredRestaurants.length}</span>
                     </div>
-                  </div>
-
-                  {/* Restaurant Info */}
-                  <div className="p-6">
-                    <div className="mb-4">
-                      <h3 className="text-2xl font-bold text-gray-900 mb-2">
-                        {restaurant.name}
-                      </h3>
-                    </div>
-
-                    <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                      {restaurant.description}
-                    </p>
-
-                    <div className="flex items-center text-sm text-gray-500 mb-4">
-                      <span className="mr-2">📍</span>
-                      <span className="truncate">{restaurant.address}</span>
-                    </div>
-
-                    {/* Packs Summary */}
-                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 rounded-xl p-4 mb-4 border border-green-100">
-                      <div className="flex justify-between items-center mb-3">
-                        <span className="text-sm font-bold text-green-900">📦 Packs disponibles</span>
-                        <span className="bg-green-500 text-white text-xs font-bold px-2.5 py-1 rounded-full">
-                          {getAvailablePacks(restaurant)} de {getTotalPacks(restaurant)}
-                        </span>
-                      </div>
-                      
-                      {restaurant.packs.slice(0, 2).map(pack => (
-                        <div key={pack.id} className="flex justify-between items-center text-sm mb-2 bg-white rounded-lg p-2">
-                          <span className="truncate font-medium text-gray-900">{pack.title}</span>
-                          <div className="flex items-center space-x-2">
-                            <span className="text-green-600 font-bold text-base">
-                              ${pack.discountedPrice}
-                            </span>
-                            <span className="text-gray-400 line-through text-xs">
-                              ${pack.originalPrice}
-                            </span>
-                            <span className="text-xs bg-red-500 text-white font-bold px-2 py-0.5 rounded-full">
-                              -{getDiscountPercentage(pack)}%
-                            </span>
-                          </div>
-                        </div>
-                      ))})
-                      
-                      {restaurant.packs.length > 2 && (
-                        <p className="text-xs text-gray-500 mt-2">
-                          +{restaurant.packs.length - 2} packs más
-                        </p>
-                      )}
-                    </div>
-
-                    {/* Actions */}
-                    <div className="flex space-x-3">
-                      <Link
-                        href={`/establecimiento/${restaurant.id}`}
-                        className="flex-1 bg-green-500 hover:bg-green-600 text-white text-center py-3 px-4 rounded-xl font-bold transition-all transform hover:scale-105 shadow-md hover:shadow-lg"
-                      >
-                        🛍️ Ver Packs
-                      </Link>
-                      <Link
-                        href={`/map?establishment=${restaurant.id}`}
-                        className="bg-blue-500 hover:bg-blue-600 text-white py-3 px-4 rounded-xl font-bold transition-all transform hover:scale-105 shadow-md hover:shadow-lg"
-                      >
-                        📍
-                      </Link>
+                    <div>
+                      <p className="text-sm text-gray-500">Resultados encontrados</p>
+                      <p className="text-lg font-bold text-gray-900">
+                        {filteredRestaurants.length} restaurante{filteredRestaurants.length !== 1 ? 's' : ''}
+                      </p>
                     </div>
                   </div>
                 </div>
-              ))}
-            </div>
-          </>
-        )}
+
+                <div className="grid gap-6 grid-cols-1 md:grid-cols-2">
+                  {filteredRestaurants.map(restaurant => (
+                    <div
+                      key={restaurant.id}
+                      className="group bg-white rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden border border-gray-200 hover:border-blue-300"
+                    >
+                      {/* Restaurant Image - Diseño horizontal */}
+                      <div className="flex">
+                        <div className="relative w-32 h-32 bg-gradient-to-br from-blue-400 via-purple-400 to-pink-400 flex items-center justify-center flex-shrink-0">
+                          <span className="text-5xl transform group-hover:scale-110 transition-transform">{restaurant.image || '🍽️'}</span>
+                          <div className="absolute top-2 right-2">
+                            <div className="w-3 h-3 bg-green-500 rounded-full border-2 border-white"></div>
+                          </div>
+                        </div>
+
+                        {/* Restaurant Info */}
+                        <div className="flex-1 p-4">
+                          <div className="flex items-start justify-between mb-2">
+                            <div className="flex-1">
+                              <h3 className="text-lg font-bold text-gray-900 mb-1 group-hover:text-blue-600 transition-colors">
+                                {restaurant.name}
+                              </h3>
+                              <span className="inline-block bg-gray-100 text-gray-600 text-xs font-medium px-2 py-1 rounded-md">
+                                {restaurant.category}
+                              </span>
+                            </div>
+                          </div>
+
+                          <p className="text-gray-600 text-xs mb-3 line-clamp-2">
+                            {restaurant.description}
+                          </p>
+
+                          <div className="flex items-center text-xs text-gray-500 mb-3">
+                            <svg className="w-3 h-3 mr-1" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                            </svg>
+                            <span className="truncate">{restaurant.address}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Packs Summary - Diseño compacto */}
+                      <div className="px-4 pb-4">
+                        <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-3 mb-3 border border-blue-100">
+                          <div className="flex items-center justify-between mb-2">
+                            <span className="text-xs font-semibold text-gray-700">Packs disponibles</span>
+                            <span className="bg-gradient-to-r from-blue-500 to-purple-600 text-white text-xs font-bold px-2 py-1 rounded-full">
+                              {getAvailablePacks(restaurant)}/{getTotalPacks(restaurant)}
+                            </span>
+                          </div>
+                          
+                          <div className="space-y-1.5">
+                            {restaurant.packs.slice(0, 2).map(pack => (
+                              <div key={pack.id} className="flex justify-between items-center text-xs bg-white rounded-lg p-2">
+                                <span className="truncate font-medium text-gray-900 flex-1 mr-2">{pack.title}</span>
+                                <div className="flex items-center gap-1.5">
+                                  <span className="text-blue-600 font-bold">
+                                    ${pack.discountedPrice}
+                                  </span>
+                                  <span className="text-gray-400 line-through text-[10px]">
+                                    ${pack.originalPrice}
+                                  </span>
+                                </div>
+                              </div>
+                            ))}
+                          </div>
+                          
+                          {restaurant.packs.length > 2 && (
+                            <p className="text-[10px] text-gray-500 mt-2 text-center">
+                              +{restaurant.packs.length - 2} más
+                            </p>
+                          )}
+                        </div>
+
+                        {/* Actions - Diseño moderno */}
+                        <div className="grid grid-cols-2 gap-2">
+                          <Link
+                            href={`/establecimiento/${restaurant.id}`}
+                            className="flex items-center justify-center gap-2 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white text-center py-2.5 px-3 rounded-xl text-sm font-semibold transition-all shadow-sm hover:shadow-md"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" />
+                            </svg>
+                            <span>Ver Packs</span>
+                          </Link>
+                          <Link
+                            href={`/map?establishment=${restaurant.id}`}
+                            className="flex items-center justify-center gap-2 bg-white hover:bg-gray-50 text-gray-700 border-2 border-gray-200 hover:border-blue-300 text-center py-2.5 px-3 rounded-xl text-sm font-semibold transition-all"
+                          >
+                            <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                              <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                            </svg>
+                            <span>Mapa</span>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   )
