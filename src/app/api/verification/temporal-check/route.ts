@@ -263,7 +263,7 @@ export async function GET(request: NextRequest) {
       }
     })
 
-    console.log(`✅ [Temporal] Mass verification completed:`, results)
+    console.log('✅ [Temporal] Mass verification completed:', results)
 
     return NextResponse.json({
       success: true,
