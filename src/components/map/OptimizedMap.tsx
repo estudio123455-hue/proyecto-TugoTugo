@@ -7,23 +7,23 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import '@/styles/maplibre-custom.css'
 import { formatDistance } from '@/lib/geolocation'
 
-// Estilo de mapa usando OpenStreetMap tiles (100% gratis, sin token)
+// Estilo de mapa profesional usando Stadia Alidade Smooth (100% gratis, sin token)
 const MAP_STYLE = {
   version: 8 as const,
   sources: {
-    osm: {
+    'stadia-smooth': {
       type: 'raster' as const,
-      tiles: ['https://tile.openstreetmap.org/{z}/{x}/{y}.png'],
+      tiles: ['https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png'],
       tileSize: 256,
-      attribution: '&copy; OpenStreetMap Contributors',
-      maxzoom: 19,
+      attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+      maxzoom: 20,
     },
   },
   layers: [
     {
-      id: 'osm',
+      id: 'stadia-smooth',
       type: 'raster' as const,
-      source: 'osm',
+      source: 'stadia-smooth',
     },
   ],
 }
@@ -85,15 +85,25 @@ const EstablishmentMarker = memo(
         >
           <button
             onClick={() => setSelectedId(establishment.id)}
-            className="relative group cursor-pointer transform transition-transform hover:scale-110"
+            className="relative group cursor-pointer transform transition-all hover:scale-110 hover:-translate-y-1"
           >
-            <div className={`${hasAvailablePacks ? 'bg-green-500' : 'bg-red-500'} rounded-full p-2 shadow-lg border-2 border-white`}>
-              <MapPin className="w-6 h-6 text-white" fill="white" />
+            {/* Marcador personalizado con logo corporativo */}
+            <div className={`relative ${
+              hasAvailablePacks 
+                ? 'bg-gradient-to-br from-green-400 to-green-600' 
+                : 'bg-gradient-to-br from-gray-400 to-gray-600'
+            } rounded-full p-3 shadow-xl border-3 border-white ring-2 ring-green-200`}>
+              <div className="text-white font-bold text-lg">🍽️</div>
             </div>
+            {/* Badge de precio */}
             {hasAvailablePacks && availablePacks.length > 0 && (
-              <div className="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white px-2 py-1 rounded shadow-md text-xs font-bold text-green-600 whitespace-nowrap">
-                ${Math.min(...availablePacks.map((p) => p.discountedPrice)).toLocaleString('es-CO')}
+              <div className="absolute -top-10 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-green-500 to-emerald-500 px-3 py-1.5 rounded-full shadow-lg text-xs font-bold text-white whitespace-nowrap border-2 border-white">
+                💵 ${Math.min(...availablePacks.map((p) => p.discountedPrice)).toLocaleString('es-CO')}
               </div>
+            )}
+            {/* Pulso animado para establecimientos con packs */}
+            {hasAvailablePacks && (
+              <div className="absolute inset-0 rounded-full bg-green-400 animate-ping opacity-20"></div>
             )}
           </button>
         </Marker>
@@ -176,8 +186,17 @@ const EstablishmentMarker = memo(
                 </button>
               </div>
             ) : (
-              <div className="bg-red-50 border border-red-200 rounded-lg p-2">
-                <p className="text-red-600 text-sm">❌ Sin packs disponibles</p>
+              <div className="bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-200 rounded-xl p-4 text-center">
+                <div className="text-4xl mb-2">🔍</div>
+                <p className="text-gray-700 font-semibold text-sm mb-1">
+                  No hay paquetes activos
+                </p>
+                <p className="text-gray-500 text-xs mb-3">
+                  Activa las notificaciones para saber cuándo hay nuevos
+                </p>
+                <button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-3 py-1.5 rounded-lg text-xs font-medium transition-all">
+                  🔔 Activar notificaciones
+                </button>
               </div>
             )}
           </div>
@@ -261,10 +280,12 @@ function OptimizedMap({ establishments, userLocation, onEstablishmentSelect }: O
         ))}
       </Map>
 
-      {/* Badge de OpenStreetMap */}
-      <div className="absolute top-4 left-4 bg-white/90 backdrop-blur-sm rounded-lg shadow-md px-3 py-2 text-xs z-10">
-        <span className="text-gray-700 font-semibold">🗺️ OpenStreetMap</span>
-        <span className="text-gray-500 ml-1">• Gratis</span>
+      {/* Badge de Stadia Maps */}
+      <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg px-4 py-2.5 text-xs z-10 border border-gray-200">
+        <div className="flex items-center gap-2">
+          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
+          <span className="text-gray-700 font-semibold">🗺️ Mapa en vivo</span>
+        </div>
       </div>
 
       {/* Contador de establecimientos */}

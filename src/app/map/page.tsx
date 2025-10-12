@@ -210,10 +210,22 @@ export default function MapPage() {
                         ))}
                     </div>
                   ) : (
-                    <div className="text-center py-8">
-                      <p className="text-gray-500">
-                        No packs available at this establishment.
+                    <div className="bg-gradient-to-br from-blue-50 to-purple-50 border-2 border-blue-200 rounded-2xl p-6 text-center">
+                      <div className="text-5xl mb-3">🔍</div>
+                      <h4 className="text-gray-800 font-bold text-lg mb-2">
+                        No hay paquetes activos
+                      </h4>
+                      <p className="text-gray-600 text-sm mb-4">
+                        Este restaurante no tiene packs disponibles en este momento.
                       </p>
+                      <div className="bg-white rounded-xl p-3 mb-3">
+                        <p className="text-xs text-gray-500 mb-2">
+                          🔔 ¿Quieres recibir notificaciones cuando haya nuevos packs?
+                        </p>
+                        <button className="bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white px-4 py-2 rounded-lg text-sm font-semibold transition-all w-full">
+                          Activar notificaciones
+                        </button>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -267,13 +279,44 @@ export default function MapPage() {
                       )}
                     </div>
                   ) : (
-                    <div className="text-center py-8">
-                      <p className="text-gray-500">
-                        No packs available right now.
+                    <div className="bg-gradient-to-br from-green-50 to-emerald-50 border-2 border-green-200 rounded-2xl p-8 text-center">
+                      <div className="text-6xl mb-4">🍽️</div>
+                      <h3 className="text-gray-800 font-bold text-xl mb-3">
+                        No hay packs disponibles ahora
+                      </h3>
+                      <p className="text-gray-600 text-sm mb-6">
+                        Los restaurantes publican nuevos packs durante el día.
+                        ¡Vuelve pronto para encontrar ofertas increíbles!
                       </p>
-                      <p className="text-sm text-gray-400 mt-2">
-                        Check back later for new deals!
-                      </p>
+                      
+                      <div className="bg-white rounded-xl p-4 mb-4 shadow-sm">
+                        <div className="flex items-center justify-center gap-2 mb-3">
+                          <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                            <span className="text-xl">🔔</span>
+                          </div>
+                          <div className="text-left">
+                            <p className="text-sm font-semibold text-gray-800">Activa las notificaciones</p>
+                            <p className="text-xs text-gray-500">Te avisaremos cuando haya nuevos packs</p>
+                          </div>
+                        </div>
+                        <button className="bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white px-6 py-3 rounded-xl text-sm font-bold transition-all w-full shadow-md hover:shadow-lg">
+                          🔔 Activar notificaciones push
+                        </button>
+                      </div>
+                      
+                      <div className="grid grid-cols-2 gap-3 text-xs">
+                        <div className="bg-blue-50 rounded-lg p-3">
+                          <div className="text-2xl mb-1">⏰</div>
+                          <p className="font-semibold text-gray-700">Horarios pico</p>
+                          <p className="text-gray-500">11am - 2pm</p>
+                          <p className="text-gray-500">6pm - 9pm</p>
+                        </div>
+                        <div className="bg-purple-50 rounded-lg p-3">
+                          <div className="text-2xl mb-1">💰</div>
+                          <p className="font-semibold text-gray-700">Ahorra hasta</p>
+                          <p className="text-purple-600 font-bold text-lg">70%</p>
+                        </div>
+                      </div>
                     </div>
                   )}
                 </div>
