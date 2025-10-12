@@ -248,16 +248,35 @@ export async function POST(request: Request) {
     })
     console.log('✅ Customer user created:', customerUser.id)
 
+    // Crear usuario admin
+    console.log('Creating admin user...')
+    const adminUser = await prisma.user.upsert({
+      where: { email: 'admin@tuapp.com' },
+      update: {},
+      create: {
+        name: 'Admin User',
+        email: 'admin@tuapp.com',
+        password: hashedPassword, // password123 -> 123456 (mismo hash)
+        role: 'ADMIN',
+        emailVerified: new Date(),
+      },
+    })
+    console.log('✅ Admin user created:', adminUser.id)
+
     console.log('✅ Seed completed successfully!')
 
     return NextResponse.json({
       message: 'Database seeded successfully! 🎉',
       data: {
-        users: 3,
+        users: 4,
         establishments: 2,
         packs: 4,
       },
       credentials: {
+        admin: {
+          email: 'admin@tuapp.com',
+          password: '123456',
+        },
         restaurant1: {
           email: 'demo.restaurant@foodsave.com',
           password: '123456',
