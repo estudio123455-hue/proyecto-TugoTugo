@@ -107,12 +107,24 @@ model Establishment {
   alcoholLicense     String?   // Licencia de bebidas alcohólicas (si aplica)
   
   // Verificación y estado
-  verificationStatus String    @default("PENDING") // PENDING, APPROVED, REJECTED, SUSPENDED
+  verificationStatus String    @default("PENDING") // PENDING, AUTO_VERIFIED, APPROVED, REJECTED, SUSPENDED
+  verificationType   String?   // AUTO, MANUAL, HYBRID
   verificationNotes  String?   // Notas del admin
   approvedAt         DateTime? // Fecha de aprobación
   approvedBy         String?   // ID del admin que aprobó
   suspendedAt        DateTime? // Fecha de suspensión
   suspendedReason    String?   // Razón de suspensión
+  
+  // Verificación automática
+  googlePlaceId      String?   // ID de Google Places
+  googleVerified     Boolean   @default(false) // Verificado con Google Places
+  locationVerified   Boolean   @default(false) // Ubicación GPS verificada
+  
+  // Documentos de verificación
+  frontPhoto         String?   // Foto del frente del local
+  interiorPhoto      String?   // Foto del interior
+  documentPhotos     String[]  @default([]) // Fotos de documentos (RUT, etc.)
+  verificationDocs   String[]  @default([]) // URLs de documentos subidos
   
   // Gestión administrativa
   assignedAdminId    String?   // Admin asignado para gestionar
