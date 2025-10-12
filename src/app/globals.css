@@ -919,12 +919,31 @@
     .side-nav,
     /* Ocultar elementos fijos en el lado izquierdo */
     [style*="position: fixed"][style*="left"],
-    [style*="position:fixed"][style*="left"] {
+    [style*="position:fixed"][style*="left"],
+    /* Ocultar divs con z-index alto que no sean nav */
+    div[style*="position: fixed"]:not(nav):not(nav *),
+    /* Ocultar elementos con left: 0 y position fixed */
+    [style*="left: 0"][style*="position: fixed"],
+    [style*="left:0"][style*="position:fixed"] {
       display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
     }
-    
-    /* Ocultar cualquier div con posición fija en los lados */
-    div[style*="position: fixed"] {
+  }
+  
+  /* Ocultar extensiones del navegador y overlays */
+  @media (max-width: 768px) {
+    /* IDs comunes de extensiones */
+    #extension-root,
+    #chrome-extension-root,
+    #firefox-extension-root,
+    [id*="extension"],
+    [class*="extension"],
+    /* Overlays y widgets flotantes */
+    [class*="floating"],
+    [class*="widget"],
+    [id*="widget"] {
       display: none !important;
     }
   }
