@@ -7,23 +7,28 @@ import 'maplibre-gl/dist/maplibre-gl.css'
 import '@/styles/maplibre-custom.css'
 import { formatDistance } from '@/lib/geolocation'
 
-// Estilo de mapa profesional usando Stadia Alidade Smooth (100% gratis, sin token)
+// Estilo de mapa profesional usando CartoDB Positron (100% gratis, sin token, muy confiable)
 const MAP_STYLE = {
   version: 8 as const,
   sources: {
-    'stadia-smooth': {
+    'carto-light': {
       type: 'raster' as const,
-      tiles: ['https://tiles.stadiamaps.com/tiles/alidade_smooth/{z}/{x}/{y}{r}.png'],
+      tiles: [
+        'https://a.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+        'https://b.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+        'https://c.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+        'https://d.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png'
+      ],
       tileSize: 256,
-      attribution: '&copy; <a href="https://stadiamaps.com/">Stadia Maps</a> &copy; <a href="https://openmaptiles.org/">OpenMapTiles</a> &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors',
+      attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
       maxzoom: 20,
     },
   },
   layers: [
     {
-      id: 'stadia-smooth',
+      id: 'carto-light',
       type: 'raster' as const,
-      source: 'stadia-smooth',
+      source: 'carto-light',
     },
   ],
 }
@@ -246,13 +251,14 @@ function OptimizedMap({ establishments, userLocation, onEstablishmentSelect }: O
         mapStyle={MAP_STYLE}
         style={{ width: '100%', height: '100%' }}
       >
-        {/* Controles de navegación */}
-        <NavigationControl position="top-right" />
+        {/* Controles de navegación - Movidos a la izquierda */}
+        <NavigationControl position="bottom-right" showCompass={true} showZoom={true} />
 
-        {/* Control de geolocalización */}
+        {/* Control de geolocalización - Movido abajo */}
         <GeolocateControl
-          position="top-right"
+          position="bottom-right"
           trackUserLocation
+          showUserLocation
         />
 
         {/* Marcador de ubicación del usuario */}
@@ -280,21 +286,47 @@ function OptimizedMap({ establishments, userLocation, onEstablishmentSelect }: O
         ))}
       </Map>
 
-      {/* Badge de Stadia Maps */}
-      <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm rounded-xl shadow-lg px-4 py-2.5 text-xs z-10 border border-gray-200">
-        <div className="flex items-center gap-2">
-          <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse"></div>
-          <span className="text-gray-700 font-semibold">🗺️ Mapa en vivo</span>
+      {/* Panel de información superior izquierda */}
+      <div className="absolute top-4 left-4 space-y-3 z-10 max-w-xs">
+        {/* Badge de estado */}
+        <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg px-4 py-3 border border-gray-200">
+          <div className="flex items-center gap-3">
+            <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
+            <div>
+              <p className="text-xs font-bold text-gray-900">🗺️ Mapa en vivo</p>
+              <p className="text-[10px] text-gray-500">Powered by CARTO</p>
+            </div>
+          </div>
         </div>
-      </div>
 
-      {/* Contador de establecimientos */}
-      <div className="absolute bottom-4 left-4 bg-white rounded-lg shadow-lg p-3 text-xs z-10">
-        <div className="flex items-center space-x-2">
-          <MapPin className="w-4 h-4 text-green-500" fill="currentColor" />
-          <span className="text-gray-700 font-medium">
-            {establishments.length} {establishments.length === 1 ? 'establecimiento' : 'establecimientos'}
-          </span>
+        {/* Contador de establecimientos */}
+        <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg px-4 py-3 border border-gray-200">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
+              <MapPin className="w-5 h-5 text-green-600" fill="currentColor" />
+            </div>
+            <div>
+              <p className="text-lg font-bold text-gray-900">{establishments.length}</p>
+              <p className="text-[10px] text-gray-500">
+                {establishments.length === 1 ? 'Establecimiento' : 'Establecimientos'}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Leyenda */}
+        <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg px-4 py-3 border border-gray-200">
+          <p className="text-xs font-bold text-gray-900 mb-2">Leyenda</p>
+          <div className="space-y-2">
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+              <span className="text-[10px] text-gray-600">Con packs disponibles</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
+              <span className="text-[10px] text-gray-600">Sin packs</span>
+            </div>
+          </div>
         </div>
       </div>
 
