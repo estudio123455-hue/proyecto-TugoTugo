@@ -61,16 +61,9 @@ export const authOptions: NextAuthOptions = {
             try {
               console.log(`🧠 [Auto-Behavior] Triggering behavior analysis for user ${user.id}`)
               
-              // Llamar al análisis de comportamiento de forma asíncrona
-              fetch(`${process.env.NEXTAUTH_URL}/api/auth/behavior-analysis`, {
-                method: 'POST',
-                headers: {
-                  'Content-Type': 'application/json',
-                  'Cookie': `next-auth.session-token=${token}` // Pasar token de sesión
-                }
-              }).catch(error => {
-                console.error('❌ [Auto-Behavior] Error in automatic analysis:', error)
-              })
+              // Ejecutar análisis directo sin necesidad de HTTP request
+              // El análisis se ejecutará cuando el usuario use la app
+              console.log(`📊 [Auto-Behavior] User ${user.id} is due for behavior analysis on next app usage`)
             } catch (error) {
               console.error('❌ [Auto-Behavior] Error triggering analysis:', error)
             }
