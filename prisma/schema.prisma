@@ -38,10 +38,24 @@ model User {
   id            String    @id @default(cuid())
   name          String?
   email         String    @unique
+  password      String?
   emailVerified DateTime?
   image         String?
-  password      String?
-  role          String    @default("CUSTOMER")
+  role          String    @default("CUSTOMER") // ADMIN, ESTABLISHMENT, CUSTOMER
+  
+  // Verificación multi-capa
+  verificationStatus String @default("PENDING") // PENDING, EMAIL_VERIFIED, PHONE_VERIFIED, TRUSTED_USER
+  phone             String?
+  phoneVerified     DateTime?
+  phoneVerificationCode String?
+  phoneVerificationExpires DateTime?
+  
+  // Análisis de comportamiento
+  trustScore        Float   @default(0.0) // 0.0 a 1.0
+  lastActivity      DateTime?
+  loginCount        Int     @default(0)
+  suspiciousActivity Boolean @default(false)
+  
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 

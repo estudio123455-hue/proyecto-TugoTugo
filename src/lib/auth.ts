@@ -45,11 +45,36 @@ export const authOptions: NextAuthOptions = {
         }
 
         // Si es ADMIN, marcar como verificado automáticamente
-        if (user.role === 'ADMIN' && !user.emailVerified) {
+        if (user.role === 'ADMIN') {
+          // Update login count and last activity
           await prisma.user.update({
             where: { id: user.id },
-            data: { emailVerified: new Date() },
+            data: {
+              loginCount: { increment: 1 },
+              lastActivity: new Date(),
+            },
           })
+
+          // 🧠 ANÁLISIS AUTOMÁTICO DE COMPORTAMIENTO
+          // Ejecutar análisis cada 5 logins para no sobrecargar
+          if (user.loginCount % 5 === 0) {
+            try {
+              console.log(`🧠 [Auto-Behavior] Triggering behavior analysis for user ${user.id}`)
+              
+              // Llamar al análisis de comportamiento de forma asíncrona
+              fetch(`${process.env.NEXTAUTH_URL}/api/auth/behavior-analysis`, {
+                method: 'POST',
+                headers: {
+                  'Content-Type': 'application/json',
+                  'Cookie': `next-auth.session-token=${token}` // Pasar token de sesión
+                }
+              }).catch(error => {
+                console.error('❌ [Auto-Behavior] Error in automatic analysis:', error)
+              })
+            } catch (error) {
+              console.error('❌ [Auto-Behavior] Error triggering analysis:', error)
+            }
+          }
         }
 
         return {
