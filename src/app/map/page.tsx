@@ -110,80 +110,76 @@ export default function MapPage() {
           />
         </div>
 
-        {/* Mobile toggle button */}
+        {/* Toggle button - visible en todas las pantallas */}
         <button
           onClick={() => setShowSidebar(!showSidebar)}
-          className="md:hidden absolute top-4 right-4 bg-white rounded-lg shadow-lg p-3 z-10"
+          className="absolute top-4 right-4 bg-white rounded-xl shadow-xl p-3 z-[1001] hover:bg-gray-50 transition-all border border-gray-200"
         >
-          <svg
-            className="w-6 h-6"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
-            />
-          </svg>
+          {showSidebar ? (
+            <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          ) : (
+            <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            </svg>
+          )}
         </button>
 
-        {/* Sidebar */}
+        {/* Sidebar - Oculto por defecto */}
         <div
-          className={`absolute top-0 right-0 h-full w-full md:w-96 bg-white shadow-lg transform transition-transform duration-300 ease-in-out z-10 ${
-            showSidebar ? 'translate-x-0' : 'translate-x-full md:translate-x-0'
+          className={`absolute top-0 right-0 h-full w-full md:w-[420px] bg-white shadow-2xl transform transition-transform duration-300 ease-in-out z-[1000] ${
+            showSidebar ? 'translate-x-0' : 'translate-x-full'
           }`}
         >
           <div className="h-full flex flex-col">
             {/* Header */}
-            <div className="bg-green-500 text-white p-4 flex items-center justify-between">
-              <h2 className="text-lg font-semibold">
-                {selectedEstablishment
-                  ? selectedEstablishment.name
-                  : 'Available Packs'}
-              </h2>
-              <button
-                onClick={() => setShowSidebar(false)}
-                className="md:hidden text-white hover:text-gray-200"
-              >
-                <svg
-                  className="w-6 h-6"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              </button>
+            <div className="bg-gradient-to-r from-green-500 to-emerald-600 text-white p-5 flex items-center justify-between shadow-lg">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center">
+                  <span className="text-2xl">🍽️</span>
+                </div>
+                <div>
+                  <h2 className="text-lg font-bold">
+                    {selectedEstablishment
+                      ? selectedEstablishment.name
+                      : 'Packs Disponibles'}
+                  </h2>
+                  <p className="text-xs text-green-100">
+                    {selectedEstablishment ? 'Detalles del restaurante' : 'Haz clic en el mapa'}
+                  </p>
+                </div>
+              </div>
             </div>
 
             {/* Content */}
-            <div className="flex-1 overflow-y-auto p-4">
+            <div className="flex-1 overflow-y-auto p-5 bg-gray-50">
               {selectedEstablishment ? (
                 <div className="space-y-4">
                   <div className="mb-6">
                     <button
                       onClick={() => setSelectedEstablishment(null)}
-                      className="text-green-600 hover:text-green-700 text-sm mb-2"
+                      className="flex items-center gap-2 text-green-600 hover:text-green-700 text-sm font-medium mb-4 hover:gap-3 transition-all"
                     >
-                      ← Back to all establishments
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                      </svg>
+                      Volver a todos
                     </button>
-                    <h3 className="text-xl font-bold text-gray-900">
-                      {selectedEstablishment.name}
-                    </h3>
-                    <p className="text-gray-600">
-                      {selectedEstablishment.address}
-                    </p>
-                    <p className="text-sm text-gray-500 capitalize">
-                      {selectedEstablishment.category.toLowerCase()}
-                    </p>
+                    <div className="bg-white rounded-2xl p-4 shadow-sm border border-gray-200">
+                      <h3 className="text-xl font-bold text-gray-900 mb-2">
+                        {selectedEstablishment.name}
+                      </h3>
+                      <div className="flex items-start gap-2 text-gray-600 mb-2">
+                        <svg className="w-4 h-4 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
+                        </svg>
+                        <span className="text-sm">{selectedEstablishment.address}</span>
+                      </div>
+                      <span className="inline-block bg-green-100 text-green-700 text-xs font-medium px-3 py-1 rounded-full capitalize">
+                        {selectedEstablishment.category.toLowerCase()}
+                      </span>
+                    </div>
                   </div>
 
                   {selectedEstablishment.packs.filter(pack => pack.quantity > 0)
@@ -231,13 +227,20 @@ export default function MapPage() {
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="mb-4">
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                      All Available Packs
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                      Click on a pack or map marker to view details
-                    </p>
+                  <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-200 mb-6">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-12 h-12 bg-gradient-to-br from-green-400 to-emerald-500 rounded-xl flex items-center justify-center">
+                        <span className="text-2xl">📍</span>
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-gray-900">
+                          Todos los Packs
+                        </h3>
+                        <p className="text-xs text-gray-500">
+                          Haz clic en un pack o marcador
+                        </p>
+                      </div>
+                    </div>
                   </div>
 
                   {establishments.flatMap(est =>
