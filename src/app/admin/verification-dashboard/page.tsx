@@ -51,17 +51,6 @@ export default function VerificationDashboard() {
   const [loading, setLoading] = useState(true)
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null)
 
-  // Verificar autorización
-  if (status === 'loading') {
-    return <div className="flex items-center justify-center min-h-screen">
-      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
-    </div>
-  }
-
-  if (!session || session.user.role !== 'ADMIN') {
-    redirect('/')
-  }
-
   const fetchMetrics = async () => {
     try {
       setLoading(true)
@@ -85,6 +74,17 @@ export default function VerificationDashboard() {
     const interval = setInterval(fetchMetrics, 5 * 60 * 1000)
     return () => clearInterval(interval)
   }, [])
+
+  // Verificar autorización
+  if (status === 'loading') {
+    return <div className="flex items-center justify-center min-h-screen">
+      <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+    </div>
+  }
+
+  if (!session || session.user.role !== 'ADMIN') {
+    redirect('/')
+  }
 
   if (loading && !metrics) {
     return <div className="flex items-center justify-center min-h-screen">
