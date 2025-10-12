@@ -110,20 +110,37 @@ export default function MapPage() {
           />
         </div>
 
-        {/* Toggle button - visible en todas las pantallas */}
+        {/* Toggle button - Diseño moderno y atractivo */}
         <button
           onClick={() => setShowSidebar(!showSidebar)}
-          className="absolute top-4 right-4 bg-white rounded-xl shadow-xl p-3 z-[1001] hover:bg-gray-50 transition-all border border-gray-200"
+          className="absolute top-4 right-4 z-[1001] group"
         >
-          {showSidebar ? (
-            <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          ) : (
-            <svg className="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-            </svg>
-          )}
+          <div className={`relative flex items-center gap-2 px-4 py-3 rounded-2xl shadow-2xl transition-all duration-300 border-2 ${
+            showSidebar 
+              ? 'bg-gradient-to-r from-red-500 to-red-600 border-red-600 hover:from-red-600 hover:to-red-700' 
+              : 'bg-gradient-to-r from-green-500 to-emerald-600 border-green-600 hover:from-green-600 hover:to-emerald-700'
+          }`}>
+            {showSidebar ? (
+              <>
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+                <span className="text-white font-bold text-sm hidden sm:inline">Cerrar</span>
+              </>
+            ) : (
+              <>
+                <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 6h16M4 12h16M4 18h16" />
+                </svg>
+                <span className="text-white font-bold text-sm hidden sm:inline">Ver Packs</span>
+              </>
+            )}
+            {!showSidebar && (
+              <div className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center border-2 border-white">
+                <span className="text-white text-[10px] font-bold">!</span>
+              </div>
+            )}
+          </div>
         </button>
 
         {/* Sidebar - Oculto por defecto */}
