@@ -286,45 +286,43 @@ function OptimizedMap({ establishments, userLocation, onEstablishmentSelect }: O
         ))}
       </Map>
 
-      {/* Panel de información superior izquierda */}
-      <div className="absolute top-4 left-4 space-y-3 z-10 max-w-xs">
-        {/* Badge de estado */}
-        <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg px-4 py-3 border border-gray-200">
-          <div className="flex items-center gap-3">
-            <div className="w-3 h-3 bg-green-500 rounded-full animate-pulse"></div>
-            <div>
-              <p className="text-xs font-bold text-gray-900">🗺️ Mapa en vivo</p>
-              <p className="text-[10px] text-gray-500">Powered by CARTO</p>
+      {/* Panel de información compacto - superior izquierda */}
+      <div className="absolute top-4 left-4 z-10">
+        <div className="bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl border border-gray-200 overflow-hidden" style={{ width: '200px' }}>
+          {/* Header con estado */}
+          <div className="bg-gradient-to-r from-green-500 to-emerald-600 px-3 py-2">
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 bg-white rounded-full animate-pulse"></div>
+              <span className="text-white text-xs font-bold">🗺️ En vivo</span>
             </div>
           </div>
-        </div>
-
-        {/* Contador de establecimientos */}
-        <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg px-4 py-3 border border-gray-200">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-green-100 rounded-lg flex items-center justify-center">
-              <MapPin className="w-5 h-5 text-green-600" fill="currentColor" />
-            </div>
-            <div>
-              <p className="text-lg font-bold text-gray-900">{establishments.length}</p>
-              <p className="text-[10px] text-gray-500">
-                {establishments.length === 1 ? 'Establecimiento' : 'Establecimientos'}
-              </p>
+          
+          {/* Contador */}
+          <div className="px-3 py-3 border-b border-gray-100">
+            <div className="flex items-center gap-2">
+              <div className="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                <MapPin className="w-4 h-4 text-green-600" fill="currentColor" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-base font-bold text-gray-900">{establishments.length}</p>
+                <p className="text-[10px] text-gray-500 truncate">
+                  {establishments.length === 1 ? 'Lugar' : 'Lugares'}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
-
-        {/* Leyenda */}
-        <div className="bg-white/95 backdrop-blur-sm rounded-xl shadow-lg px-4 py-3 border border-gray-200">
-          <p className="text-xs font-bold text-gray-900 mb-2">Leyenda</p>
-          <div className="space-y-2">
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-              <span className="text-[10px] text-gray-600">Con packs disponibles</span>
-            </div>
-            <div className="flex items-center gap-2">
-              <div className="w-3 h-3 bg-gray-500 rounded-full"></div>
-              <span className="text-[10px] text-gray-600">Sin packs</span>
+          
+          {/* Leyenda compacta */}
+          <div className="px-3 py-2 bg-gray-50">
+            <div className="space-y-1.5">
+              <div className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 bg-green-500 rounded-full flex-shrink-0"></div>
+                <span className="text-[10px] text-gray-600">Con packs</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <div className="w-2.5 h-2.5 bg-gray-400 rounded-full flex-shrink-0"></div>
+                <span className="text-[10px] text-gray-600">Sin packs</span>
+              </div>
             </div>
           </div>
         </div>
