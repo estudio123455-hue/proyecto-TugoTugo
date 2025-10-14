@@ -10,8 +10,8 @@ export const prisma = globalForPrisma.prisma ?? new PrismaClient({
       url: process.env.DATABASE_URL
     }
   },
-  // Optimizar conexiones para Railway
-  log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
+  // Optimizar conexiones para evitar "too many clients"
+  log: process.env.NODE_ENV === 'development' ? ['error', 'warn'] : ['error'],
 })
 
 if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
@@ -19,4 +19,15 @@ if (process.env.NODE_ENV !== 'production') globalForPrisma.prisma = prisma
 // Cerrar conexiones al terminar el proceso
 process.on('beforeExit', async () => {
   await prisma.$disconnect()
+})
+
+// Cerrar conexiones en SIGINT y SIGTERM
+process.on('SIGINT', async () => {
+  await prisma.$disconnect()
+  process.exit(0)
+})
+
+process.on('SIGTERM', async () => {
+  await prisma.$disconnect()
+  process.exit(0)
 })
