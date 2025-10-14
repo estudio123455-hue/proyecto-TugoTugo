@@ -170,7 +170,7 @@ export default function Profile() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-50 pb-20 md:pb-8">
+    <div className="min-h-screen bg-gray-25 pb-20 md:pb-8" style={{backgroundColor: '#fafafa'}}>
       <Navigation />
 
       <div className="max-w-6xl mx-auto pt-4 md:pt-8 px-4">
@@ -468,93 +468,130 @@ export default function Profile() {
           )}
 
           {activeTab === 'settings' && (
-            <div className="space-y-6">
-              <h2 className="text-lg md:text-xl font-semibold text-gray-900">
+            <div className="space-y-8">
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-800">
                 Account Settings
               </h2>
 
-              <div className="bg-white rounded-lg shadow p-4 md:p-6">
-                <div className="space-y-6">
+              <div className="bg-white rounded-2xl shadow-lg border border-gray-100 p-6 md:p-8">
+                <div className="space-y-8">
+                  {/* Personal Information Section */}
                   <div>
-                    <h3 className="text-base md:text-lg font-medium text-gray-900 mb-4">
+                    <h3 className="text-xl font-bold text-gray-800 mb-6 pb-2 border-b border-gray-100">
                       Personal Information
                     </h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-semibold text-gray-600 mb-2">
                           Name
                         </label>
                         <input
                           type="text"
                           value={session?.user?.name || ''}
-                          className="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-50"
+                          className="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-emerald-300 transition-all"
                           disabled
                         />
                       </div>
                       <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                        <label className="block text-sm font-semibold text-gray-600 mb-2">
                           Email
                         </label>
                         <input
                           type="email"
                           value={session?.user?.email || ''}
-                          className="w-full border border-gray-300 rounded-md px-3 py-2 bg-gray-50"
+                          className="w-full border border-gray-200 rounded-xl px-4 py-3 bg-gray-50 text-gray-700 font-medium focus:outline-none focus:ring-2 focus:ring-emerald-100 focus:border-emerald-300 transition-all"
                           disabled
                         />
                       </div>
                     </div>
                   </div>
 
+                  {/* Notifications Section */}
                   <div>
-                    <h3 className="text-base md:text-lg font-medium text-gray-900 mb-4">
+                    <h3 className="text-xl font-bold text-gray-800 mb-6 pb-2 border-b border-gray-100">
                       Notifications
                     </h3>
-                    <div className="space-y-3">
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          className="mr-3 w-4 h-4"
-                          checked={notifications.emailReminders}
-                          onChange={(e) =>
-                            setNotifications({
-                              ...notifications,
-                              emailReminders: e.target.checked,
-                            })
-                          }
-                        />
-                        <span className="text-sm text-gray-700">
+                    <div className="space-y-4">
+                      <label className="flex items-center group cursor-pointer">
+                        <div className="relative">
+                          <input
+                            type="checkbox"
+                            className="sr-only"
+                            checked={notifications.emailReminders}
+                            onChange={(e) =>
+                              setNotifications({
+                                ...notifications,
+                                emailReminders: e.target.checked,
+                              })
+                            }
+                          />
+                          <div className={`w-12 h-6 rounded-full transition-all duration-200 ${
+                            notifications.emailReminders 
+                              ? 'bg-emerald-500 shadow-lg' 
+                              : 'bg-gray-300'
+                          }`}>
+                            <div className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-200 ${
+                              notifications.emailReminders ? 'translate-x-6' : 'translate-x-0.5'
+                            } mt-0.5`}></div>
+                          </div>
+                        </div>
+                        <span className="ml-4 text-gray-700 font-medium group-hover:text-gray-900 transition-colors">
                           Email notifications for pickup reminders
                         </span>
                       </label>
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          className="mr-3 w-4 h-4"
-                          checked={notifications.newPackAlerts}
-                          onChange={(e) =>
-                            setNotifications({
-                              ...notifications,
-                              newPackAlerts: e.target.checked,
-                            })
-                          }
-                        />
-                        <span className="text-sm text-gray-700">
+                      
+                      <label className="flex items-center group cursor-pointer">
+                        <div className="relative">
+                          <input
+                            type="checkbox"
+                            className="sr-only"
+                            checked={notifications.newPackAlerts}
+                            onChange={(e) =>
+                              setNotifications({
+                                ...notifications,
+                                newPackAlerts: e.target.checked,
+                              })
+                            }
+                          />
+                          <div className={`w-12 h-6 rounded-full transition-all duration-200 ${
+                            notifications.newPackAlerts 
+                              ? 'bg-emerald-500 shadow-lg' 
+                              : 'bg-gray-300'
+                          }`}>
+                            <div className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-200 ${
+                              notifications.newPackAlerts ? 'translate-x-6' : 'translate-x-0.5'
+                            } mt-0.5`}></div>
+                          </div>
+                        </div>
+                        <span className="ml-4 text-gray-700 font-medium group-hover:text-gray-900 transition-colors">
                           New pack alerts in your area
                         </span>
                       </label>
-                      <label className="flex items-center">
-                        <input
-                          type="checkbox"
-                          className="mr-3 w-4 h-4"
-                          checked={notifications.weeklySummary}
-                          onChange={(e) =>
-                            setNotifications({
-                              ...notifications,
-                              weeklySummary: e.target.checked,
-                            })
-                          }
-                        />
-                        <span className="text-sm text-gray-700">
+                      
+                      <label className="flex items-center group cursor-pointer">
+                        <div className="relative">
+                          <input
+                            type="checkbox"
+                            className="sr-only"
+                            checked={notifications.weeklySummary}
+                            onChange={(e) =>
+                              setNotifications({
+                                ...notifications,
+                                weeklySummary: e.target.checked,
+                              })
+                            }
+                          />
+                          <div className={`w-12 h-6 rounded-full transition-all duration-200 ${
+                            notifications.weeklySummary 
+                              ? 'bg-emerald-500 shadow-lg' 
+                              : 'bg-gray-300'
+                          }`}>
+                            <div className={`w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-200 ${
+                              notifications.weeklySummary ? 'translate-x-6' : 'translate-x-0.5'
+                            } mt-0.5`}></div>
+                          </div>
+                        </div>
+                        <span className="ml-4 text-gray-700 font-medium group-hover:text-gray-900 transition-colors">
                           Weekly impact summary
                         </span>
                       </label>
@@ -562,29 +599,44 @@ export default function Profile() {
                   </div>
 
                   {saveMessage && (
-                    <div className={`p-3 rounded-md text-sm ${
+                    <div className={`p-4 rounded-xl text-sm font-medium ${
                       saveMessage.includes('✅') 
-                        ? 'bg-green-50 text-green-700 border border-green-200' 
+                        ? 'bg-emerald-50 text-emerald-700 border border-emerald-200' 
                         : 'bg-red-50 text-red-700 border border-red-200'
                     }`}>
                       {saveMessage}
                     </div>
                   )}
 
-                  <div className="pt-4 flex flex-col sm:flex-row gap-3">
+                  {/* Action Buttons */}
+                  <div className="pt-6 flex flex-col sm:flex-row gap-4 justify-center">
                     <button
                       onClick={handleSaveSettings}
                       disabled={isSaving}
-                      className="bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white px-6 py-2 rounded-md transition-colors font-medium"
+                      className="flex-1 sm:flex-none bg-emerald-500 hover:bg-emerald-600 disabled:bg-gray-400 text-white px-8 py-3 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 disabled:transform-none flex items-center justify-center gap-2"
                     >
-                      {isSaving ? '⏳ Guardando...' : '💾 Save Changes'}
+                      {isSaving ? (
+                        <>
+                          <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                          <span>Guardando...</span>
+                        </>
+                      ) : (
+                        <>
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                          </svg>
+                          <span>Save Changes</span>
+                        </>
+                      )}
                     </button>
                     
                     <button
                       onClick={() => signOut()}
-                      className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-md transition-colors font-medium flex items-center gap-2"
+                      className="flex-1 sm:flex-none bg-red-400 hover:bg-red-500 text-white px-8 py-3 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
                     >
-                      <span>🚪</span>
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+                      </svg>
                       <span>Cerrar Sesión</span>
                     </button>
                   </div>
