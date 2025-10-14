@@ -212,6 +212,13 @@ model Order {
   status           String      @default("PENDING")
   pickupDate       DateTime
   stripePaymentId  String?
+  
+  // Campos de Mercado Pago
+  paymentId        String?     // ID del pago de MercadoPago
+  paymentStatus    String?     // Estado del pago (approved, rejected, pending, etc.)
+  paymentMethod    String?     // Método de pago (visa, mastercard, mercadopago, etc.)
+  paidAmount       Float?      // Monto pagado
+  
   verificationCode String?     @unique // Código QR único para verificación
   verifiedAt       DateTime?   // Fecha de verificación por el restaurante
   createdAt        DateTime    @default(now())
