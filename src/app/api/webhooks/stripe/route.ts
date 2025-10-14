@@ -3,8 +3,7 @@ import Stripe from 'stripe'
 import { prisma } from '@/lib/prisma'
 import { sendOrderConfirmationEmail } from '@/lib/email'
 import { generateVerificationCode, generateOrderQRCode } from '@/lib/qrcode'
-import { sendPushNotification } from '@/lib/notifications-server'
-import { getNotificationTemplate } from '@/lib/notifications'
+// Notificaciones VAPID removidas
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2023-08-16',
@@ -107,68 +106,7 @@ export async function POST(request: NextRequest) {
             // Don't fail the webhook if email fails
           }
 
-          // Enviar notificación push al cliente
-          try {
-            const userSubscriptions = await prisma.pushSubscription.findMany({
-              where: { userId: order.userId },
-            })
-
-            if (userSubscriptions.length > 0) {
-              const notification = getNotificationTemplate('order_confirmed', {
-                establishmentName: order.pack.establishment.name,
-                pickupTime: `${order.pack.pickupTimeStart} - ${order.pack.pickupTimeEnd}`,
-                orderId: order.id,
-              })
-
-              for (const sub of userSubscriptions) {
-                await sendPushNotification(
-                  {
-                    endpoint: sub.endpoint,
-                    keys: {
-                      p256dh: sub.p256dh,
-                      auth: sub.auth,
-                    },
-                  },
-                  notification
-                )
-              }
-            }
-          } catch (pushError) {
-            console.error('Failed to send push notification:', pushError)
-            // Don't fail the webhook if push fails
-          }
-
-          // Enviar notificación push al restaurante
-          try {
-            const establishment = order.pack.establishment
-            const restaurantSubscriptions = await prisma.pushSubscription.findMany({
-              where: { userId: establishment.userId },
-            })
-
-            if (restaurantSubscriptions.length > 0) {
-              const notification = getNotificationTemplate('new_order', {
-                customerName: order.user.name || order.user.email,
-                quantity: order.quantity,
-                orderId: order.id,
-              })
-
-              for (const sub of restaurantSubscriptions) {
-                await sendPushNotification(
-                  {
-                    endpoint: sub.endpoint,
-                    keys: {
-                      p256dh: sub.p256dh,
-                      auth: sub.auth,
-                    },
-                  },
-                  notification
-                )
-              }
-            }
-          } catch (pushError) {
-            console.error('Failed to send push notification to restaurant:', pushError)
-            // Don't fail the webhook if push fails
-          }
+          // Notificaciones push VAPID removidas
 
           console.log('Order confirmed:', session.metadata.orderId)
         }
