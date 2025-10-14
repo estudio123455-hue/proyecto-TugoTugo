@@ -190,7 +190,7 @@ export default function TestVapidPage() {
       <div className="max-w-4xl mx-auto px-4">
         <div className="bg-white rounded-lg shadow-lg p-6">
           <h1 className="text-3xl font-bold text-gray-900 mb-6">
-            🧪 Prueba de Notificaciones VAPID
+            🧪 Prueba de Notificaciones VAPID - ECDSA P-256 Raw
           </h1>
           
           <div className="grid md:grid-cols-2 gap-6">
