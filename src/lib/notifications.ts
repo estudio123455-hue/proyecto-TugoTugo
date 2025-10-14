@@ -177,7 +177,7 @@ export function getVapidPublicKey(): string {
  * Convertir base64 a Uint8Array para VAPID
  * Maneja automáticamente la conversión a formato raw si es necesario
  */
-export function urlBase64ToUint8Array(base64String: string): BufferSource {
+export function urlBase64ToUint8Array(base64String: string): Uint8Array {
   try {
     // Verificar si necesita conversión a formato raw
     let processedKey = base64String

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { sendNotification } from '@/lib/notifications-server'
+import { sendPushNotification } from '@/lib/notifications-server'
 
 export async function POST(request: NextRequest) {
   try {
@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
     console.log('📦 [Test Notification] Payload creado:', testNotification.title)
     
     // Enviar notificación
-    const result = await sendNotification(subscription, testNotification)
+    const result = await sendPushNotification(subscription, testNotification)
     
     console.log('✅ [Test Notification] Notificación enviada exitosamente')
     

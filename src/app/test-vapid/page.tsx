@@ -6,7 +6,7 @@ import { getVapidPublicKey, urlBase64ToUint8Array } from '@/lib/notifications'
 export default function TestVapidPage() {
   const [subscription, setSubscription] = useState<PushSubscription | null>(null)
   const [isSupported, setIsSupported] = useState(false)
-  const [permission, setPermission] = useState<NotificationPermission>('default')
+  const [permission, setPermission] = useState<'default' | 'granted' | 'denied'>('default')
   const [logs, setLogs] = useState<string[]>([])
   const [isLoading, setIsLoading] = useState(false)
 
