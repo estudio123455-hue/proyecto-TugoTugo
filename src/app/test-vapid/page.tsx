@@ -93,14 +93,17 @@ export default function TestVapidPage() {
       addLog('🔑 Convirtiendo clave VAPID a formato correcto...')
       
       // Esta función maneja automáticamente la conversión a RAW
-      const applicationServerKey = urlBase64ToUint8Array(vapidPublicKey)
-      addLog(`📏 Clave convertida: ${applicationServerKey.length} bytes`)
+      const keyArray = urlBase64ToUint8Array(vapidPublicKey)
+      addLog(`📏 Clave convertida: ${keyArray.length} bytes`)
+      
+      // Convertir a ArrayBuffer para compatibilidad con PushManager
+      const applicationServerKey = keyArray.buffer.slice(keyArray.byteOffset, keyArray.byteOffset + keyArray.byteLength)
 
       // Suscribirse
       addLog('📱 Creando suscripción push...')
       const pushSubscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: applicationServerKey.buffer,
+        applicationServerKey: applicationServerKey,
       })
 
       setSubscription(pushSubscription)
