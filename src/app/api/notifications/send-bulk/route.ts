@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
     console.log('📢 [Bulk Send] Filtros:', filters)
 
     // Construir query para usuarios
-    let whereClause: any = {}
+    const whereClause: any = {}
     
     if (userIds && userIds.length > 0) {
       whereClause.userId = { in: userIds }
