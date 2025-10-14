@@ -44,12 +44,12 @@ export default function BottomNavigation() {
               href={item.href}
               className={`flex flex-col items-center justify-center flex-1 py-2 px-1 transition-colors ${
                 isActive 
-                  ? 'text-emerald-600' 
-                  : 'text-gray-500 hover:text-gray-700'
+                  ? 'text-emerald-600 font-semibold' 
+                  : 'text-gray-800 hover:text-gray-900'
               }`}
             >
               <div className="text-xl mb-1">{item.icon}</div>
-              <span className="text-xs font-medium leading-tight">{item.label}</span>
+              <span className={`text-xs leading-tight ${isActive ? 'font-bold' : 'font-semibold'}`}>{item.label}</span>
             </Link>
           )
         })}
