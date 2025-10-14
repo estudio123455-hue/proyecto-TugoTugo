@@ -1,6 +1,7 @@
 'use client'
 
-import { ReactNode, useEffect } from 'react'
+import { useEffect, ReactNode } from 'react'
+import { useScrollLock } from '@/hooks/useScrollLock'
 import { X } from 'lucide-react'
 
 interface ModalProps {
@@ -22,17 +23,8 @@ export default function Modal({
   closeOnOverlayClick = true,
   showCloseButton = true,
 }: ModalProps) {
-  useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden'
-    } else {
-      document.body.style.overflow = ''
-    }
-
-    return () => {
-      document.body.style.overflow = ''
-    }
-  }, [isOpen])
+  // Usar el hook personalizado para manejar scroll lock
+  useScrollLock({ isLocked: isOpen })
 
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {

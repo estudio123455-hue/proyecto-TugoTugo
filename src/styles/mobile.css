@@ -161,6 +161,29 @@ textarea {
   .ios-safe-bottom {
     padding-bottom: max(env(safe-area-inset-bottom), 1rem);
   }
+
+  /* Fix iOS Safari scroll issues */
+  body {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Prevent scroll bounce when body is fixed */
+  body.modal-open {
+    position: fixed;
+    overflow: hidden;
+    -webkit-overflow-scrolling: auto;
+  }
+
+  /* Ensure main content can scroll */
+  .main-content {
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Fix for webkit scroll freeze */
+  .scroll-container {
+    -webkit-overflow-scrolling: touch;
+    transform: translateZ(0);
+  }
 }
 
 /* Android specific */
@@ -173,6 +196,20 @@ textarea {
 /* Prevent overscroll bounce */
 .prevent-overscroll {
   overscroll-behavior: contain;
+}
+
+/* Scroll lock for modals and sheets */
+body.scroll-locked {
+  overflow: hidden !important;
+  position: fixed !important;
+  width: 100% !important;
+}
+
+/* iOS Safari specific scroll fixes */
+@supports (-webkit-touch-callout: none) {
+  body.scroll-locked {
+    -webkit-overflow-scrolling: auto !important;
+  }
 }
 
 /* Touch-friendly spacing */
