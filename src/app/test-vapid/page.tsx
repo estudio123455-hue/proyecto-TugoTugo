@@ -97,7 +97,7 @@ export default function TestVapidPage() {
       addLog(`📏 Clave convertida: ${keyArray.length} bytes`)
       
       // Convertir a ArrayBuffer para compatibilidad con PushManager
-      const applicationServerKey = keyArray.buffer.slice(keyArray.byteOffset, keyArray.byteOffset + keyArray.byteLength)
+      const applicationServerKey = keyArray.buffer.slice(keyArray.byteOffset, keyArray.byteOffset + keyArray.byteLength) as ArrayBuffer
 
       // Suscribirse
       addLog('📱 Creando suscripción push...')
