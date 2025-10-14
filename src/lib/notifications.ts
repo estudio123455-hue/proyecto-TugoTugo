@@ -175,16 +175,43 @@ export function getVapidPublicKey(): string {
 
 /**
  * Convertir base64 a Uint8Array para VAPID
+ * Maneja automáticamente la conversión a formato raw si es necesario
  */
 export function urlBase64ToUint8Array(base64String: string): BufferSource {
-  const padding = '='.repeat((4 - (base64String.length % 4)) % 4)
-  const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/')
+  try {
+    // Verificar si necesita conversión a formato raw
+    let processedKey = base64String
+    
+    // Decodificar para verificar formato
+    const buffer = Buffer.from(base64String, 'base64url')
+    
+    if (buffer.length === 65 && buffer[0] === 0x04) {
+      // Formato sin comprimir: convertir a raw (64 bytes)
+      const rawBuffer = buffer.slice(1)
+      processedKey = rawBuffer.toString('base64url')
+      console.log('🔧 Clave convertida a formato raw (64 bytes)')
+    } else if (buffer.length === 64) {
+      console.log('✅ Clave ya está en formato raw')
+    } else {
+      console.warn(`⚠️ Longitud de clave inesperada: ${buffer.length} bytes`)
+    }
+    
+    const padding = '='.repeat((4 - (processedKey.length % 4)) % 4)
+    const base64 = (processedKey + padding)
+      .replace(/-/g, '+')
+      .replace(/_/g, '/')
 
-  const rawData = window.atob(base64)
-  const outputArray = new Uint8Array(rawData.length)
+    const rawData = window.atob(base64)
+    const outputArray = new Uint8Array(rawData.length)
 
-  for (let i = 0; i < rawData.length; ++i) {
-    outputArray[i] = rawData.charCodeAt(i)
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i)
+    }
+    
+    console.log(`📏 Array final: ${outputArray.length} bytes`)
+    return outputArray
+  } catch (error) {
+    console.error('❌ Error al procesar clave VAPID:', error)
+    throw new Error('Formato de clave VAPID inválido')
   }
-  return outputArray as BufferSource
 }
