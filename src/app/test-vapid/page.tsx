@@ -100,7 +100,7 @@ export default function TestVapidPage() {
       addLog('📱 Creando suscripción push...')
       const pushSubscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: applicationServerKey,
+        applicationServerKey: applicationServerKey.buffer,
       })
 
       setSubscription(pushSubscription)
