@@ -1,7 +1,6 @@
 'use client'
 
 import Link from 'next/link'
-import Navigation from '@/components/Navigation'
 import { useSession } from 'next-auth/react'
 
 export default function Home() {
@@ -9,10 +8,8 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
-      <Navigation />
-      
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-purple-500 to-orange-400 pt-20 pb-32 md:pt-32 md:pb-40">
+      <section className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-purple-500 to-orange-400 pt-8 pb-32 md:pt-16 md:pb-40">
         {/* Decorative shapes */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute -top-10 -right-10 w-72 h-72 bg-orange-300/20 rounded-full blur-3xl"></div>
