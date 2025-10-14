@@ -170,6 +170,14 @@ export async function requestNotificationPermission(): Promise<'granted' | 'deni
  * Obtener la clave pública VAPID
  */
 export function getVapidPublicKey(): string {
+  console.log('🔑 Obteniendo clave VAPID pública...')
+  console.log('🔑 Variable de entorno NEXT_PUBLIC_VAPID_PUBLIC_KEY:', VAPID_PUBLIC_KEY ? `${VAPID_PUBLIC_KEY.substring(0, 20)}... (${VAPID_PUBLIC_KEY.length} chars)` : 'NO DEFINIDA')
+  
+  if (!VAPID_PUBLIC_KEY || VAPID_PUBLIC_KEY.trim() === '') {
+    console.error('❌ NEXT_PUBLIC_VAPID_PUBLIC_KEY no está configurada')
+    throw new Error('Clave VAPID pública no configurada. Verifica las variables de entorno.')
+  }
+  
   return VAPID_PUBLIC_KEY
 }
 
@@ -179,21 +187,33 @@ export function getVapidPublicKey(): string {
  */
 export function urlBase64ToUint8Array(base64String: string): Uint8Array {
   try {
+    // Verificar que la clave existe
+    if (!base64String || base64String.trim() === '') {
+      console.error('❌ Clave VAPID vacía o undefined')
+      throw new Error('Clave VAPID no proporcionada')
+    }
+    
+    console.log(`🔑 Procesando clave VAPID: ${base64String.substring(0, 20)}... (${base64String.length} chars)`)
+    
     // Verificar si necesita conversión a formato raw
     let processedKey = base64String
     
     // Decodificar para verificar formato
     const buffer = Buffer.from(base64String, 'base64url')
     
+    console.log(`📏 Buffer decodificado: ${buffer.length} bytes`)
+    
     if (buffer.length === 65 && buffer[0] === 0x04) {
       // Formato sin comprimir: convertir a raw (64 bytes)
       const rawBuffer = buffer.slice(1)
       processedKey = rawBuffer.toString('base64url')
       console.log('🔧 Clave convertida a formato raw (64 bytes)')
+      console.log(`🔧 Nueva clave: ${processedKey.substring(0, 20)}...`)
     } else if (buffer.length === 64) {
       console.log('✅ Clave ya está en formato raw')
     } else {
       console.warn(`⚠️ Longitud de clave inesperada: ${buffer.length} bytes`)
+      console.warn(`⚠️ Primeros bytes: ${Array.from(buffer.slice(0, 5)).map(b => b.toString(16)).join(' ')}`)
     }
     
     const padding = '='.repeat((4 - (processedKey.length % 4)) % 4)
@@ -212,6 +232,8 @@ export function urlBase64ToUint8Array(base64String: string): Uint8Array {
     return outputArray
   } catch (error) {
     console.error('❌ Error al procesar clave VAPID:', error)
-    throw new Error('Formato de clave VAPID inválido')
+    console.error('❌ Clave recibida:', base64String)
+    console.error('❌ Tipo de clave:', typeof base64String)
+    throw new Error(`Formato de clave VAPID inválido: ${error instanceof Error ? error.message : 'Error desconocido'}`)
   }
 }
