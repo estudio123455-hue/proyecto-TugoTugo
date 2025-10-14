@@ -26,10 +26,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Hash de la contraseña
-    const hashedPassword = await bcrypt.hash(password, 10)
+    // Hash de la contraseña (usando 12 rounds como en el otro endpoint)
+    const hashedPassword = await bcrypt.hash(password, 12)
 
     // Crear usuario directamente (sin verificación)
+    console.log('📝 [Register] Creating user:', { name, email, role })
+    
     const user = await prisma.user.create({
       data: {
         name,
@@ -39,6 +41,8 @@ export async function POST(request: NextRequest) {
         emailVerified: new Date(), // Marcar como verificado automáticamente
       },
     })
+
+    console.log('✅ [Register] User created successfully:', user.id, user.email, user.role)
 
     return NextResponse.json(
       { 

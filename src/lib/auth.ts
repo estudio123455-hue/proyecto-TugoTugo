@@ -25,16 +25,27 @@ export const authOptions: NextAuthOptions = {
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
+          console.log('❌ [Auth] Missing credentials')
           return null
         }
+
+        console.log('🔐 [Auth] Attempting login for:', credentials.email)
 
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         })
 
-        if (!user || !user.password) {
+        if (!user) {
+          console.log('❌ [Auth] User not found:', credentials.email)
           return null
         }
+
+        if (!user.password) {
+          console.log('❌ [Auth] User has no password (OAuth user?):', credentials.email)
+          return null
+        }
+
+        console.log('🔍 [Auth] User found, checking password...')
 
         const isPasswordValid = await bcrypt.compare(
           credentials.password,
@@ -42,8 +53,11 @@ export const authOptions: NextAuthOptions = {
         )
 
         if (!isPasswordValid) {
+          console.log('❌ [Auth] Invalid password for:', credentials.email)
           return null
         }
+
+        console.log('✅ [Auth] Password valid for:', credentials.email, 'Role:', user.role)
 
         // Si es ADMIN, marcar como verificado automáticamente
         if (user.role === 'ADMIN') {
