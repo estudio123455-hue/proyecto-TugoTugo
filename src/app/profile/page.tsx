@@ -1,6 +1,6 @@
 'use client'
 
-// import { useSession } from 'next-auth/react'
+import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Navigation from '@/components/Navigation'
@@ -571,13 +571,21 @@ export default function Profile() {
                     </div>
                   )}
 
-                  <div className="pt-4">
+                  <div className="pt-4 flex flex-col sm:flex-row gap-3">
                     <button
                       onClick={handleSaveSettings}
                       disabled={isSaving}
                       className="bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white px-6 py-2 rounded-md transition-colors font-medium"
                     >
                       {isSaving ? '⏳ Guardando...' : '💾 Save Changes'}
+                    </button>
+                    
+                    <button
+                      onClick={() => signOut()}
+                      className="bg-red-500 hover:bg-red-600 text-white px-6 py-2 rounded-md transition-colors font-medium flex items-center gap-2"
+                    >
+                      <span>🚪</span>
+                      <span>Cerrar Sesión</span>
                     </button>
                   </div>
                 </div>
