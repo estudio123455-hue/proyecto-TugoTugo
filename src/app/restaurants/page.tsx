@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react'
 // import { useSession } from 'next-auth/react'
 import Navigation from '@/components/Navigation'
+import GlobalHeader from '@/components/GlobalHeader'
 import NotificationSystem from '@/components/NotificationSystem'
 import Link from 'next/link'
 import { useRestaurantsFeed } from '@/hooks/useRestaurantsFeed'
@@ -129,6 +130,7 @@ export default function RestaurantsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
       <Navigation />
+      <GlobalHeader title="Restaurantes" />
       <NotificationSystem />
       
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-24 pb-12">

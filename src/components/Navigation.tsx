@@ -1,9 +1,10 @@
 'use client'
 
-import { signIn, signOut } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { useCleanSession } from '@/hooks/useCleanSession'
 import { usePathname } from 'next/navigation'
+import { UserMenu } from '@/components/LogoutButton'
 
 export default function Navigation() {
   const { data: session, status } = useCleanSession()
@@ -94,17 +95,12 @@ export default function Navigation() {
             {status === 'loading' ? (
               <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
             ) : session ? (
-              <div className="hidden md:flex items-center space-x-3">
-                <div className="flex items-center space-x-2">
-                  <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
-                    <span className="text-emerald-600 font-semibold text-sm">
-                      {session.user?.name?.charAt(0)?.toUpperCase() || 'U'}
-                    </span>
-                  </div>
-                  <span className="text-sm font-medium text-gray-700">
-                    {session.user?.name?.split(' ')[0] || 'Usuario'}
-                  </span>
-                </div>
+              <div className="hidden md:flex items-center">
+                <UserMenu 
+                  userName={session.user?.name || 'Usuario'}
+                  userEmail={session.user?.email || ''}
+                  userAvatar={session.user?.image || undefined}
+                />
               </div>
             ) : (
               <div className="hidden md:flex items-center space-x-3">

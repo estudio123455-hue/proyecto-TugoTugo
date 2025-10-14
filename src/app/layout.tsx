@@ -5,6 +5,7 @@ import React from 'react'
 import { Providers } from './providers'
 import AuthGuard from '@/components/AuthGuard'
 import BottomNavigation from '@/components/mobile/BottomNavigation'
+import FloatingLogout from '@/components/FloatingLogout'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -29,6 +30,7 @@ export default function RootLayout({
               {children}
             </div>
             <BottomNavigation />
+            <FloatingLogout />
           </AuthGuard>
         </Providers>
       </body>

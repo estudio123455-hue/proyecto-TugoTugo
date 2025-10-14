@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useCleanSession } from '@/hooks/useCleanSession'
+import LogoutButton from '@/components/LogoutButton'
 
 export default function BottomNavigation() {
   const pathname = usePathname()
@@ -26,7 +27,7 @@ export default function BottomNavigation() {
     { href: '/dashboard', icon: '📊', label: 'Dashboard' },
     { href: '/restaurant/packs', icon: '📦', label: 'Packs' },
     { href: '/restaurant/orders', icon: '🛒', label: 'Órdenes' },
-    { href: '/restaurant/settings', icon: '⚙️', label: 'Config' },
+    { href: '/profile', icon: '👤', label: 'Perfil' },
   ]
 
   const navItems = session?.user?.role === 'ESTABLISHMENT' ? establishmentNavItems : userNavItems

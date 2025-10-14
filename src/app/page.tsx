@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import Navigation from '@/components/Navigation'
+import GlobalHeader from '@/components/GlobalHeader'
 import { useSession } from 'next-auth/react'
 
 export default function Home() {
@@ -10,6 +11,7 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-white">
       <Navigation />
+      <GlobalHeader />
       
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-purple-500 to-orange-400 pt-20 pb-32 md:pt-32 md:pb-40">

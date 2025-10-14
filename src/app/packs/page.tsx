@@ -4,10 +4,12 @@ import { useEffect, useState, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import Head from 'next/head'
 import Navigation from '@/components/Navigation'
+import GlobalHeader from '@/components/GlobalHeader'
 import MapLibreMap, { MapLocation } from '@/components/MapLibreMap'
 // import PackCard from '@/components/PackCard' // TODO: Use this component
 import EmptyState from '@/components/EmptyState'
 import PackSkeleton from '@/components/PackSkeleton'
+import LogoutButton from '@/components/LogoutButton'
 import { Map as MapIcon, List } from 'lucide-react'
 
 interface Pack {
@@ -264,8 +266,22 @@ export default function PacksExplorer() {
       
       <div className="min-h-screen bg-gray-50">
         <Navigation />
+        <GlobalHeader 
+          title="Packs Disponibles"
+          actions={
+            <div className="flex items-center space-x-2">
+              <button
+                onClick={() => setViewMode(viewMode === 'list' ? 'map' : 'list')}
+                className="p-2 text-gray-600 hover:text-emerald-600 hover:bg-emerald-50 rounded-lg transition-colors"
+                title={viewMode === 'list' ? 'Ver Mapa' : 'Ver Lista'}
+              >
+                {viewMode === 'list' ? <MapIcon className="w-5 h-5" /> : <List className="w-5 h-5" />}
+              </button>
+            </div>
+          }
+        />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-8" role="main">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 pb-8" role="main">
         {/* Hero Section with Impact - Brand Identity */}
         <header className="text-center mb-8 sm:mb-12" role="banner">
           {/* Slogan de impacto */}

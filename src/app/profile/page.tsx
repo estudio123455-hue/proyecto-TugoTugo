@@ -1,11 +1,11 @@
 'use client'
 
-import { signOut } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import Navigation from '@/components/Navigation'
 import Link from 'next/link'
 import { useCleanSession } from '@/hooks/useCleanSession'
+import LogoutButton from '@/components/LogoutButton'
 
 interface Order {
   id: string
@@ -630,15 +630,7 @@ export default function Profile() {
                       )}
                     </button>
                     
-                    <button
-                      onClick={() => signOut()}
-                      className="flex-1 sm:flex-none bg-red-400 hover:bg-red-500 text-white px-8 py-3 rounded-xl transition-all duration-200 font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 flex items-center justify-center gap-2"
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
-                      </svg>
-                      <span>Cerrar Sesión</span>
-                    </button>
+                    <LogoutButton className="flex-1 sm:flex-none px-8 py-3 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5" />
                   </div>
                 </div>
               </div>
