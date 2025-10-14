@@ -29,19 +29,22 @@ export const authOptions: NextAuthOptions = {
           return null
         }
 
-        console.log('🔐 [Auth] Attempting login for:', credentials.email)
+        // Normalizar email (lowercase y trim)
+        const normalizedEmail = credentials.email.toLowerCase().trim()
+        
+        console.log('🔐 [Auth] Attempting login for:', normalizedEmail)
 
         const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
+          where: { email: normalizedEmail },
         })
 
         if (!user) {
-          console.log('❌ [Auth] User not found:', credentials.email)
+          console.log('❌ [Auth] User not found:', normalizedEmail)
           return null
         }
 
         if (!user.password) {
-          console.log('❌ [Auth] User has no password (OAuth user?):', credentials.email)
+          console.log('❌ [Auth] User has no password (OAuth user?):', normalizedEmail)
           return null
         }
 
@@ -53,11 +56,11 @@ export const authOptions: NextAuthOptions = {
         )
 
         if (!isPasswordValid) {
-          console.log('❌ [Auth] Invalid password for:', credentials.email)
+          console.log('❌ [Auth] Invalid password for:', normalizedEmail)
           return null
         }
 
-        console.log('✅ [Auth] Password valid for:', credentials.email, 'Role:', user.role)
+        console.log('✅ [Auth] Password valid for:', normalizedEmail, 'Role:', user.role)
 
         // Si es ADMIN, marcar como verificado automáticamente
         if (user.role === 'ADMIN') {

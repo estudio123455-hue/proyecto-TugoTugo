@@ -6,17 +6,22 @@ export async function POST(request: NextRequest) {
   try {
     const { name, email, password, role } = await request.json()
 
+    // Normalizar email (lowercase y trim)
+    const normalizedEmail = email.toLowerCase().trim()
+
     // Validar datos
-    if (!name || !email || !password || !role) {
+    if (!name || !normalizedEmail || !password || !role) {
       return NextResponse.json(
         { message: 'Todos los campos son requeridos' },
         { status: 400 }
       )
     }
 
+    console.log('📝 [Register] Attempting to register:', { name, email: normalizedEmail, role })
+
     // Verificar si el usuario ya existe
     const existingUser = await prisma.user.findUnique({
-      where: { email },
+      where: { email: normalizedEmail },
     })
 
     if (existingUser) {
@@ -30,12 +35,12 @@ export async function POST(request: NextRequest) {
     const hashedPassword = await bcrypt.hash(password, 12)
 
     // Crear usuario directamente (sin verificación)
-    console.log('📝 [Register] Creating user:', { name, email, role })
+    console.log('📝 [Register] Creating user:', { name, email: normalizedEmail, role })
     
     const user = await prisma.user.create({
       data: {
         name,
-        email,
+        email: normalizedEmail,
         password: hashedPassword,
         role,
         emailVerified: new Date(), // Marcar como verificado automáticamente
