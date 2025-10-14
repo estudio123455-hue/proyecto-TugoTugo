@@ -3,7 +3,6 @@
 import { signIn, signOut } from 'next-auth/react'
 import Link from 'next/link'
 import { useCleanSession } from '@/hooks/useCleanSession'
-import NotificationButton from './NotificationButton'
 import { usePathname } from 'next/navigation'
 
 export default function Navigation() {
@@ -89,8 +88,7 @@ export default function Navigation() {
               Ver nuevos packs
             </Link>
 
-            {/* Notifications */}
-            {session && <NotificationButton />}
+            {/* Notifications removed */}
 
             {/* User Menu */}
             {status === 'loading' ? (
