@@ -138,11 +138,6 @@ export default function MercadoPagoCheckout({
           <div className="mt-4">
             <Wallet
               initialization={{ preferenceId }}
-              customization={{
-                texts: {
-                  valueProp: 'smart_option'
-                }
-              }}
             />
           </div>
         </div>
