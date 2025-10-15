@@ -33,7 +33,7 @@ export default function LogoutButton({
       <button
         onClick={handleLogout}
         disabled={isLoggingOut}
-        className={`p-2 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-lg transition-all duration-200 ${className}`}
+        className={`p-2.5 text-gray-600 hover:text-red-600 hover:bg-red-50 rounded-xl transition-all duration-200 border border-transparent hover:border-red-200 hover:shadow-sm disabled:opacity-50 ${className}`}
         title="Cerrar Sesión"
       >
         {isLoggingOut ? (
@@ -50,9 +50,9 @@ export default function LogoutButton({
       <button
         onClick={handleLogout}
         disabled={isLoggingOut}
-        className={`w-full flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-colors ${className}`}
+        className={`w-full flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-red-50 hover:text-red-600 transition-all duration-150 disabled:opacity-50 ${className}`}
       >
-        <LogOut className="w-4 h-4 mr-3" />
+        <LogOut className="w-4 h-4 mr-3 text-gray-400" />
         {isLoggingOut ? 'Cerrando sesión...' : 'Cerrar Sesión'}
       </button>
     )
@@ -62,7 +62,7 @@ export default function LogoutButton({
     <button
       onClick={handleLogout}
       disabled={isLoggingOut}
-      className={`inline-flex items-center px-4 py-2 bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white text-sm font-medium rounded-lg transition-all duration-200 shadow-sm hover:shadow-md ${className}`}
+      className={`inline-flex items-center px-5 py-2.5 bg-red-500 hover:bg-red-600 disabled:bg-red-300 text-white text-sm font-semibold rounded-xl transition-all duration-200 shadow-sm hover:shadow-md transform hover:scale-105 active:scale-95 disabled:transform-none ${className}`}
     >
       {isLoggingOut ? (
         <>
@@ -95,30 +95,41 @@ export function UserMenu({
     <div className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center space-x-2 p-2 rounded-lg hover:bg-gray-100 transition-colors"
+        className="flex items-center space-x-3 p-2 rounded-xl hover:bg-gray-50 transition-all duration-200 border border-transparent hover:border-gray-200 hover:shadow-sm"
       >
-        <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+        <div className="w-9 h-9 bg-gradient-to-br from-emerald-100 to-emerald-200 rounded-full flex items-center justify-center ring-2 ring-emerald-100">
           {userAvatar ? (
             <img 
               src={userAvatar} 
               alt={userName} 
-              className="w-8 h-8 rounded-full object-cover"
+              className="w-9 h-9 rounded-full object-cover"
             />
           ) : (
-            <span className="text-emerald-600 font-semibold text-sm">
+            <span className="text-emerald-700 font-bold text-sm">
               {userName?.charAt(0)?.toUpperCase() || 'U'}
             </span>
           )}
         </div>
-        <div className="hidden md:block text-left">
-          <p className="text-sm font-medium text-gray-700">
-            {userName?.split(' ')[0] || 'Usuario'}
+        <div className="hidden md:block text-left min-w-0 flex-1">
+          <p className="text-sm font-semibold text-gray-800 truncate max-w-[120px]">
+            {userName || 'Usuario'}
           </p>
           {userEmail && (
-            <p className="text-xs text-gray-500 truncate max-w-32">
+            <p className="text-xs text-gray-500 truncate max-w-[120px]">
               {userEmail}
             </p>
           )}
+        </div>
+        <div className="hidden md:block">
+          <svg 
+            className="w-4 h-4 text-gray-400 transition-transform duration-200" 
+            style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
+            fill="none" 
+            stroke="currentColor" 
+            viewBox="0 0 24 24"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
         </div>
       </button>
 
@@ -131,33 +142,35 @@ export function UserMenu({
           />
           
           {/* Dropdown menu */}
-          <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 py-1 z-20">
-            <div className="px-4 py-2 border-b border-gray-100">
-              <p className="text-sm font-medium text-gray-900">{userName}</p>
+          <div className="absolute right-0 mt-3 w-56 bg-white rounded-xl shadow-xl border border-gray-100 py-2 z-20 animate-in slide-in-from-top-2 duration-200">
+            <div className="px-4 py-3 border-b border-gray-100">
+              <p className="text-sm font-semibold text-gray-900 truncate">{userName}</p>
               {userEmail && (
-                <p className="text-xs text-gray-500 truncate">{userEmail}</p>
+                <p className="text-xs text-gray-500 truncate mt-1">{userEmail}</p>
               )}
             </div>
             
-            <a
-              href="/profile"
-              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-              onClick={() => setIsOpen(false)}
-            >
-              <User className="w-4 h-4 mr-3" />
-              Mi Perfil
-            </a>
+            <div className="py-1">
+              <a
+                href="/profile"
+                className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-150"
+                onClick={() => setIsOpen(false)}
+              >
+                <User className="w-4 h-4 mr-3 text-gray-400" />
+                Mi Perfil
+              </a>
+              
+              <a
+                href="/orders"
+                className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-emerald-50 hover:text-emerald-700 transition-all duration-150"
+                onClick={() => setIsOpen(false)}
+              >
+                <span className="w-4 h-4 mr-3 text-gray-400">📦</span>
+                Mis Órdenes
+              </a>
+            </div>
             
-            <a
-              href="/orders"
-              className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-              onClick={() => setIsOpen(false)}
-            >
-              <span className="w-4 h-4 mr-3">📦</span>
-              Mis Órdenes
-            </a>
-            
-            <div className="border-t border-gray-100 mt-1">
+            <div className="border-t border-gray-100 mt-1 pt-1">
               <LogoutButton variant="dropdown" />
             </div>
           </div>
