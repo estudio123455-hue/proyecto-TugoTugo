@@ -10,7 +10,7 @@ export default function SignInNew() {
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState('')
   const [successMessage, setSuccessMessage] = useState('')
-  const [loginType, setLoginType] = useState<'customer' | 'restaurant'>('customer')
+  // Removed loginType - now only for customers
   const [showPassword, setShowPassword] = useState(false)
   const [mounted, setMounted] = useState(false)
 
@@ -49,28 +49,11 @@ export default function SignInNew() {
 
       const session = await getSession()
 
-      // Verify that the user role matches the selected login type
-      if (
-        loginType === 'restaurant' &&
-        session?.user?.role !== 'ESTABLISHMENT'
-      ) {
-        setError('Esta cuenta no es de restaurante. Usa el login de cliente.')
-        setIsLoading(false)
-        return
-      }
-
-      if (
-        loginType === 'customer' &&
-        session?.user?.role === 'ESTABLISHMENT'
-      ) {
-        setError('Esta cuenta es de restaurante. Usa el login de restaurante.')
-        setIsLoading(false)
-        return
-      }
-
-      // Redirect based on actual role
+      // Redirect based on user role
       if (session?.user?.role === 'ESTABLISHMENT') {
         window.location.href = '/dashboard'
+      } else if (session?.user?.role === 'ADMIN') {
+        window.location.href = '/admin'
       } else {
         window.location.href = '/packs'
       }
@@ -143,33 +126,7 @@ export default function SignInNew() {
                     </p>
                   </div>
                   
-                  {/* Login Type Selector */}
-                  <div className="mb-6">
-                    <div className="flex bg-gray-100 rounded-xl p-1">
-                      <button
-                        type="button"
-                        onClick={() => setLoginType('customer')}
-                        className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
-                          loginType === 'customer'
-                            ? 'bg-white text-purple-600 shadow-sm'
-                            : 'text-gray-600 hover:text-gray-900'
-                        }`}
-                      >
-                        🛒 Cliente
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setLoginType('restaurant')}
-                        className={`flex-1 py-2 px-4 rounded-lg font-medium transition-all ${
-                          loginType === 'restaurant'
-                            ? 'bg-white text-purple-600 shadow-sm'
-                            : 'text-gray-600 hover:text-gray-900'
-                        }`}
-                      >
-                        🏪 Restaurante
-                      </button>
-                    </div>
-                  </div>
+                  {/* Simplified login - no type selector needed */}
 
                   {successMessage && (
                     <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-xl">

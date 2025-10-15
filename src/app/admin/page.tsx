@@ -19,8 +19,8 @@ export default function AdminDashboard() {
     } else if (session?.user?.role !== 'ADMIN') {
       router.push('/')
     } else {
-      // Redirigir al nuevo dashboard inteligente
-      router.push('/admin/verification-dashboard')
+      // Redirigir al panel de restaurantes como página principal
+      router.push('/admin/restaurants')
     }
   }, [session, status, router])
 
