@@ -8,7 +8,7 @@ const prisma = new PrismaClient()
 // PATCH - Actualizar estado de verificación de restaurante
 export async function PATCH(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  context: { params: Promise<{ id: string }> }
 ) {
   try {
     const session = await getServerSession(authOptions)
@@ -20,6 +20,7 @@ export async function PATCH(
       )
     }
 
+    const params = await context.params
     const body = await request.json()
     const { isVerified } = body
     const restaurantId = params.id
