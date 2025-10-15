@@ -59,7 +59,24 @@ export default function EstablishmentSetup({
         setIsGettingLocation(false)
       },
       error => {
-        setError('Error getting location: ' + error.message)
+        let errorMessage = 'Error obteniendo ubicación: ';
+        
+        switch(error.code) {
+          case error.PERMISSION_DENIED:
+            errorMessage = '📍 Permiso de ubicación denegado. Por favor, permite el acceso a la ubicación en tu navegador o ingresa las coordenadas manualmente.';
+            break;
+          case error.POSITION_UNAVAILABLE:
+            errorMessage = '📍 Ubicación no disponible. Verifica tu conexión GPS o ingresa las coordenadas manualmente.';
+            break;
+          case error.TIMEOUT:
+            errorMessage = '📍 Tiempo de espera agotado. Intenta nuevamente o ingresa las coordenadas manualmente.';
+            break;
+          default:
+            errorMessage = '📍 Error desconocido obteniendo ubicación. Puedes ingresar las coordenadas manualmente.';
+            break;
+        }
+        
+        setError(errorMessage)
         setIsGettingLocation(false)
       }
     )
@@ -251,8 +268,43 @@ export default function EstablishmentSetup({
                   </span>
                 )}
               </div>
+              
+              {/* Campos manuales para coordenadas */}
+              <div className="grid grid-cols-2 gap-3 mt-3">
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                    Latitud
+                  </label>
+                  <input
+                    type="number"
+                    step="any"
+                    value={formData.latitude || ''}
+                    onChange={e =>
+                      setFormData({ ...formData, latitude: parseFloat(e.target.value) || 0 })
+                    }
+                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    placeholder="4.7110"
+                  />
+                </div>
+                <div>
+                  <label className="block text-xs font-medium text-gray-600 mb-1">
+                    Longitud
+                  </label>
+                  <input
+                    type="number"
+                    step="any"
+                    value={formData.longitude || ''}
+                    onChange={e =>
+                      setFormData({ ...formData, longitude: parseFloat(e.target.value) || 0 })
+                    }
+                    className="w-full border border-gray-300 rounded px-2 py-1 text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+                    placeholder="-74.0721"
+                  />
+                </div>
+              </div>
+              
               <p className="text-xs text-gray-500 mt-2">
-                💡 Necesitamos tu ubicación para mostrar tu negocio en el mapa
+                💡 Necesitamos tu ubicación para mostrar tu negocio en el mapa. Puedes usar el botón de arriba o ingresar las coordenadas manualmente.
               </p>
             </div>
           </div>
