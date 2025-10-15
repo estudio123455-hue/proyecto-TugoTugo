@@ -7,7 +7,7 @@ import bcrypt from 'bcryptjs'
 const prisma = new PrismaClient()
 
 // GET - Obtener todos los restaurantes (solo admin)
-export async function GET(request: NextRequest) {
+export async function GET() {
   try {
     const session = await getServerSession(authOptions)
 
@@ -121,7 +121,7 @@ export async function POST(request: NextRequest) {
     })
 
     // Crear el establecimiento asociado
-    const establishment = await prisma.establishment.create({
+    await prisma.establishment.create({
       data: {
         name,
         address: address || 'Dirección pendiente',

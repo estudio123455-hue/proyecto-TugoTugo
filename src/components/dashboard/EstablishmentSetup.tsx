@@ -59,21 +59,21 @@ export default function EstablishmentSetup({
         setIsGettingLocation(false)
       },
       error => {
-        let errorMessage = 'Error obteniendo ubicación: ';
+        let errorMessage = 'Error obteniendo ubicación: '
         
         switch(error.code) {
           case error.PERMISSION_DENIED:
-            errorMessage = '📍 Permiso de ubicación denegado. Por favor, permite el acceso a la ubicación en tu navegador o ingresa las coordenadas manualmente.';
-            break;
+            errorMessage = '📍 Permiso de ubicación denegado. Por favor, permite el acceso a la ubicación en tu navegador o ingresa las coordenadas manualmente.'
+            break
           case error.POSITION_UNAVAILABLE:
-            errorMessage = '📍 Ubicación no disponible. Verifica tu conexión GPS o ingresa las coordenadas manualmente.';
-            break;
+            errorMessage = '📍 Ubicación no disponible. Verifica tu conexión GPS o ingresa las coordenadas manualmente.'
+            break
           case error.TIMEOUT:
-            errorMessage = '📍 Tiempo de espera agotado. Intenta nuevamente o ingresa las coordenadas manualmente.';
-            break;
+            errorMessage = '📍 Tiempo de espera agotado. Intenta nuevamente o ingresa las coordenadas manualmente.'
+            break
           default:
-            errorMessage = '📍 Error desconocido obteniendo ubicación. Puedes ingresar las coordenadas manualmente.';
-            break;
+            errorMessage = '📍 Error desconocido obteniendo ubicación. Puedes ingresar las coordenadas manualmente.'
+            break
         }
         
         setError(errorMessage)

@@ -3,7 +3,7 @@
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { User, Building, Mail, Phone, MapPin, Calendar, CheckCircle, XCircle, Clock, Plus } from 'lucide-react'
+import { Building, Mail, Phone, MapPin, CheckCircle, XCircle, Clock, Plus } from 'lucide-react'
 
 interface Restaurant {
   id: string
@@ -230,7 +230,7 @@ export default function AdminRestaurantsPage() {
             <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
               <h3 className="text-lg font-semibold mb-4">Crear Nuevo Restaurante</h3>
               
-              <form onSubmit={createRestaurant} className="space-y-4">
+              <form onSubmit={createRestaurant} className="space-y-4">{/* eslint-disable-line @typescript-eslint/no-misused-promises */}
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Nombre del Restaurante *

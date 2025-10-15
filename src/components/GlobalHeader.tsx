@@ -5,19 +5,15 @@ import { useCleanSession } from '@/hooks/useCleanSession'
 import { usePathname } from 'next/navigation'
 import LogoutButton, { UserMenu } from './LogoutButton'
 import Link from 'next/link'
-import { ArrowLeft, Menu } from 'lucide-react'
-
 interface GlobalHeaderProps {
   title?: string
   showBack?: boolean
-  backUrl?: string
   actions?: React.ReactNode
 }
 
 export default function GlobalHeader({ 
   title, 
   showBack = false, 
-  backUrl,
   actions 
 }: GlobalHeaderProps) {
   const { data: session, status } = useCleanSession()

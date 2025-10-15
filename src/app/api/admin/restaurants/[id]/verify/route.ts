@@ -49,7 +49,7 @@ export async function PATCH(
     // Actualizar estado de verificación del usuario y establecimiento
     const verificationStatus = isVerified ? 'APPROVED' : 'PENDING'
     
-    const updatedUser = await prisma.user.update({
+    await prisma.user.update({
       where: { id: restaurantId },
       data: { 
         verificationStatus,
