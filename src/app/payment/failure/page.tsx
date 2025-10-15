@@ -1,28 +1,28 @@
-'use client';
+'use client'
 
-import { useSearchParams, useRouter } from 'next/navigation';
-import Card, { CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import { XCircle, Home, RotateCcw } from 'lucide-react';
+import { useSearchParams, useRouter } from 'next/navigation'
+import Card, { CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import Button from '@/components/ui/Button'
+import { XCircle, Home, RotateCcw } from 'lucide-react'
 
 export default function PaymentFailurePage() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
+  const searchParams = useSearchParams()
+  const router = useRouter()
 
-  const paymentId = searchParams.get('payment_id');
-  const status = searchParams.get('status');
-  const externalReference = searchParams.get('external_reference');
+  const paymentId = searchParams.get('payment_id')
+  const status = searchParams.get('status')
+  const externalReference = searchParams.get('external_reference')
 
   const getErrorMessage = () => {
     switch (status) {
       case 'rejected':
-        return 'El pago fue rechazado. Verifica los datos de tu tarjeta e intenta nuevamente.';
+        return 'El pago fue rechazado. Verifica los datos de tu tarjeta e intenta nuevamente.'
       case 'cancelled':
-        return 'El pago fue cancelado.';
+        return 'El pago fue cancelado.'
       default:
-        return 'Hubo un problema procesando tu pago. Por favor, intenta nuevamente.';
+        return 'Hubo un problema procesando tu pago. Por favor, intenta nuevamente.'
     }
-  };
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -84,5 +84,5 @@ export default function PaymentFailurePage() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

@@ -1,10 +1,10 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { initMercadoPago, Wallet } from '@mercadopago/sdk-react';
-import Card, { CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Loader2 } from 'lucide-react';
-import { toast } from 'sonner';
+import { useEffect, useState } from 'react'
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
+import Card, { CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { Loader2 } from 'lucide-react'
+import { toast } from 'sonner'
 
 interface MercadoPagoCheckoutProps {
   items: Array<{
@@ -25,30 +25,30 @@ export default function MercadoPagoCheckout({
   onReady,
   onError
 }: MercadoPagoCheckoutProps) {
-  const [preferenceId, setPreferenceId] = useState<string>('');
-  const [loading, setLoading] = useState(true);
+  const [preferenceId, setPreferenceId] = useState<string>('')
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     // Inicializar MercadoPago
-    const publicKey = process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY;
+    const publicKey = process.env.NEXT_PUBLIC_MERCADOPAGO_PUBLIC_KEY
     
     if (!publicKey) {
-      const error = 'Clave pública de MercadoPago no configurada';
-      toast.error(error);
-      onError?.(error);
-      return;
+      const error = 'Clave pública de MercadoPago no configurada'
+      toast.error(error)
+      onError?.(error)
+      return
     }
 
     initMercadoPago(publicKey, {
       locale: 'es-AR' // Cambiar según tu país
-    });
+    })
 
-    createPreference();
-  }, [items, orderId]);
+    createPreference()
+  }, [items, orderId])
 
   const createPreference = async () => {
     try {
-      setLoading(true);
+      setLoading(true)
 
       const response = await fetch('/api/mercadopago/create-preference', {
         method: 'POST',
@@ -64,26 +64,26 @@ export default function MercadoPagoCheckout({
             pending: `${window.location.origin}/payment/pending`
           }
         }),
-      });
+      })
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Error creando preferencia de pago');
+        const error = await response.json()
+        throw new Error(error.error || 'Error creando preferencia de pago')
       }
 
-      const { id } = await response.json();
-      setPreferenceId(id);
-      onReady?.();
+      const { id } = await response.json()
+      setPreferenceId(id)
+      onReady?.()
 
     } catch (error) {
-      console.error('Error creando preferencia:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Error creando preferencia';
-      toast.error(errorMessage);
-      onError?.(errorMessage);
+      console.error('Error creando preferencia:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Error creando preferencia'
+      toast.error(errorMessage)
+      onError?.(errorMessage)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   if (loading) {
     return (
@@ -93,7 +93,7 @@ export default function MercadoPagoCheckout({
           <span>Preparando checkout...</span>
         </CardContent>
       </Card>
-    );
+    )
   }
 
   if (!preferenceId) {
@@ -105,7 +105,7 @@ export default function MercadoPagoCheckout({
           </p>
         </CardContent>
       </Card>
-    );
+    )
   }
 
   return (
@@ -148,5 +148,5 @@ export default function MercadoPagoCheckout({
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }

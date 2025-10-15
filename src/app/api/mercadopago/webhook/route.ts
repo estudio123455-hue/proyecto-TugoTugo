@@ -1,54 +1,54 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { MercadoPagoConfig, Payment } from 'mercadopago';
-import { prisma } from '@/lib/prisma';
+import { NextRequest, NextResponse } from 'next/server'
+import { MercadoPagoConfig, Payment } from 'mercadopago'
+import { prisma } from '@/lib/prisma'
 
 const client = new MercadoPagoConfig({
   accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
-});
+})
 
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await request.json()
     
     // Verificar que es una notificación de pago
     if (body.type !== 'payment') {
-      return NextResponse.json({ message: 'Tipo de notificación no soportado' });
+      return NextResponse.json({ message: 'Tipo de notificación no soportado' })
     }
 
-    const paymentId = body.data?.id;
+    const paymentId = body.data?.id
     
     if (!paymentId) {
-      return NextResponse.json({ error: 'ID de pago no encontrado' }, { status: 400 });
+      return NextResponse.json({ error: 'ID de pago no encontrado' }, { status: 400 })
     }
 
     // Obtener información del pago desde MercadoPago
-    const payment = new Payment(client);
-    const paymentInfo = await payment.get({ id: paymentId });
+    const payment = new Payment(client)
+    const paymentInfo = await payment.get({ id: paymentId })
 
     if (!paymentInfo) {
-      return NextResponse.json({ error: 'Pago no encontrado' }, { status: 404 });
+      return NextResponse.json({ error: 'Pago no encontrado' }, { status: 404 })
     }
 
-    const orderId = paymentInfo.external_reference;
-    const userId = paymentInfo.metadata?.user_id;
+    const orderId = paymentInfo.external_reference
+    const userId = paymentInfo.metadata?.user_id
 
     // Actualizar el estado del pedido según el estado del pago
     if (orderId) {
-      let orderStatus = 'pending';
+      let orderStatus = 'pending'
       
       switch (paymentInfo.status) {
         case 'approved':
-          orderStatus = 'paid';
-          break;
+          orderStatus = 'paid'
+          break
         case 'rejected':
-          orderStatus = 'cancelled';
-          break;
+          orderStatus = 'cancelled'
+          break
         case 'pending':
         case 'in_process':
-          orderStatus = 'pending';
-          break;
+          orderStatus = 'pending'
+          break
         default:
-          orderStatus = 'pending';
+          orderStatus = 'pending'
       }
 
       // Actualizar en la base de datos
@@ -62,12 +62,12 @@ export async function POST(request: NextRequest) {
           paidAmount: paymentInfo.transaction_amount || 0,
           updatedAt: new Date()
         }
-      });
+      })
 
       // Si el pago fue aprobado, puedes agregar lógica adicional aquí
       if (paymentInfo.status === 'approved') {
         // Ejemplo: enviar email de confirmación, actualizar stock, etc.
-        console.log(`Pago aprobado para orden ${orderId}`);
+        console.log(`Pago aprobado para orden ${orderId}`)
         
         // Opcional: Crear notificación para el usuario
         if (userId) {
@@ -79,23 +79,23 @@ export async function POST(request: NextRequest) {
               type: 'payment_success',
               read: false
             }
-          });
+          })
         }
       }
     }
 
-    return NextResponse.json({ message: 'Webhook procesado correctamente' });
+    return NextResponse.json({ message: 'Webhook procesado correctamente' })
 
   } catch (error) {
-    console.error('Error procesando webhook de MercadoPago:', error);
+    console.error('Error procesando webhook de MercadoPago:', error)
     return NextResponse.json(
       { error: 'Error procesando webhook' },
       { status: 500 }
-    );
+    )
   }
 }
 
 // Método GET para verificación del webhook (opcional)
 export async function GET() {
-  return NextResponse.json({ message: 'Webhook de MercadoPago activo' });
+  return NextResponse.json({ message: 'Webhook de MercadoPago activo' })
 }

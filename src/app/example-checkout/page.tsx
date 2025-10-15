@@ -1,18 +1,18 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import { useSession } from 'next-auth/react';
-import Card, { CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import MercadoPagoButton from '@/components/payment/MercadoPagoButton';
-import MercadoPagoCheckout from '@/components/payment/MercadoPagoCheckout';
-import { ShoppingCart, CreditCard, Package } from 'lucide-react';
-import { toast } from 'sonner';
+import { useState } from 'react'
+import { useSession } from 'next-auth/react'
+import Card, { CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import Button from '@/components/ui/Button'
+import MercadoPagoButton from '@/components/payment/MercadoPagoButton'
+import MercadoPagoCheckout from '@/components/payment/MercadoPagoCheckout'
+import { ShoppingCart, CreditCard, Package } from 'lucide-react'
+import { toast } from 'sonner'
 
 export default function ExampleCheckoutPage() {
-  const { data: session } = useSession();
-  const [selectedPack, setSelectedPack] = useState<any>(null);
-  const [checkoutType, setCheckoutType] = useState<'button' | 'checkout'>('button');
+  const { data: session } = useSession()
+  const [selectedPack, setSelectedPack] = useState<any>(null)
+  const [checkoutType, setCheckoutType] = useState<'button' | 'checkout'>('button')
 
   // Ejemplo de packs disponibles
   const examplePacks = [
@@ -43,11 +43,11 @@ export default function ExampleCheckoutPage() {
       restaurant: 'Sakura Sushi',
       image: '/images/pack-sushi.jpg'
     }
-  ];
+  ]
 
   const handlePackSelect = (pack: any) => {
-    setSelectedPack(pack);
-  };
+    setSelectedPack(pack)
+  }
 
   const createOrderItems = (pack: any) => {
     return [
@@ -58,12 +58,12 @@ export default function ExampleCheckoutPage() {
         quantity: 1,
         unit_price: pack.discountedPrice
       }
-    ];
-  };
+    ]
+  }
 
   const generateOrderId = () => {
-    return `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
-  };
+    return `order_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`
+  }
 
   if (!session) {
     return (
@@ -74,7 +74,7 @@ export default function ExampleCheckoutPage() {
           </CardContent>
         </Card>
       </div>
-    );
+    )
   }
 
   return (
@@ -216,11 +216,11 @@ export default function ExampleCheckoutPage() {
                           items={createOrderItems(selectedPack)}
                           orderId={generateOrderId()}
                           onSuccess={(preferenceId) => {
-                            toast.success('Redirigiendo a Mercado Pago...');
-                            console.log('Preference ID:', preferenceId);
+                            toast.success('Redirigiendo a Mercado Pago...')
+                            console.log('Preference ID:', preferenceId)
                           }}
                           onError={(error) => {
-                            toast.error(`Error: ${error}`);
+                            toast.error(`Error: ${error}`)
                           }}
                           className="w-full"
                         >
@@ -232,10 +232,10 @@ export default function ExampleCheckoutPage() {
                         items={createOrderItems(selectedPack)}
                         orderId={generateOrderId()}
                         onReady={() => {
-                          toast.success('Checkout listo para usar');
+                          toast.success('Checkout listo para usar')
                         }}
                         onError={(error) => {
-                          toast.error(`Error: ${error}`);
+                          toast.error(`Error: ${error}`)
                         }}
                       />
                     )}
@@ -284,5 +284,5 @@ export default function ExampleCheckoutPage() {
         </Card>
       </div>
     </div>
-  );
+  )
 }

@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import Card, { CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import { CreditCard, Smartphone, Building2, Receipt, Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react'
+import Card, { CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import Button from '@/components/ui/Button'
+import { CreditCard, Smartphone, Building2, Receipt, Eye, EyeOff } from 'lucide-react'
 
 // Datos de ejemplo para demostración
 const demoPaymentMethods = {
@@ -125,26 +125,26 @@ const demoPaymentMethods = {
       secure_thumbnail: 'https://http2.mlstatic.com/storage/logos-api-admin/0a187de0-f2fa-11eb-8e0d-6f4af49bf82e-m.svg'
     }
   ]
-};
+}
 
 export default function DemoPaymentMethodsPage() {
-  const [showJson, setShowJson] = useState(false);
+  const [showJson, setShowJson] = useState(false)
 
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'credit_card':
       case 'debit_card':
-        return <CreditCard className="h-5 w-5" />;
+        return <CreditCard className="h-5 w-5" />
       case 'digital_wallet':
-        return <Smartphone className="h-5 w-5" />;
+        return <Smartphone className="h-5 w-5" />
       case 'bank_transfer':
-        return <Building2 className="h-5 w-5" />;
+        return <Building2 className="h-5 w-5" />
       case 'ticket':
-        return <Receipt className="h-5 w-5" />;
+        return <Receipt className="h-5 w-5" />
       default:
-        return <CreditCard className="h-5 w-5" />;
+        return <CreditCard className="h-5 w-5" />
     }
-  };
+  }
 
   const getTypeName = (type: string) => {
     const names: { [key: string]: string } = {
@@ -154,9 +154,9 @@ export default function DemoPaymentMethodsPage() {
       'bank_transfer': 'Transferencias Bancarias',
       'ticket': 'Pagos en Efectivo',
       'atm': 'Cajeros Automáticos'
-    };
-    return names[type] || type;
-  };
+    }
+    return names[type] || type
+  }
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -355,5 +355,5 @@ export default function DemoPaymentMethodsPage() {
         </Card>
       </div>
     </div>
-  );
+  )
 }

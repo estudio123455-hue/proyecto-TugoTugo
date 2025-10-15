@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { MercadoPagoConfig, Preference } from 'mercadopago';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import { NextRequest, NextResponse } from 'next/server'
+import { MercadoPagoConfig, Preference } from 'mercadopago'
+import { getServerSession } from 'next-auth'
+import { authOptions } from '@/lib/auth'
 
 const client = new MercadoPagoConfig({
   accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN!,
@@ -9,24 +9,24 @@ const client = new MercadoPagoConfig({
     timeout: 5000,
     idempotencyKey: 'abc'
   }
-});
+})
 
 export async function POST(request: NextRequest) {
   try {
-    const session = await getServerSession(authOptions);
+    const session = await getServerSession(authOptions)
     
     if (!session?.user?.id) {
-      return NextResponse.json({ error: 'No autorizado' }, { status: 401 });
+      return NextResponse.json({ error: 'No autorizado' }, { status: 401 })
     }
 
-    const body = await request.json();
-    const { items, orderId, backUrls } = body;
+    const body = await request.json()
+    const { items, orderId, backUrls } = body
 
     if (!items || !Array.isArray(items) || items.length === 0) {
-      return NextResponse.json({ error: 'Items requeridos' }, { status: 400 });
+      return NextResponse.json({ error: 'Items requeridos' }, { status: 400 })
     }
 
-    const preference = new Preference(client);
+    const preference = new Preference(client)
 
     const preferenceData = {
       items: items.map((item: any) => ({
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
         currency_id: 'ARS' // Cambiar según tu país
       })),
       payer: {
-        email: session.user.email,
+        email: session.user.email || undefined,
         name: session.user.name || 'Usuario',
       },
       back_urls: {
@@ -53,21 +53,21 @@ export async function POST(request: NextRequest) {
         user_id: session.user.id,
         order_id: orderId
       }
-    };
+    }
 
-    const result = await preference.create({ body: preferenceData });
+    const result = await preference.create({ body: preferenceData })
 
     return NextResponse.json({
       id: result.id,
       init_point: result.init_point,
       sandbox_init_point: result.sandbox_init_point
-    });
+    })
 
   } catch (error) {
-    console.error('Error creando preferencia de MercadoPago:', error);
+    console.error('Error creando preferencia de MercadoPago:', error)
     return NextResponse.json(
       { error: 'Error interno del servidor' },
       { status: 500 }
-    );
+    )
   }
 }

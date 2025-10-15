@@ -1,11 +1,11 @@
-'use client';
+'use client'
 
-import { useSession } from 'next-auth/react';
-import PaymentMethodsDisplay from '@/components/payment/PaymentMethodsDisplay';
-import Card, { CardContent } from '@/components/ui/Card';
+import { useSession } from 'next-auth/react'
+import PaymentMethodsDisplay from '@/components/payment/PaymentMethodsDisplay'
+import Card, { CardContent } from '@/components/ui/Card'
 
 export default function PaymentMethodsPage() {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession()
 
   if (status === 'loading') {
     return (
@@ -21,7 +21,7 @@ export default function PaymentMethodsPage() {
           </div>
         </div>
       </div>
-    );
+    )
   }
 
   if (!session) {
@@ -44,7 +44,7 @@ export default function PaymentMethodsPage() {
           </Card>
         </div>
       </div>
-    );
+    )
   }
 
   return (
@@ -113,5 +113,5 @@ export default function PaymentMethodsPage() {
         </Card>
       </div>
     </div>
-  );
+  )
 }

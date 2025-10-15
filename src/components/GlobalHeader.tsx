@@ -1,28 +1,31 @@
-'use client';
+'use client'
 
-import { useCleanSession } from '@/hooks/useCleanSession';
-import { UserMenu } from '@/components/LogoutButton';
-import LogoutButton from '@/components/LogoutButton';
-import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import React from 'react'
+import { useCleanSession } from '@/hooks/useCleanSession'
+import { usePathname } from 'next/navigation'
+import LogoutButton, { UserMenu } from './LogoutButton'
+import Link from 'next/link'
+import { ArrowLeft, Menu } from 'lucide-react'
 
 interface GlobalHeaderProps {
-  title?: string;
-  showBackButton?: boolean;
-  actions?: React.ReactNode;
+  title?: string
+  showBack?: boolean
+  backUrl?: string
+  actions?: React.ReactNode
 }
 
 export default function GlobalHeader({ 
   title, 
-  showBackButton = false, 
+  showBack = false, 
+  backUrl,
   actions 
 }: GlobalHeaderProps) {
-  const { data: session, status } = useCleanSession();
-  const pathname = usePathname();
+  const { data: session, status } = useCleanSession()
+  const pathname = usePathname()
 
   // No mostrar en páginas de auth
   if (pathname?.startsWith('/auth')) {
-    return null;
+    return null
   }
 
   return (
@@ -32,7 +35,7 @@ export default function GlobalHeader({
           
           {/* Left side */}
           <div className="flex items-center space-x-4">
-            {showBackButton && (
+            {showBack && (
               <button
                 onClick={() => window.history.back()}
                 className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
@@ -98,7 +101,7 @@ export default function GlobalHeader({
         </div>
       </div>
     </header>
-  );
+  )
 }
 
 // Hook para usar en páginas
@@ -106,7 +109,7 @@ export function useGlobalHeader() {
   return {
     setTitle: (title: string) => {
       // Esto se puede expandir para manejar el estado global del título
-      document.title = `${title} - Zavo`;
+      document.title = `${title} - Zavo`
     }
-  };
+  }
 }

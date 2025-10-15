@@ -1,8 +1,8 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import Card, { CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Loader2, CreditCard, Smartphone, Building2, Receipt } from 'lucide-react';
+import { useEffect, useState } from 'react'
+import Card, { CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import { Loader2, CreditCard, Smartphone, Building2, Receipt } from 'lucide-react'
 
 interface PaymentMethod {
   id: string;
@@ -24,52 +24,52 @@ interface PaymentMethodsData {
 }
 
 export default function PaymentMethodsDisplay() {
-  const [data, setData] = useState<PaymentMethodsData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [data, setData] = useState<PaymentMethodsData | null>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
-    fetchPaymentMethods();
-  }, []);
+    fetchPaymentMethods()
+  }, [])
 
   const fetchPaymentMethods = async () => {
     try {
-      setLoading(true);
-      const response = await fetch('/api/mercadopago/payment-methods');
+      setLoading(true)
+      const response = await fetch('/api/mercadopago/payment-methods')
       
       if (!response.ok) {
-        throw new Error('Error obteniendo métodos de pago');
+        throw new Error('Error obteniendo métodos de pago')
       }
 
-      const result = await response.json();
+      const result = await response.json()
       
       if (result.success) {
-        setData(result.data);
+        setData(result.data)
       } else {
-        throw new Error(result.message || 'Error desconocido');
+        throw new Error(result.message || 'Error desconocido')
       }
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   const getTypeIcon = (type: string) => {
     switch (type) {
       case 'credit_card':
       case 'debit_card':
-        return <CreditCard className="h-5 w-5" />;
+        return <CreditCard className="h-5 w-5" />
       case 'digital_wallet':
-        return <Smartphone className="h-5 w-5" />;
+        return <Smartphone className="h-5 w-5" />
       case 'bank_transfer':
-        return <Building2 className="h-5 w-5" />;
+        return <Building2 className="h-5 w-5" />
       case 'ticket':
-        return <Receipt className="h-5 w-5" />;
+        return <Receipt className="h-5 w-5" />
       default:
-        return <CreditCard className="h-5 w-5" />;
+        return <CreditCard className="h-5 w-5" />
     }
-  };
+  }
 
   const getTypeName = (type: string) => {
     const names: { [key: string]: string } = {
@@ -79,9 +79,9 @@ export default function PaymentMethodsDisplay() {
       'bank_transfer': 'Transferencias Bancarias',
       'ticket': 'Pagos en Efectivo',
       'atm': 'Cajeros Automáticos'
-    };
-    return names[type] || type;
-  };
+    }
+    return names[type] || type
+  }
 
   if (loading) {
     return (
@@ -91,7 +91,7 @@ export default function PaymentMethodsDisplay() {
           <span>Cargando métodos de pago...</span>
         </CardContent>
       </Card>
-    );
+    )
   }
 
   if (error) {
@@ -104,11 +104,11 @@ export default function PaymentMethodsDisplay() {
           </div>
         </CardContent>
       </Card>
-    );
+    )
   }
 
   if (!data) {
-    return null;
+    return null
   }
 
   return (
@@ -226,5 +226,5 @@ export default function PaymentMethodsDisplay() {
         ))}
       </div>
     </div>
-  );
+  )
 }

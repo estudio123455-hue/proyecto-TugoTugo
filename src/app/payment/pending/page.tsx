@@ -1,17 +1,17 @@
-'use client';
+'use client'
 
-import { useSearchParams, useRouter } from 'next/navigation';
-import Card, { CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import { Clock, Home, RefreshCw } from 'lucide-react';
+import { useSearchParams, useRouter } from 'next/navigation'
+import Card, { CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import Button from '@/components/ui/Button'
+import { Clock, Home, RefreshCw } from 'lucide-react'
 
 export default function PaymentPendingPage() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
+  const searchParams = useSearchParams()
+  const router = useRouter()
 
-  const paymentId = searchParams.get('payment_id');
-  const status = searchParams.get('status');
-  const externalReference = searchParams.get('external_reference');
+  const paymentId = searchParams.get('payment_id')
+  const status = searchParams.get('status')
+  const externalReference = searchParams.get('external_reference')
 
   return (
     <div className="container mx-auto px-4 py-8">
@@ -82,5 +82,5 @@ export default function PaymentPendingPage() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

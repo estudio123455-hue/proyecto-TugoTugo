@@ -1,36 +1,32 @@
-'use client';
+'use client'
 
-import { signOut } from 'next-auth/react';
-import { LogOut, User } from 'lucide-react';
-import { useState } from 'react';
+import { signOut } from 'next-auth/react'
+import { LogOut, User } from 'lucide-react'
+import { useState } from 'react'
 
 interface LogoutButtonProps {
-  variant?: 'button' | 'dropdown' | 'icon';
-  className?: string;
-  showUserInfo?: boolean;
-  userName?: string;
+  variant?: 'button' | 'dropdown' | 'icon'
+  className?: string
 }
 
 export default function LogoutButton({ 
   variant = 'button', 
-  className = '',
-  showUserInfo = false,
-  userName = ''
+  className = ''
 }: LogoutButtonProps) {
-  const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
 
   const handleLogout = async () => {
-    setIsLoggingOut(true);
+    setIsLoggingOut(true)
     try {
       await signOut({ 
         callbackUrl: '/',
         redirect: true 
-      });
+      })
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
-      setIsLoggingOut(false);
+      console.error('Error al cerrar sesión:', error)
+      setIsLoggingOut(false)
     }
-  };
+  }
 
   if (variant === 'icon') {
     return (
@@ -46,7 +42,7 @@ export default function LogoutButton({
           <LogOut className="w-5 h-5" />
         )}
       </button>
-    );
+    )
   }
 
   if (variant === 'dropdown') {
@@ -59,7 +55,7 @@ export default function LogoutButton({
         <LogOut className="w-4 h-4 mr-3" />
         {isLoggingOut ? 'Cerrando sesión...' : 'Cerrar Sesión'}
       </button>
-    );
+    )
   }
 
   return (
@@ -80,7 +76,7 @@ export default function LogoutButton({
         </>
       )}
     </button>
-  );
+  )
 }
 
 // Componente de menú de usuario con dropdown
@@ -93,7 +89,7 @@ export function UserMenu({
   userEmail?: string; 
   userAvatar?: string;
 }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
     <div className="relative">
@@ -168,5 +164,5 @@ export function UserMenu({
         </>
       )}
     </div>
-  );
+  )
 }

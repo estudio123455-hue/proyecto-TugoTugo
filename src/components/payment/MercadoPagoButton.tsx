@@ -1,9 +1,9 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
-import Button from '@/components/ui/Button';
-import { Loader2, CreditCard } from 'lucide-react';
-import { toast } from 'sonner';
+import { useState } from 'react'
+import Button from '@/components/ui/Button'
+import { Loader2, CreditCard } from 'lucide-react'
+import { toast } from 'sonner'
 
 interface MercadoPagoButtonProps {
   items: Array<{
@@ -28,11 +28,11 @@ export default function MercadoPagoButton({
   className,
   children
 }: MercadoPagoButtonProps) {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false)
 
   const handlePayment = async () => {
     try {
-      setLoading(true);
+      setLoading(true)
 
       const response = await fetch('/api/mercadopago/create-preference', {
         method: 'POST',
@@ -48,34 +48,34 @@ export default function MercadoPagoButton({
             pending: `${window.location.origin}/payment/pending`
           }
         }),
-      });
+      })
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Error creando preferencia de pago');
+        const error = await response.json()
+        throw new Error(error.error || 'Error creando preferencia de pago')
       }
 
-      const { id, init_point, sandbox_init_point } = await response.json();
+      const { id, init_point, sandbox_init_point } = await response.json()
 
       // Usar sandbox_init_point en desarrollo, init_point en producción
       const paymentUrl = process.env.NODE_ENV === 'development' 
         ? sandbox_init_point 
-        : init_point;
+        : init_point
 
       // Redirigir a MercadoPago
-      window.location.href = paymentUrl;
+      window.location.href = paymentUrl
 
-      onSuccess?.(id);
+      onSuccess?.(id)
 
     } catch (error) {
-      console.error('Error procesando pago:', error);
-      const errorMessage = error instanceof Error ? error.message : 'Error procesando pago';
-      toast.error(errorMessage);
-      onError?.(errorMessage);
+      console.error('Error procesando pago:', error)
+      const errorMessage = error instanceof Error ? error.message : 'Error procesando pago'
+      toast.error(errorMessage)
+      onError?.(errorMessage)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   return (
     <Button
@@ -95,5 +95,5 @@ export default function MercadoPagoButton({
         </>
       )}
     </Button>
-  );
+  )
 }

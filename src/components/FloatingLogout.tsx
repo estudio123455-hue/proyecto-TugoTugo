@@ -1,30 +1,30 @@
-'use client';
+'use client'
 
-import { useCleanSession } from '@/hooks/useCleanSession';
-import LogoutButton from '@/components/LogoutButton';
-import { usePathname } from 'next/navigation';
-import { useState, useEffect } from 'react';
+import { useCleanSession } from '@/hooks/useCleanSession'
+import LogoutButton from '@/components/LogoutButton'
+import { usePathname } from 'next/navigation'
+import { useState, useEffect } from 'react'
 
 export default function FloatingLogout() {
-  const { data: session } = useCleanSession();
-  const pathname = usePathname();
-  const [isVisible, setIsVisible] = useState(false);
+  const { data: session } = useCleanSession()
+  const pathname = usePathname()
+  const [isVisible, setIsVisible] = useState(false)
 
   // No mostrar en páginas de auth o si no hay sesión
-  const shouldShow = session && !pathname?.startsWith('/auth');
+  const shouldShow = session && !pathname?.startsWith('/auth')
 
   // Mostrar/ocultar basado en scroll
   useEffect(() => {
     const handleScroll = () => {
-      const scrollY = window.scrollY;
-      setIsVisible(scrollY > 200); // Mostrar después de hacer scroll
-    };
+      const scrollY = window.scrollY
+      setIsVisible(scrollY > 200) // Mostrar después de hacer scroll
+    }
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
-  if (!shouldShow) return null;
+  if (!shouldShow) return null
 
   return (
     <>
@@ -64,15 +64,15 @@ export default function FloatingLogout() {
         </div>
       </div>
     </>
-  );
+  )
 }
 
 // Componente alternativo más discreto
 export function QuickLogout() {
-  const { data: session } = useCleanSession();
-  const pathname = usePathname();
+  const { data: session } = useCleanSession()
+  const pathname = usePathname()
 
-  if (!session || pathname?.startsWith('/auth')) return null;
+  if (!session || pathname?.startsWith('/auth')) return null
 
   return (
     <div className="fixed top-4 right-4 z-50">
@@ -80,5 +80,5 @@ export function QuickLogout() {
         <LogoutButton variant="icon" className="text-gray-600 hover:text-red-600" />
       </div>
     </div>
-  );
+  )
 }

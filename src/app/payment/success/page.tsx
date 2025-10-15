@@ -1,48 +1,48 @@
-'use client';
+'use client'
 
-import { useEffect, useState } from 'react';
-import { useSearchParams, useRouter } from 'next/navigation';
-import Card, { CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
-import { CheckCircle, Loader2, Home, Receipt } from 'lucide-react';
-import { toast } from 'sonner';
+import { useEffect, useState } from 'react'
+import { useSearchParams, useRouter } from 'next/navigation'
+import Card, { CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+import Button from '@/components/ui/Button'
+import { CheckCircle, Loader2, Home, Receipt } from 'lucide-react'
+import { toast } from 'sonner'
 
 export default function PaymentSuccessPage() {
-  const searchParams = useSearchParams();
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
-  const [paymentInfo, setPaymentInfo] = useState<any>(null);
+  const searchParams = useSearchParams()
+  const router = useRouter()
+  const [loading, setLoading] = useState(true)
+  const [paymentInfo, setPaymentInfo] = useState<any>(null)
 
-  const paymentId = searchParams.get('payment_id');
-  const status = searchParams.get('status');
-  const externalReference = searchParams.get('external_reference');
+  const paymentId = searchParams.get('payment_id')
+  const status = searchParams.get('status')
+  const externalReference = searchParams.get('external_reference')
 
   useEffect(() => {
     if (paymentId) {
-      fetchPaymentStatus();
+      fetchPaymentStatus()
     } else {
-      setLoading(false);
+      setLoading(false)
     }
-  }, [paymentId]);
+  }, [paymentId])
 
   const fetchPaymentStatus = async () => {
     try {
-      const response = await fetch(`/api/mercadopago/payment-status?payment_id=${paymentId}`);
+      const response = await fetch(`/api/mercadopago/payment-status?payment_id=${paymentId}`)
       
       if (response.ok) {
-        const data = await response.json();
-        setPaymentInfo(data);
+        const data = await response.json()
+        setPaymentInfo(data)
         
         if (data.status === 'approved') {
-          toast.success('¡Pago confirmado exitosamente!');
+          toast.success('¡Pago confirmado exitosamente!')
         }
       }
     } catch (error) {
-      console.error('Error obteniendo estado del pago:', error);
+      console.error('Error obteniendo estado del pago:', error)
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-  };
+  }
 
   if (loading) {
     return (
@@ -54,7 +54,7 @@ export default function PaymentSuccessPage() {
           </CardContent>
         </Card>
       </div>
-    );
+    )
   }
 
   return (
@@ -119,5 +119,5 @@ export default function PaymentSuccessPage() {
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }
