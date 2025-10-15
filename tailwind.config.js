@@ -34,56 +34,56 @@ module.exports = {
         'element': '1rem',      // 16px - Entre elementos
       },
       colors: {
-        // Primary Brand Colors (Verde sostenibilidad)
+        // Primary Brand Colors (Verde sostenibilidad TugoTugo)
         primary: {
           50: '#f0fdf4',
-          100: '#dcfce7',
+          100: '#dcfce7', 
           200: '#bbf7d0',
           300: '#86efac',
           400: '#4ade80',
-          500: '#22c55e', // Verde principal
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
+          500: '#16a34a', // Verde principal TugoTugo
+          600: '#15803d',
+          700: '#166534',
+          800: '#14532d',
+          900: '#0f2419',
         },
-        // Secondary (Naranja food/apetito)
+        // Secondary (Terracota cálido y sostenible)
         secondary: {
-          50: '#fff7ed',
-          100: '#ffedd5',
-          200: '#fed7aa',
-          300: '#fdba74',
-          400: '#fb923c',
-          500: '#f97316', // Naranja principal
-          600: '#ea580c',
-          700: '#c2410c',
-          800: '#9a3412',
-          900: '#7c2d12',
+          50: '#fef7f0',
+          100: '#fdeee0',
+          200: '#fad5b8',
+          300: '#f7b885',
+          400: '#f39651',
+          500: '#e07a39', // Terracota principal
+          600: '#c85d28',
+          700: '#a8471f',
+          800: '#8a3819',
+          900: '#6d2c14',
         },
-        // Aliases para compatibilidad
-        fresh: {
+        // Aliases para compatibilidad y branding
+        tugo: {
           50: '#f0fdf4',
-          100: '#dcfce7',
+          100: '#dcfce7', 
           200: '#bbf7d0',
           300: '#86efac',
           400: '#4ade80',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
+          500: '#16a34a', // Verde TugoTugo
+          600: '#15803d',
+          700: '#166534',
+          800: '#14532d',
+          900: '#0f2419',
         },
-        warm: {
-          50: '#fff7ed',
-          100: '#ffedd5',
-          200: '#fed7aa',
-          300: '#fdba74',
-          400: '#fb923c',
-          500: '#f97316',
-          600: '#ea580c',
-          700: '#c2410c',
-          800: '#9a3412',
-          900: '#7c2d12',
+        terracota: {
+          50: '#fef7f0',
+          100: '#fdeee0',
+          200: '#fad5b8',
+          300: '#f7b885',
+          400: '#f39651',
+          500: '#e07a39', // Terracota cálido
+          600: '#c85d28',
+          700: '#a8471f',
+          800: '#8a3819',
+          900: '#6d2c14',
         },
         // Neutrals mejorados
         gray: {
@@ -105,37 +105,11 @@ module.exports = {
           200: '#bbf7d0',
           300: '#86efac',
           400: '#4ade80',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
-        },
-        // Primary para compatibilidad
-        primary: {
-          50: '#f0f9ff',
-          100: '#e0f2fe',
-          200: '#bae6fd',
-          300: '#7dd3fc',
-          400: '#38bdf8',
-          500: '#0ea5e9',
-          600: '#0284c7',
-          700: '#0369a1',
-          800: '#075985',
-          900: '#0c4a6e',
-        },
-        // Verde estándar para compatibilidad
-        green: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          200: '#bbf7d0',
-          300: '#86efac',
-          400: '#4ade80',
-          500: '#22c55e',
-          600: '#16a34a',
-          700: '#15803d',
-          800: '#166534',
-          900: '#14532d',
+          500: '#16a34a', // Actualizado al verde TugoTugo
+          600: '#15803d',
+          700: '#166534',
+          800: '#14532d',
+          900: '#0f2419',
         },
         emerald: {
           50: '#ecfdf5',
@@ -235,8 +209,9 @@ module.exports = {
         'warm-glow': '0 10px 40px -10px rgba(249, 115, 22, 0.3)',
       },
       fontFamily: {
-        sans: ['Poppins', 'system-ui', 'sans-serif'],
-        display: ['Poppins', 'system-ui', 'sans-serif'],
+        sans: ['Nunito', 'Inter', 'system-ui', 'sans-serif'],
+        display: ['Nunito', 'Inter', 'system-ui', 'sans-serif'],
+        body: ['Nunito', 'Inter', 'system-ui', 'sans-serif'],
       },
     },
   },
