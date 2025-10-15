@@ -1,5 +1,6 @@
 'use client'
 
+import React from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
@@ -230,7 +231,7 @@ export default function AdminRestaurantsPage() {
             <div className="bg-white rounded-lg p-6 w-full max-w-md mx-4">
               <h3 className="text-lg font-semibold mb-4">Crear Nuevo Restaurante</h3>
               
-              <form onSubmit={createRestaurant} className="space-y-4">{/* eslint-disable-line @typescript-eslint/no-misused-promises */}
+              <form onSubmit={createRestaurant} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-1">
                     Nombre del Restaurante *
