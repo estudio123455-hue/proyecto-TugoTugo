@@ -69,13 +69,18 @@ export default function GlobalHeader({
               <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
             ) : session ? (
               <div className="flex items-center space-x-2">
-                {/* Desktop: User menu */}
+                {/* Desktop: User menu hidden - logout only available on mobile */}
                 <div className="hidden md:block">
-                  <UserMenu 
-                    userName={session.user?.name || 'Usuario'}
-                    userEmail={session.user?.email || ''}
-                    userAvatar={session.user?.image || undefined}
-                  />
+                  <div className="flex items-center space-x-2 px-3 py-2 text-sm text-gray-700">
+                    <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
+                      <span className="text-emerald-600 font-semibold text-sm">
+                        {session.user?.name?.charAt(0)?.toUpperCase() || 'U'}
+                      </span>
+                    </div>
+                    <span className="font-medium">
+                      {session.user?.name?.split(' ')[0] || 'Usuario'}
+                    </span>
+                  </div>
                 </div>
                 
                 {/* Mobile: Simple logout button */}

@@ -42,27 +42,7 @@ export default function FloatingLogout() {
         </div>
       </div>
 
-      {/* Indicador de usuario en la esquina para desktop */}
-      <div className="hidden md:block fixed top-20 right-4 z-40">
-        <div className="bg-white rounded-lg shadow-md border border-gray-200 p-3">
-          <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-emerald-100 rounded-full flex items-center justify-center">
-              <span className="text-emerald-600 font-semibold text-sm">
-                {session.user?.name?.charAt(0)?.toUpperCase() || 'U'}
-              </span>
-            </div>
-            <div className="text-sm">
-              <p className="font-medium text-gray-900 truncate max-w-24">
-                {session.user?.name?.split(' ')[0] || 'Usuario'}
-              </p>
-              <LogoutButton 
-                variant="button" 
-                className="text-xs px-2 py-1 mt-1"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
+      {/* Desktop logout removed - only mobile version remains */}
     </>
   )
 }
