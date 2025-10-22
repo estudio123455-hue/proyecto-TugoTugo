@@ -20,10 +20,10 @@ export default function AIDashboard() {
   useEffect(() => {
     // Calcular estadísticas de IA
     if (hasRecommendations) {
-      const locationRecs = recommendations.filter(r => r.type === 'location').length
-      const historyRecs = recommendations.filter(r => r.type === 'history').length
-      const similarUserRecs = recommendations.filter(r => r.type === 'similar_users').length
-      const trendingRecs = recommendations.filter(r => r.type === 'trending').length
+      // const locationRecs = recommendations.filter(r => r.type === 'location').length
+      // const historyRecs = recommendations.filter(r => r.type === 'history').length
+      // const similarUserRecs = recommendations.filter(r => r.type === 'similar_users').length
+      // const trendingRecs = recommendations.filter(r => r.type === 'trending').length
 
       setAiStats(prev => ({
         ...prev,

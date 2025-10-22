@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect, useCallback } from 'react'
-import { tugotugoAI, AIRecommendation, UserBehavior } from '@/lib/ai/tugotugo-ai'
+import { tugotugoAI, AIRecommendation } from '@/lib/ai/tugotugo-ai'
 import { useCleanSession } from './useCleanSession'
 import { Pack } from '@prisma/client'
 

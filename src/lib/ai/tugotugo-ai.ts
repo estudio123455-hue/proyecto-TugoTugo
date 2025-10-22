@@ -5,7 +5,7 @@
  * Nivel Básico: Recomendaciones basadas en historial + ubicación
  */
 
-import { Pack, User, Order } from '@prisma/client'
+import { Pack, Order } from '@prisma/client'
 
 // Tipos específicos para TugoTugo AI
 export interface UserBehavior {
@@ -173,7 +173,7 @@ export class TugoTugoAI {
     const purchasePatterns = this.analyzePurchasePatterns(userBehavior.history.purchases)
     
     // Analizar patrones de visualización
-    const viewPatterns = this.analyzeViewPatterns(userBehavior.history.views)
+    // const viewPatterns = this.analyzeViewPatterns(userBehavior.history.views)
     
     packs.forEach(pack => {
       let score = 0
@@ -185,7 +185,7 @@ export class TugoTugoAI {
       // Score por establecimiento frecuente
       if (purchasePatterns.frequentEstablishments.includes(pack.establishmentId)) {
         score += 0.3
-        reasons.push(`Restaurante que has visitado antes`)
+        reasons.push('Restaurante que has visitado antes')
       }
       
       // Score por rango de precio habitual
@@ -242,7 +242,7 @@ export class TugoTugoAI {
         recommendations.push({
           packId: pack.id,
           score: similarUser.similarity * 0.8, // Factor de similitud
-          reasons: [`Usuarios con gustos similares también compraron esto`],
+          reasons: ['Usuarios con gustos similares también compraron esto'],
           type: 'similar_users',
           confidence: similarUser.similarity
         })
@@ -378,8 +378,9 @@ export class TugoTugoAI {
 
   private analyzePurchasePatterns(purchases: Order[]) {
     // Analizar patrones de compra
-    const categories = purchases.map(p => p.category).filter(Boolean)
-    const establishments = purchases.map(p => p.establishmentId).filter(Boolean)
+    // TODO: Obtener categoría y establishment desde el pack relacionado
+    const categories: string[] = [] // purchases.map(p => p.pack?.category).filter(Boolean)
+    const establishments: string[] = [] // purchases.map(p => p.pack?.establishmentId).filter(Boolean)
     const prices = purchases.map(p => p.totalAmount)
     const hours = purchases.map(p => new Date(p.createdAt).getHours())
     
@@ -496,7 +497,7 @@ export class TugoTugoAI {
     }
   }
 
-  private async saveUserBehavior(userId: string, behavior: UserBehavior) {
+  private async saveUserBehavior(_userId: string, _behavior: UserBehavior) {
     try {
       const allBehaviors = Object.fromEntries(this.userBehaviors.entries())
       localStorage.setItem('tugotugo-user-behaviors', JSON.stringify(allBehaviors))
