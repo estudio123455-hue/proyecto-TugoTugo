@@ -54,13 +54,5 @@ export async function POST(_request: NextRequest) {
   }
 }
 
-// TODO: Implement when Firebase Admin is configured
-// Send notification to users near a new pack
-export async function sendLocationBasedNotification(
-  _packId: string,
-  _establishmentLocation: { lat: number; lng: number },
-  _radiusKm: number = 5
-) {
-  console.log('Location-based notifications not yet implemented. Install firebase-admin package first.')
-  return null
-}
+// TODO: Move this function to a separate utility file when implementing
+// Location-based notification functionality will be implemented in /src/lib/notifications.ts
