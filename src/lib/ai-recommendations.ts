@@ -61,24 +61,9 @@ export class AIRecommendationEngine {
       return this.embeddings.get(cacheKey)!
     }
 
-    try {
-      // TODO: Uncomment when OpenAI is installed
-      // const text = `${pack.title} ${pack.description} ${pack.category} ${pack.establishmentName} ${pack.tags.join(' ')} ${pack.dietaryInfo.join(' ')}`
-      // const response = await openai.embeddings.create({
-      //   model: 'text-embedding-3-small',
-      //   input: text,
-      //   encoding_format: 'float',
-      // })
-      // const embedding = response.data[0].embedding
-      // this.embeddings.set(cacheKey, embedding)
-      // return embedding
-      
-      // Temporary fallback: return empty array
-      return []
-    } catch (error) {
-      console.error('Error generating pack embedding:', error)
-      return []
-    }
+    // TODO: Implement OpenAI embeddings when available
+    // For now, return empty array as fallback
+    return []
   }
 
   // Generate user preference embedding

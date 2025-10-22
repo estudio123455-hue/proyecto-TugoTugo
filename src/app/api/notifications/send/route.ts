@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
+// import { prisma } from '@/lib/prisma' // TODO: Uncomment when needed
 // TODO: Install firebase-admin package and uncomment the following lines:
 // import admin from 'firebase-admin'
 // 
@@ -18,20 +18,21 @@ import { prisma } from '@/lib/prisma'
 //   })
 // }
 
-interface NotificationPayload {
-  title: string
-  body: string
-  icon?: string
-  badge?: string
-  data?: { [key: string]: string }
-  actions?: Array<{
-    action: string
-    title: string
-    icon?: string
-  }>
-}
+// TODO: Use this interface when implementing notifications
+// interface NotificationPayload {
+//   title: string
+//   body: string
+//   icon?: string
+//   badge?: string
+//   data?: { [key: string]: string }
+//   actions?: Array<{
+//     action: string
+//     title: string
+//     icon?: string
+//   }>
+// }
 
-export async function POST(request: NextRequest) {
+export async function POST(_request: NextRequest) {
   try {
     const session = await getServerSession(authOptions)
     
@@ -56,9 +57,9 @@ export async function POST(request: NextRequest) {
 // TODO: Implement when Firebase Admin is configured
 // Send notification to users near a new pack
 export async function sendLocationBasedNotification(
-  packId: string,
-  establishmentLocation: { lat: number; lng: number },
-  radiusKm: number = 5
+  _packId: string,
+  _establishmentLocation: { lat: number; lng: number },
+  _radiusKm: number = 5
 ) {
   console.log('Location-based notifications not yet implemented. Install firebase-admin package first.')
   return null

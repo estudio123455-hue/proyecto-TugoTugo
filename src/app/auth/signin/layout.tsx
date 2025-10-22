@@ -3,6 +3,8 @@ export const metadata = {
   description: 'Inicia sesión en Zavo',
 }
 
+import React from 'react'
+
 export default function SignInLayout({
   children,
 }: {

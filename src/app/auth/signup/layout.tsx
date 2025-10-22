@@ -3,6 +3,8 @@ export const metadata = {
   description: 'Crea tu cuenta en Zavo',
 }
 
+import React from 'react'
+
 export default function SignUpLayout({
   children,
 }: {
