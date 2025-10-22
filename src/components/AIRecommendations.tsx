@@ -3,9 +3,9 @@
 import { useState, useEffect } from 'react'
 import { useSession } from 'next-auth/react'
 import Link from 'next/link'
-// TODO: Install framer-motion package and uncomment
-// import { motion } from 'framer-motion'
-import { MapPin, Clock, Star, Zap } from 'lucide-react'
+import { Brain, MapPin, Clock, Star, Zap, TrendingUp } from 'lucide-react'
+import SmartRecommendations from './SmartRecommendations'
+import { Pack } from '@prisma/client'
 
 interface RecommendedPack {
   id: string
