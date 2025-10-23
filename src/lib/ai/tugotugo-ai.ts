@@ -71,12 +71,12 @@ export class TugoTugoAI {
   }
 
   /**
-   * Generar recomendaciones personalizadas para un usuario
+   * Generar recomendaciones personalizadas con IA real
    */
   async generateRecommendations(
-    userId: string, 
+    userId: string,
     userLocation: { lat: number; lng: number },
-    availablePacks: Pack[],
+    availablePacks: any[],
     limit: number = 10
   ): Promise<AIRecommendation[]> {
     const userBehavior = this.userBehaviors.get(userId)
