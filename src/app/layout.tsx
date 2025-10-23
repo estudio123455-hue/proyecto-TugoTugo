@@ -6,6 +6,7 @@ import { Providers } from './providers'
 import AuthGuard from '@/components/AuthGuard'
 import BottomNavigation from '@/components/mobile/BottomNavigation'
 import FloatingLogout from '@/components/FloatingLogout'
+import ChatBot from '@/components/ChatBot'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -31,6 +32,7 @@ export default function RootLayout({
             </div>
             <BottomNavigation />
             <FloatingLogout />
+            <ChatBot />
           </AuthGuard>
         </Providers>
       </body>
