@@ -38,7 +38,7 @@ Sentry.init({
     // Add server-specific error filtering
     if (event.exception) {
       const error = hint.originalException
-      if (error && error.message) {
+      if (error && error instanceof Error && error.message) {
         // Ignore specific server errors
         if (error.message.includes('ECONNRESET')) {
           return null
