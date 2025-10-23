@@ -11,7 +11,7 @@ import {
   DollarSign, 
   Star,
   Users,
-  Clock,
+  // Clock,
   ThumbsUp,
   ThumbsDown
 } from 'lucide-react'
@@ -29,7 +29,7 @@ export default function MLPredictions({
 }: MLPredictionsProps) {
   const {
     isLoading,
-    userProfile,
+    // userProfile,
     mlRecommendations,
     generateMLRecommendations,
     getUserInsights,

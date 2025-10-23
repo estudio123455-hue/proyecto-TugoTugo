@@ -190,7 +190,7 @@ export class SentimentAnalyzer {
   /**
    * Generar resumen del análisis
    */
-  private generateSummary(score: number, aspects: SentimentResult['aspects']): string {
+  private generateSummary(score: number, _aspects: SentimentResult['aspects']): string {
     if (score > 0.5) return 'Reseña muy positiva'
     if (score > 0.2) return 'Reseña positiva'
     if (score > -0.2) return 'Reseña neutral'

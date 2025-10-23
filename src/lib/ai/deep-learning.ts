@@ -172,7 +172,7 @@ export class DeepLearningSystem {
    * Predicción de demanda en tiempo real
    */
   async predictRealTimeDemand(
-    timeHorizon: number = 24, // horas
+    _timeHorizon: number = 24, // horas
     location?: { lat: number; lng: number }
   ): Promise<RealTimePrediction> {
     if (!this.isInitialized) {
@@ -279,7 +279,7 @@ export class DeepLearningSystem {
     const features = this.prepareAdvancedChurnFeatures(userFeatures)
     
     const predictions = await model.predict(features)
-    const [stayProb, churnSoonProb, churnNowProb] = predictions
+    const [_stayProb, churnSoonProb, churnNowProb] = predictions
     
     const churnProbability = churnSoonProb + churnNowProb
     
@@ -328,7 +328,7 @@ export class DeepLearningSystem {
     userEmbedding: number[]
     contextualFactors: string[]
   }> {
-    const model = this.models.get('embeddingRecommendations')
+    // const model = this.models.get('embeddingRecommendations')
     
     // Generar embedding del usuario
     const userEmbedding = await this.generateUserEmbedding(userId, contextFeatures)
@@ -370,8 +370,8 @@ export class DeepLearningSystem {
    */
   async retrainModel(
     modelName: string,
-    newTrainingData: any[],
-    config?: NeuralNetworkConfig
+    _newTrainingData: any[],
+    _config?: NeuralNetworkConfig
   ): Promise<{
     success: boolean
     newAccuracy: number
@@ -422,14 +422,14 @@ export class DeepLearningSystem {
     })
   }
   
-  private async simulatePriceOptimization(features: any): Promise<number> {
-    const basePrice = features[0] * 100000
+  private async simulatePurchasePrediction(_features: any): Promise<number> {
+    // const basePrice = _features[0] * 100000
     const adjustment = (Math.random() - 0.5) * 0.2 // ±20%
     return Math.max(0.5, 1 + adjustment)
   }
   
-  private async simulateAdvancedChurn(features: any): Promise<number[]> {
-    const engagement = features[0] || 0.5
+  private async simulateAdvancedChurn(_features: any): Promise<number[]> {
+    const engagement = _features[0] || 0.5
     const stayProb = engagement * 0.8 + 0.1
     const churnSoonProb = (1 - engagement) * 0.3
     const churnNowProb = (1 - engagement) * 0.1
@@ -437,8 +437,13 @@ export class DeepLearningSystem {
     return [stayProb, churnSoonProb, churnNowProb]
   }
   
-  private async simulateEmbeddingRecommendations(features: any): Promise<number[]> {
+  private async simulateEmbeddingRecommendations(_features: any): Promise<number[]> {
     return Array.from({ length: 128 }, () => Math.random() * 2 - 1)
+  }
+  
+  private async simulatePriceOptimization(_features: any): Promise<number> {
+    const adjustment = (Math.random() - 0.5) * 0.2 // ±20%
+    return Math.max(0.5, 1 + adjustment)
   }
   
   private prepareRealTimeFeatures(location?: { lat: number; lng: number }): any {
@@ -467,14 +472,14 @@ export class DeepLearningSystem {
     return Array.from({ length: 100 }, () => Math.random())
   }
   
-  private isSeasonalPattern(userFeatures: any): boolean {
+  private isSeasonalPattern(_userFeatures: any): boolean {
     return Math.random() > 0.7
   }
   
   private generateInterventionRecommendations(
     churnProb: number,
     churnType: string,
-    userFeatures: any
+    _userFeatures: any
   ): string[] {
     const recommendations = []
     
@@ -500,7 +505,7 @@ export class DeepLearningSystem {
     return 'standard_retention'
   }
   
-  private async generateUserEmbedding(userId: string, contextFeatures: any): Promise<number[]> {
+  private async generateUserEmbedding(_userId: string, _contextFeatures: any): Promise<number[]> {
     return Array.from({ length: 128 }, () => Math.random() * 2 - 1)
   }
   
@@ -521,14 +526,14 @@ export class DeepLearningSystem {
   private calculateRecommendationScore(
     userEmbedding: number[],
     itemEmbedding: number[],
-    contextFeatures: any
+    _contextFeatures: any
   ): number {
     const similarity = this.cosineSimilarity(userEmbedding, itemEmbedding)
     const contextBoost = Math.random() * 0.2 // boost contextual
     return Math.max(0, Math.min(1, similarity + contextBoost))
   }
   
-  private explainRecommendation(userEmbedding: number[], itemEmbedding: number[]): string[] {
+  private explainRecommendation(_userEmbedding: number[], _itemEmbedding: number[]): string[] {
     return [
       'Alta similitud con tus preferencias',
       'Basado en tu historial de compras',

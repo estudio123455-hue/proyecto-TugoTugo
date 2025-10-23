@@ -6,8 +6,8 @@
  */
 
 import { sentimentAnalyzer } from './sentiment-analysis'
-import { mlAdvancedSystem } from './ml-advanced'
-import { deepLearningSystem } from './deep-learning'
+// import { mlAdvancedSystem } from './ml-advanced'
+// import { deepLearningSystem } from './deep-learning'
 
 export interface ChatMessage {
   id: string
@@ -295,7 +295,7 @@ export class ConversationalAI {
     const baseResponse = this.selectRandomResponse(intentConfig.responses)
     
     // Personalizar respuesta
-    let personalizedResponse = await this.personalizeResponse(
+    const personalizedResponse = await this.personalizeResponse(
       baseResponse,
       entities,
       context,
@@ -389,7 +389,7 @@ export class ConversationalAI {
    */
   private async executeActions(
     actions: string[],
-    entities: any,
+    _entities: any,
     context: ConversationContext
   ): Promise<any[]> {
     const executedActions: any[] = []
@@ -421,10 +421,10 @@ export class ConversationalAI {
           })
           break
         case 'filter_by_cuisine':
-          if (entities.cuisine) {
+          if (_entities.cuisine) {
             executedActions.push({
               type: 'show_packs',
-              data: { cuisine: entities.cuisine, limit: 6 }
+              data: { cuisine: _entities.cuisine, limit: 6 }
             })
           }
           break
@@ -438,7 +438,7 @@ export class ConversationalAI {
    * Generar recomendaciones contextuales
    */
   private async generateContextualRecommendations(
-    context: ConversationContext
+    _context: ConversationContext
   ): Promise<any[]> {
     try {
       // TODO: Integrar con sistema ML real
@@ -477,8 +477,8 @@ export class ConversationalAI {
    * Generar respuesta de fallback
    */
   private generateFallbackResponse(
-    message: string,
-    context: ConversationContext
+    _message: string,
+    _context: ConversationContext
   ): ChatResponse {
     const fallbackResponses = [
       'No estoy seguro de entender exactamente lo que buscas, pero puedo ayudarte con recomendaciones de comida, búsqueda de restaurantes o información sobre ofertas.',
@@ -527,7 +527,7 @@ export class ConversationalAI {
   /**
    * Obtener historial de conversación
    */
-  getConversationHistory(sessionId: string): ChatMessage[] {
+  getConversationHistory(_sessionId: string): ChatMessage[] {
     // TODO: Implementar persistencia real
     return []
   }

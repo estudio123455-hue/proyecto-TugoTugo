@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 import { mlAdvancedSystem, UserFeatures, PredictionResult } from '@/lib/ai/ml-advanced'
-import { sentimentAnalyzer, ReviewAnalysis } from '@/lib/ai/sentiment-analysis'
+import { sentimentAnalyzer } from '@/lib/ai/sentiment-analysis'
 import { useCleanSession } from './useCleanSession'
 import { Pack } from '@prisma/client'
 

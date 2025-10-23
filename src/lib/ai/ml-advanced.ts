@@ -8,7 +8,7 @@
 // TODO: Instalar TensorFlow.js
 // npm install @tensorflow/tfjs @tensorflow/tfjs-node
 
-import { sentimentAnalyzer, SentimentResult } from './sentiment-analysis'
+// import { sentimentAnalyzer, SentimentResult } from './sentiment-analysis'
 
 // Interfaces para ML
 export interface UserFeatures {
