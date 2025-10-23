@@ -441,37 +441,32 @@ export class ConversationalAI {
   private async generateContextualRecommendations(
     _context: ConversationContext
   ): Promise<any[]> {
-    try {
-      // TODO: Integrar con sistema ML real
-      // const mlRecommendations = await mlAdvancedSystem.generateMLRecommendations(...)
-      
-      // Por ahora, generar recomendaciones simuladas
-      return [
-        {
-          id: 'pack_1',
-          title: 'Pack Saludable Mediterráneo',
-          restaurant: 'Olive Garden',
-          price: 25000,
-          originalPrice: 35000,
-          discount: 29,
-          rating: 4.5,
-          reason: 'Basado en tu preferencia por comida saludable'
-        },
-        {
-          id: 'pack_2',
-          title: 'Combo Burger Gourmet',
-          restaurant: 'Burger House',
-          price: 18000,
-          originalPrice: 24000,
-          discount: 25,
-          rating: 4.2,
-          reason: 'Popular en tu zona y en tu rango de precio'
-        }
-      ]
-    } catch (error) {
-      console.error('Error generando recomendaciones:', error)
-      return []
-    }
+    // TODO: Integrar con sistema ML real
+    // const mlRecommendations = await mlAdvancedSystem.generateMLRecommendations(...)
+    
+    // Por ahora, generar recomendaciones simuladas
+    return [
+      {
+        id: 'pack_1',
+        title: 'Pack Saludable Mediterráneo',
+        restaurant: 'Olive Garden',
+        price: 25000,
+        originalPrice: 35000,
+        discount: 29,
+        rating: 4.5,
+        reason: 'Basado en tu preferencia por comida saludable'
+      },
+      {
+        id: 'pack_2',
+        title: 'Combo Burger Gourmet',
+        restaurant: 'Burger House',
+        price: 18000,
+        originalPrice: 24000,
+        discount: 25,
+        rating: 4.2,
+        reason: 'Popular en tu zona y en tu rango de precio'
+      }
+    ]
   }
   
   /**
