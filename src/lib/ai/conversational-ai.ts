@@ -240,7 +240,7 @@ export class ConversationalAI {
     let bestMatch = 'unknown'
     let bestScore = 0
     
-    for (const [intent, config] of this.intents.entries()) {
+    for (const [intent, config] of Array.from(this.intents.entries())) {
       const patterns = config.patterns
       let score = 0
       
@@ -266,7 +266,8 @@ export class ConversationalAI {
     const entities: { [key: string]: any } = {}
     
     for (const [entityType, regex] of Object.entries(this.entityExtractor)) {
-      const match = message.match(regex)
+      const regexPattern = regex as RegExp
+      const match = message.match(regexPattern)
       if (match) {
         entities[entityType] = match[1] || match[0]
       }

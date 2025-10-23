@@ -315,8 +315,8 @@ export class SentimentAnalyzer {
       confidence: avgConfidence,
       aspects: combinedAspects,
       keywords: {
-        positive: [...new Set(allPositive)],
-        negative: [...new Set(allNegative)]
+        positive: Array.from(new Set(allPositive)),
+        negative: Array.from(new Set(allNegative))
       },
       summary: this.generateSummary(avgScore, combinedAspects)
     }
