@@ -266,6 +266,54 @@ body {
   display: none;
 }
 
+/* Floating elements positioning */
+.floating-elements-container {
+  position: relative;
+  z-index: 40;
+}
+
+/* ChatBot positioning improvements */
+.chatbot-button {
+  /* Mobile: above bottom nav, right side */
+  bottom: 5.5rem; /* 88px - above bottom nav */
+  right: 1rem;
+  z-index: 40;
+}
+
+.chatbot-window {
+  /* Mobile: smaller and positioned to avoid overlaps */
+  bottom: 1rem;
+  right: 1rem;
+  max-height: calc(100vh - 8rem); /* Leave space for nav */
+  z-index: 40;
+}
+
+/* Logout button positioning */
+.logout-button-mobile {
+  /* Mobile: left side to avoid ChatBot */
+  bottom: 5.5rem; /* Same level as ChatBot but left side */
+  left: 1rem;
+  z-index: 50; /* Higher than ChatBot for emergency access */
+}
+
+/* Desktop overrides */
+@media (min-width: 768px) {
+  .chatbot-button {
+    bottom: 1.5rem; /* 24px */
+    right: 1.5rem;
+  }
+  
+  .chatbot-window {
+    bottom: 1.5rem;
+    right: 1.5rem;
+    max-height: 500px;
+  }
+  
+  .logout-button-mobile {
+    display: none; /* Hide on desktop */
+  }
+}
+
 /* Mobile responsive containers */
 @media (max-width: 640px) {
   .container-mobile {
@@ -281,5 +329,10 @@ body {
   /* Compact navigation on mobile */
   nav {
     overflow-x: hidden;
+  }
+  
+  /* Ensure floating elements don't interfere with content */
+  .with-bottom-nav {
+    padding-bottom: 5rem; /* Extra space for floating elements */
   }
 }

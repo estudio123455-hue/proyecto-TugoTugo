@@ -168,16 +168,16 @@ export default function ChatBot({
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className={`fixed bottom-6 right-6 z-50 bg-gradient-to-r from-purple-500 to-blue-500 text-white p-4 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 ${className}`}
+          className={`fixed chatbot-button bg-gradient-to-r from-purple-500 to-blue-500 text-white p-3 rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition-all duration-200 md:p-4 fab-shadow ${className}`}
         >
-          <MessageCircle className="w-6 h-6" />
+          <MessageCircle className="w-5 h-5 md:w-6 md:h-6" />
           <div className="absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-pulse" />
         </button>
       )}
 
       {/* Ventana de chat */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 z-50 w-96 h-[500px] bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col overflow-hidden">
+        <div className="fixed chatbot-window w-80 h-[400px] bg-white rounded-lg shadow-2xl border border-gray-200 flex flex-col overflow-hidden md:w-96 md:h-[500px]">
           {/* Header */}
           <div className="bg-gradient-to-r from-purple-500 to-blue-500 text-white p-4 flex items-center justify-between">
             <div className="flex items-center space-x-2">

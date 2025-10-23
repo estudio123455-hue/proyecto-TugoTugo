@@ -30,14 +30,14 @@ export default function FloatingLogout() {
     <>
       {/* Botón flotante para móvil */}
       <div 
-        className={`fixed bottom-20 right-4 z-50 md:hidden transition-all duration-300 ${
+        className={`fixed logout-button-mobile md:hidden transition-all duration-300 ${
           isVisible ? 'translate-y-0 opacity-100' : 'translate-y-16 opacity-0'
         }`}
       >
-        <div className="bg-white rounded-full shadow-lg border border-gray-200 p-2">
+        <div className="bg-white rounded-full shadow-lg border border-gray-200 p-1.5">
           <LogoutButton 
             variant="icon" 
-            className="w-12 h-12 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105"
+            className="w-9 h-9 bg-red-500 hover:bg-red-600 text-white rounded-full shadow-lg hover:shadow-xl transition-all duration-200 transform hover:scale-105 fab-shadow"
           />
         </div>
       </div>
