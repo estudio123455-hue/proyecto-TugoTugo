@@ -77,7 +77,7 @@ describe('TugoTugo - Tests de Integración', () => {
       const chatResponse = await testConversationalAI("Hola, ¿qué me recomiendas?")
       expect(chatResponse.message).toBeDefined()
       expect(chatResponse.confidence).toBeGreaterThan(0.7)
-      expect(chatResponse.suggestions).toHaveLength.greaterThan(0)
+      expect(chatResponse.suggestions.length).toBeGreaterThan(0)
     })
 
     it('Debe usar TensorFlow.js real', async () => {

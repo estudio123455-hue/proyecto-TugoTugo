@@ -38,7 +38,7 @@ Sentry.init({
     // Filter out specific errors
     if (event.exception) {
       const error = hint.originalException
-      if (error && error.message) {
+      if (error && error instanceof Error && error.message) {
         // Ignore network errors
         if (error.message.includes('Network Error')) {
           return null
