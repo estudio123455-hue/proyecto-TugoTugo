@@ -80,15 +80,6 @@ export default function Navigation() {
           {/* Right: Secondary Actions */}
           <div className="flex items-center space-x-4">
             
-            {/* CTA Button */}
-            <Link
-              href="/packs"
-              className="hidden md:inline-flex items-center px-4 py-2 bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-semibold rounded-lg transition-all duration-200 shadow-sm hover:shadow-md transform hover:-translate-y-0.5"
-            >
-              <span className="mr-2">🎁</span>
-              Ver nuevos packs
-            </Link>
-
             {/* Notifications removed */}
 
             {/* User Menu */}

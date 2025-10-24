@@ -5,13 +5,20 @@ node_modules/
 
 # Testing
 /coverage
+*.test.js
+*.test.ts
+test-*.html
+test-*.ts
+test-*.http
 
 # Next.js
 /.next/
 /out/
+.swc/
 
 # Production
 /build
+/dist
 
 # Misc
 .DS_Store
@@ -22,6 +29,7 @@ next-env.d.ts
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.pnpm-debug.log*
 
 # Local env files
 .env*.local
@@ -36,10 +44,24 @@ yarn-error.log*
 # Database
 prisma/dev.db
 prisma/dev.db-journal
+*.db
+*.db-journal
 
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
 
 # OS
 Thumbs.db
+.DS_Store
+
+# Temporary files
+*.tmp
+*.temp
+move-*.ps1
+generate-*.js
+
+# Build artifacts
+tsconfig.tsbuildinfo

@@ -14,23 +14,18 @@ export default function Home() {
       <GlobalHeader />
       
       {/* Hero Section */}
-      <section className="relative overflow-hidden bg-gradient-to-br from-tugo-500 via-tugo-400 to-terracota-400 pt-20 pb-32 md:pt-32 md:pb-40">
-        {/* Decorative organic shapes */}
+      <section className="relative bg-gradient-to-br from-tugo-500 to-terracota-400 pt-20 pb-32 md:pt-32 md:pb-40">
+        {/* Simplified background */}
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute -top-10 -right-10 w-80 h-80 bg-terracota-300/30 rounded-full blur-3xl animate-pulse-soft"></div>
-          <div className="absolute top-1/3 -left-20 w-96 h-96 bg-tugo-300/25 rounded-full blur-3xl animate-float"></div>
-          <div className="absolute bottom-10 right-1/3 w-72 h-72 bg-green-300/20 rounded-full blur-2xl"></div>
-          {/* Floating food icons */}
-          <div className="absolute top-20 right-20 text-4xl animate-bounce-slow opacity-60">🥗</div>
-          <div className="absolute top-40 left-10 text-3xl animate-float opacity-50">🍞</div>
-          <div className="absolute bottom-40 left-1/4 text-5xl animate-pulse-soft opacity-40">🥘</div>
+          <div className="absolute -top-10 -right-10 w-80 h-80 bg-terracota-300/20 rounded-full blur-2xl"></div>
+          <div className="absolute bottom-10 left-1/3 w-72 h-72 bg-tugo-300/15 rounded-full blur-xl"></div>
         </div>
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             {/* Badge */}
-            <div className="inline-flex items-center gap-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-6 py-3 mb-8 hover:bg-white/30 transition-all">
-              <span className="text-2xl animate-bounce-slow">🌱</span>
+            <div className="inline-flex items-center gap-3 bg-white/20 backdrop-blur-sm border border-white/30 rounded-full px-6 py-3 mb-8 hover:bg-white/30 transition-colors">
+              <span className="text-xl">🌱</span>
               <span className="text-white font-semibold">Únete al movimiento sostenible</span>
             </div>
 
@@ -73,24 +68,13 @@ export default function Home() {
               </Link>
             </div>
 
-            {/* Impact Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 max-w-4xl mx-auto pt-8 border-t border-white/20">
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-white mb-2 animate-pulse-soft">15,247</div>
-                <div className="text-sm md:text-base text-white/90 font-medium">kg de comida salvada</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-white mb-2 animate-pulse-soft">32.5</div>
-                <div className="text-sm md:text-base text-white/90 font-medium">Toneladas CO₂ evitadas</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-white mb-2 animate-pulse-soft">847</div>
-                <div className="text-sm md:text-base text-white/90 font-medium">Restaurantes aliados</div>
-              </div>
-              <div className="text-center">
-                <div className="text-3xl md:text-4xl font-bold text-white mb-2 animate-pulse-soft">$89,340</div>
-                <div className="text-sm md:text-base text-white/90 font-medium">Ahorrados por usuarios</div>
-              </div>
+            {/* Impact Message */}
+            <div className="max-w-2xl mx-auto pt-8 border-t border-white/20">
+              <p className="text-center text-white/90 text-lg">
+                Únete a miles de personas que ya están haciendo la diferencia.
+                <br />
+                <span className="font-semibold text-white">Cada pack salvado cuenta.</span>
+              </p>
             </div>
           </div>
         </div>
@@ -119,14 +103,14 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid md:grid-cols-3 gap-8 md:gap-12 stagger-animation">
+          <div className="grid md:grid-cols-3 gap-8 md:gap-12">
             {/* Step 1 */}
-            <div className="text-center group bg-white rounded-3xl p-8 shadow-soft hover:shadow-lg transition-all hover:-translate-y-2">
+            <div className="text-center bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
               <div className="relative inline-block mb-8">
-                <div className="w-28 h-28 bg-gradient-to-br from-tugo-500 to-tugo-600 rounded-3xl flex items-center justify-center text-5xl transform group-hover:scale-110 transition-all shadow-lg group-hover:shadow-xl">
+                <div className="w-24 h-24 bg-gradient-to-br from-tugo-500 to-tugo-600 rounded-2xl flex items-center justify-center text-4xl shadow-md">
                   🗺️
                 </div>
-                <div className="absolute -top-3 -right-3 w-10 h-10 bg-terracota-400 rounded-full flex items-center justify-center font-bold text-white shadow-lg">
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-terracota-400 rounded-full flex items-center justify-center font-bold text-white text-sm shadow-md">
                   1
                 </div>
               </div>
@@ -137,12 +121,12 @@ export default function Home() {
             </div>
 
             {/* Step 2 */}
-            <div className="text-center group bg-white rounded-3xl p-8 shadow-soft hover:shadow-lg transition-all hover:-translate-y-2">
+            <div className="text-center bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
               <div className="relative inline-block mb-8">
-                <div className="w-28 h-28 bg-gradient-to-br from-terracota-500 to-terracota-600 rounded-3xl flex items-center justify-center text-5xl transform group-hover:scale-110 transition-all shadow-lg group-hover:shadow-xl">
+                <div className="w-24 h-24 bg-gradient-to-br from-terracota-500 to-terracota-600 rounded-2xl flex items-center justify-center text-4xl shadow-md">
                   💳
                 </div>
-                <div className="absolute -top-3 -right-3 w-10 h-10 bg-tugo-500 rounded-full flex items-center justify-center font-bold text-white shadow-lg">
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-tugo-500 rounded-full flex items-center justify-center font-bold text-white text-sm shadow-md">
                   2
                 </div>
               </div>
@@ -153,12 +137,12 @@ export default function Home() {
             </div>
 
             {/* Step 3 */}
-            <div className="text-center group bg-white rounded-3xl p-8 shadow-soft hover:shadow-lg transition-all hover:-translate-y-2">
+            <div className="text-center bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-shadow">
               <div className="relative inline-block mb-8">
-                <div className="w-28 h-28 bg-gradient-to-br from-green-500 to-tugo-600 rounded-3xl flex items-center justify-center text-5xl transform group-hover:scale-110 transition-all shadow-lg group-hover:shadow-xl">
+                <div className="w-24 h-24 bg-gradient-to-br from-green-500 to-tugo-600 rounded-2xl flex items-center justify-center text-4xl shadow-md">
                   🎁
                 </div>
-                <div className="absolute -top-3 -right-3 w-10 h-10 bg-terracota-400 rounded-full flex items-center justify-center font-bold text-white shadow-lg">
+                <div className="absolute -top-2 -right-2 w-8 h-8 bg-terracota-400 rounded-full flex items-center justify-center font-bold text-white text-sm shadow-md">
                   3
                 </div>
               </div>
@@ -184,8 +168,8 @@ export default function Home() {
                 Cada rescate cuenta
               </h2>
               <div className="space-y-8">
-                <div className="flex gap-6 group">
-                  <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-tugo-100 to-tugo-200 rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                <div className="flex gap-6">
+                  <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-tugo-100 to-tugo-200 rounded-2xl flex items-center justify-center text-3xl">
                     💰
                   </div>
                   <div>
@@ -196,8 +180,8 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="flex gap-6 group">
-                  <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-tugo-100 to-tugo-200 rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                <div className="flex gap-6">
+                  <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-tugo-100 to-tugo-200 rounded-2xl flex items-center justify-center text-3xl">
                     🌱
                   </div>
                   <div>
@@ -208,8 +192,8 @@ export default function Home() {
                   </div>
                 </div>
 
-                <div className="flex gap-6 group">
-                  <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-terracota-100 to-terracota-200 rounded-2xl flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">
+                <div className="flex gap-6">
+                  <div className="flex-shrink-0 w-16 h-16 bg-gradient-to-br from-terracota-100 to-terracota-200 rounded-2xl flex items-center justify-center text-3xl">
                     🏦
                   </div>
                   <div>
@@ -223,8 +207,8 @@ export default function Home() {
             </div>
 
             <div className="relative order-1 lg:order-2">
-              <div className="bg-gradient-to-br from-tugo-500 to-terracota-500 rounded-3xl p-10 text-white shadow-2xl transform hover:scale-105 transition-all">
-                <div className="text-7xl mb-8 text-center animate-bounce-slow">🌍</div>
+              <div className="bg-gradient-to-br from-tugo-500 to-terracota-500 rounded-2xl p-8 text-white shadow-lg">
+                <div className="text-6xl mb-6 text-center">🌍</div>
                 <h3 className="text-3xl font-bold mb-6 text-center">Nuestro Impacto Colectivo</h3>
                 <p className="text-lg text-white/90 mb-8 text-center">
                   Juntos estamos creando un futuro más sostenible
