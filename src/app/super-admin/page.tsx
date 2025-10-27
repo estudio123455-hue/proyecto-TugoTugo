@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 
 const ADMIN_PASSWORD = 'TugoTugo2024Admin!' // Contraseña única
@@ -324,7 +324,7 @@ function PacksManagement({ packs, restaurants, onCreatePack, onDeletePack }: any
               required
             >
               <option value="">Seleccionar restaurante</option>
-              {restaurants.map(restaurant => (
+              {restaurants.map((restaurant: any) => (
                 <option key={restaurant.id} value={restaurant.id}>
                   {restaurant.name}
                 </option>
@@ -406,7 +406,7 @@ function PacksManagement({ packs, restaurants, onCreatePack, onDeletePack }: any
 
       {/* Lista de packs */}
       <div className="grid gap-4">
-        {packs.map(pack => (
+        {packs.map((pack: any) => (
           <div key={pack.id} className="bg-white p-4 rounded-lg shadow">
             <div className="flex justify-between items-start">
               <div className="flex-1">
@@ -563,7 +563,7 @@ function RestaurantsManagement({ restaurants, onCreateRestaurant, onDeleteRestau
 
       {/* Lista de restaurantes */}
       <div className="grid gap-4">
-        {restaurants.map(restaurant => (
+        {restaurants.map((restaurant: any) => (
           <div key={restaurant.id} className="bg-white p-4 rounded-lg shadow">
             <div className="flex justify-between items-start">
               <div className="flex-1">
@@ -603,9 +603,9 @@ function RestaurantsManagement({ restaurants, onCreateRestaurant, onDeleteRestau
 
 // Componente de estadísticas
 function StatsPanel({ packs, restaurants }: any) {
-  const activePacks = packs.filter(p => p.isActive).length
-  const activeRestaurants = restaurants.filter(r => r.isActive).length
-  const totalRevenue = packs.reduce((sum, pack) => sum + (pack.discountedPrice * (pack.quantity || 0)), 0)
+  const activePacks = packs.filter((p: any) => p.isActive).length
+  const activeRestaurants = restaurants.filter((r: any) => r.isActive).length
+  const totalRevenue = packs.reduce((sum: number, pack: any) => sum + (pack.discountedPrice * (pack.quantity || 0)), 0)
 
   return (
     <div>
