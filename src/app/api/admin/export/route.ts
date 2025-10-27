@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
         csvData = '\uFEFF'
         csvData += 'Nombre,Categoria,Direccion,Email,Telefono,Usuario,Email Usuario\n'
         establishments.forEach((est) => {
-          csvData += `${est.name},${est.category},${est.address},${est.email || ''},${est.phone || ''},${est.user.name || ''},${est.user.email}\n`
+          csvData += `${est.name},${est.category},${est.address},${est.email || ''},${est.phone || ''},${est.user?.name || ''},${est.user?.email || ''}\n`
         })
         filename = 'restaurantes.csv'
         break
