@@ -75,12 +75,12 @@ export default function SuperAdminPage() {
         alert('Error creando pack')
       }
     } catch (error) {
-      alert('Error: ' + error.message)
+      alert('Error: ' + (error instanceof Error ? error.message : 'Unknown error'))
     }
   }
 
   // Eliminar pack
-  const deletePack = async (packId) => {
+  const deletePack = async (packId: string) => {
     if (confirm('¿Estás seguro de eliminar este pack?')) {
       try {
         const response = await fetch(`/api/packs/${packId}`, {
@@ -111,12 +111,12 @@ export default function SuperAdminPage() {
         alert('Error creando restaurante')
       }
     } catch (error) {
-      alert('Error: ' + error.message)
+      alert('Error: ' + (error instanceof Error ? error.message : 'Unknown error'))
     }
   }
 
   // Eliminar restaurante
-  const deleteRestaurant = async (restaurantId) => {
+  const deleteRestaurant = async (restaurantId: string) => {
     if (confirm('¿Estás seguro de eliminar este restaurante?')) {
       try {
         const response = await fetch(`/api/establishments/${restaurantId}`, {
