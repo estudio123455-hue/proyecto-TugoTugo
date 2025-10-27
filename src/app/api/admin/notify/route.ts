@@ -50,7 +50,7 @@ export async function POST(request: NextRequest) {
           )
         }
 
-        recipientEmail = approvedEst.user.email
+        recipientEmail = approvedEst.user?.email
         emailContent = emailTemplates.establishmentApproved(approvedEst.name)
         break
       }
@@ -74,7 +74,7 @@ export async function POST(request: NextRequest) {
           )
         }
 
-        recipientEmail = rejectedEst.user.email
+        recipientEmail = rejectedEst.user?.email
         emailContent = emailTemplates.establishmentRejected(
           rejectedEst.name,
           data?.reason
@@ -121,6 +121,14 @@ export async function POST(request: NextRequest) {
           { success: false, message: 'Tipo de notificación no válido' },
           { status: 400 }
         )
+    }
+
+    // Validar que el email existe
+    if (!recipientEmail) {
+      return NextResponse.json(
+        { success: false, message: 'Email del destinatario no encontrado' },
+        { status: 400 }
+      )
     }
 
     // Enviar email
