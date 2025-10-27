@@ -267,7 +267,7 @@ function PacksManagement({ packs, restaurants, onCreatePack, onDeletePack }: any
     pickupTimeEnd: ''
   })
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     const packData = {
       ...formData,
@@ -457,7 +457,7 @@ function RestaurantsManagement({ restaurants, onCreateRestaurant, onDeleteRestau
     longitude: ''
   })
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     const restaurantData = {
       ...formData,
