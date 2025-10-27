@@ -137,14 +137,17 @@ export async function POST(request: Request) {
     const establishment = await prisma.establishment.create({
       data: {
         name: data.name,
-        description: data.description,
+        description: data.description || '',
         address: data.address,
-        latitude: data.latitude,
-        longitude: data.longitude,
-        phone: data.phone,
-        email: data.email,
-        category: data.category,
-        userId: data.userId,
+        latitude: data.latitude || 0,
+        longitude: data.longitude || 0,
+        phone: data.phone || '',
+        email: data.email || '',
+        category: data.category || 'RESTAURANT',
+        isActive: data.isActive !== undefined ? data.isActive : true,
+        verificationStatus: 'APPROVED', // Auto-aprobar desde super-admin
+        // userId es opcional para super-admin
+        ...(data.userId && { userId: data.userId })
       },
     })
 
@@ -152,7 +155,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error('Error creating establishment:', error)
     return NextResponse.json(
-      { message: 'Internal server error' },
+      { message: 'Internal server error', error: error.message },
       { status: 500 }
     )
   }
