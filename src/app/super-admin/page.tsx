@@ -99,18 +99,23 @@ export default function SuperAdminPage() {
   // Crear restaurante
   const createRestaurant = async (restaurantData: any) => {
     try {
+      console.log('Enviando datos del restaurante:', restaurantData)
       const response = await fetch('/api/establishments', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(restaurantData)
       })
+      
       if (response.ok) {
         loadData()
         alert('Restaurante creado exitosamente')
       } else {
-        alert('Error creando restaurante')
+        const errorData = await response.json()
+        console.error('Error del servidor:', errorData)
+        alert('Error creando restaurante: ' + (errorData.error || errorData.message || 'Error desconocido'))
       }
     } catch (error) {
+      console.error('Error de red:', error)
       alert('Error: ' + (error instanceof Error ? error.message : 'Unknown error'))
     }
   }
@@ -459,8 +464,23 @@ function RestaurantsManagement({ restaurants, onCreateRestaurant, onDeleteRestau
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Validación básica
+    if (!formData.name.trim()) {
+      alert('El nombre del restaurante es obligatorio')
+      return
+    }
+    if (!formData.address.trim()) {
+      alert('La dirección es obligatoria')
+      return
+    }
+    
     const restaurantData = {
       ...formData,
+      name: formData.name.trim(),
+      address: formData.address.trim(),
+      phone: formData.phone.trim(),
+      email: formData.email.trim(),
       latitude: parseFloat(formData.latitude) || 0,
       longitude: parseFloat(formData.longitude) || 0,
       isActive: true
