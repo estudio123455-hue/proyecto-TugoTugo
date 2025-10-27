@@ -61,7 +61,7 @@ export default function SuperAdminPage() {
   }, [isAuthenticated])
 
   // Crear pack
-  const createPack = async (packData) => {
+  const createPack = async (packData: any) => {
     try {
       const response = await fetch('/api/packs', {
         method: 'POST',
@@ -97,7 +97,7 @@ export default function SuperAdminPage() {
   }
 
   // Crear restaurante
-  const createRestaurant = async (restaurantData) => {
+  const createRestaurant = async (restaurantData: any) => {
     try {
       const response = await fetch('/api/establishments', {
         method: 'POST',
@@ -252,7 +252,7 @@ export default function SuperAdminPage() {
 }
 
 // Componente para gestión de packs
-function PacksManagement({ packs, restaurants, onCreatePack, onDeletePack }) {
+function PacksManagement({ packs, restaurants, onCreatePack, onDeletePack }: any) {
   const [showForm, setShowForm] = useState(false)
   const [formData, setFormData] = useState({
     title: '',
@@ -445,7 +445,7 @@ function PacksManagement({ packs, restaurants, onCreatePack, onDeletePack }) {
 }
 
 // Componente para gestión de restaurantes
-function RestaurantsManagement({ restaurants, onCreateRestaurant, onDeleteRestaurant }) {
+function RestaurantsManagement({ restaurants, onCreateRestaurant, onDeleteRestaurant }: any) {
   const [showForm, setShowForm] = useState(false)
   const [formData, setFormData] = useState({
     name: '',
@@ -602,7 +602,7 @@ function RestaurantsManagement({ restaurants, onCreateRestaurant, onDeleteRestau
 }
 
 // Componente de estadísticas
-function StatsPanel({ packs, restaurants }) {
+function StatsPanel({ packs, restaurants }: any) {
   const activePacks = packs.filter(p => p.isActive).length
   const activeRestaurants = restaurants.filter(r => r.isActive).length
   const totalRevenue = packs.reduce((sum, pack) => sum + (pack.discountedPrice * (pack.quantity || 0)), 0)
