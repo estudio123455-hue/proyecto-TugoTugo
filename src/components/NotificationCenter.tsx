@@ -37,8 +37,8 @@ const NotificationCenter = () => {
     }
   }
 
-  const handlePreferenceChange = async (key: string, value: boolean) => {
-    setPreferences(prev => ({ ...prev, [key]: value }))
+  const handlePreferenceChange = async (key: string, read: boolean) => {
+    setPreferences(prev => ({ ...prev, [key]: read }))
     
     // Save preferences to backend
     try {
@@ -155,13 +155,8 @@ const NotificationCenter = () => {
       </div>
 
       {/* Notification Preferences */}
-      {/* TODO: Restore AnimatePresence when framer-motion is installed */}
       {isEnabled && (
         <div
-          // TODO: Restore motion animations when framer-motion is installed
-          // initial={{ opacity: 0, height: 0 }}
-          // animate={{ opacity: 1, height: 'auto' }}
-          // exit={{ opacity: 0, height: 0 }}
           className="bg-white rounded-3xl p-6 shadow-soft"
         >
             <div className="flex items-center gap-3 mb-6">
