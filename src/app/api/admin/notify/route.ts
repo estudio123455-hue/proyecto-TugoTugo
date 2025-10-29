@@ -27,7 +27,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Obtener email del destinatario
-    let recipientEmail = ''
+    let recipientEmail: string | undefined = ''
     let emailContent = { subject: '', html: '' }
 
     switch (type) {
