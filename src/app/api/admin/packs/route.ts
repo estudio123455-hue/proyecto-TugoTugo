@@ -36,9 +36,12 @@ export async function GET() {
       },
     })
 
+    // Filtrar packs que tengan establishments válidos
+    const validPacks = packs.filter(pack => pack.establishment !== null)
+
     return NextResponse.json({
       success: true,
-      data: packs,
+      data: validPacks,
     })
   } catch (error) {
     console.error('Error fetching packs:', error)
