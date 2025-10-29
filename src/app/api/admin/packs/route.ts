@@ -174,6 +174,11 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Valores por defecto para fechas si no se proporcionan
+    const now = new Date()
+    const tomorrow = new Date(now)
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    
     const pack = await prisma.pack.create({
       data: {
         title,
@@ -181,10 +186,10 @@ export async function POST(request: NextRequest) {
         originalPrice: parseFloat(originalPrice),
         discountedPrice: parseFloat(discountedPrice),
         quantity: parseInt(quantity),
-        availableFrom: new Date(availableFrom),
-        availableUntil: new Date(availableUntil),
-        pickupTimeStart,
-        pickupTimeEnd,
+        availableFrom: availableFrom ? new Date(availableFrom) : now,
+        availableUntil: availableUntil ? new Date(availableUntil) : tomorrow,
+        pickupTimeStart: pickupTimeStart || '12:00',
+        pickupTimeEnd: pickupTimeEnd || '22:00',
         establishmentId,
         isActive: isActive !== undefined ? isActive : true,
       },

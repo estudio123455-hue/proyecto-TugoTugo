@@ -267,40 +267,81 @@ export default function SuperAdminPage() {
 // Componente para gestión de packs
 function PacksManagement({ packs, restaurants, onCreatePack, onDeletePack }: any) {
   const [showForm, setShowForm] = useState(false)
+  // Obtener fechas por defecto
+  const getDefaultDates = () => {
+    const now = new Date()
+    const today = now.toISOString().split('T')[0]
+    const tomorrow = new Date(now)
+    tomorrow.setDate(tomorrow.getDate() + 1)
+    const tomorrowStr = tomorrow.toISOString().split('T')[0]
+    
+    return { today, tomorrow: tomorrowStr }
+  }
+
   const [formData, setFormData] = useState({
     title: '',
     description: '',
     originalPrice: '',
     discountedPrice: '',
-    quantity: '',
+    quantity: '5',
     establishmentId: '',
-    availableFrom: '',
-    availableUntil: '',
-    pickupTimeStart: '',
-    pickupTimeEnd: ''
+    availableFrom: getDefaultDates().today,
+    availableUntil: getDefaultDates().tomorrow,
+    pickupTimeStart: '12:00',
+    pickupTimeEnd: '22:00'
   })
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
+    
+    // Validación básica
+    if (!formData.title.trim()) {
+      alert('El título del pack es obligatorio')
+      return
+    }
+    if (!formData.description.trim()) {
+      alert('La descripción es obligatoria')
+      return
+    }
+    if (!formData.establishmentId) {
+      alert('Debe seleccionar un restaurante')
+      return
+    }
+    if (!formData.originalPrice || !formData.discountedPrice) {
+      alert('Los precios son obligatorios')
+      return
+    }
+    if (parseFloat(formData.discountedPrice) >= parseFloat(formData.originalPrice)) {
+      alert('El precio con descuento debe ser menor al precio original')
+      return
+    }
+    
     const packData = {
       ...formData,
-      originalPrice: parseInt(formData.originalPrice),
-      discountedPrice: parseInt(formData.discountedPrice),
-      quantity: parseInt(formData.quantity),
+      title: formData.title.trim(),
+      description: formData.description.trim(),
+      originalPrice: parseFloat(formData.originalPrice),
+      discountedPrice: parseFloat(formData.discountedPrice),
+      quantity: parseInt(formData.quantity) || 1,
       isActive: true
     }
+    
+    console.log('Datos del pack a enviar:', packData)
     onCreatePack(packData)
+    
+    // Resetear formulario con valores por defecto
+    const defaultDates = getDefaultDates()
     setFormData({
       title: '',
       description: '',
       originalPrice: '',
       discountedPrice: '',
-      quantity: '',
+      quantity: '5',
       establishmentId: '',
-      availableFrom: '',
-      availableUntil: '',
-      pickupTimeStart: '',
-      pickupTimeEnd: ''
+      availableFrom: defaultDates.today,
+      availableUntil: defaultDates.tomorrow,
+      pickupTimeStart: '12:00',
+      pickupTimeEnd: '22:00'
     })
     setShowForm(false)
   }
