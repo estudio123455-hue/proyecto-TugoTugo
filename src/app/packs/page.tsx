@@ -281,8 +281,30 @@ export default function PacksExplorer() {
       return
     }
 
+    // Mostrar confirmación con detalles del pack
+    const pack = filteredPacks.find(p => p.id === packId)
+    if (!pack) return
+
+    const confirmed = confirm(
+      `¿Confirmar compra?\n\n` +
+      `Pack: ${pack.title}\n` +
+      `Restaurante: ${pack.establishment.name}\n` +
+      `Precio: $${pack.discountedPrice.toFixed(2)}\n` +
+      `Cantidad: ${quantity}\n\n` +
+      `Total: $${(pack.discountedPrice * quantity * 1.19).toFixed(2)} (incluye IVA)`
+    )
+
+    if (!confirmed) return
+
     try {
-      const response = await fetch('/api/orders', {
+      // Mostrar loading
+      const button = document.querySelector(`[data-pack-id="${packId}"]`) as HTMLButtonElement
+      if (button) {
+        button.disabled = true
+        button.innerHTML = '⏳ Procesando...'
+      }
+
+      const response = await fetch('/api/checkout', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -290,20 +312,33 @@ export default function PacksExplorer() {
         body: JSON.stringify({
           packId,
           quantity,
+          paymentMethod: 'card'
         }),
       })
 
-      if (response.ok) {
-        const data = await response.json()
-        // Redirect to payment
-        window.location.href = data.paymentUrl
+      const data = await response.json()
+
+      if (data.success) {
+        // Redirigir a página de éxito
+        window.location.href = data.data.checkoutUrl
       } else {
-        const error = await response.json()
-        alert(error.message || 'Failed to reserve pack')
+        alert(data.message || 'Error procesando el pago')
+        // Restaurar botón
+        if (button) {
+          button.disabled = false
+          button.innerHTML = '🛒 Reservar Pack Sorpresa'
+        }
       }
     } catch (error) {
-      console.error('Error reserving pack:', error)
-      alert('An error occurred while reserving the pack')
+      console.error('Error en checkout:', error)
+      alert('Error de conexión. Intenta de nuevo.')
+      
+      // Restaurar botón
+      const button = document.querySelector(`[data-pack-id="${packId}"]`) as HTMLButtonElement
+      if (button) {
+        button.disabled = false
+        button.innerHTML = '🛒 Reservar Pack Sorpresa'
+      }
     }
   }
 
@@ -963,6 +998,7 @@ export default function PacksExplorer() {
                               {/* CTA Button */}
                               <button
                                 onClick={() => handleReservePack(pack.id, 1)}
+                                data-pack-id={pack.id}
                                 className="group w-full bg-gradient-to-r from-green-500 to-emerald-600 hover:from-green-600 hover:to-emerald-700 text-white font-bold py-3 px-4 rounded-xl transition-all transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2 active:scale-95 focus:ring-4 focus:ring-green-200"
                               >
                                 <span className="group-hover:animate-bounce">🛒</span>
