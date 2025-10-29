@@ -63,18 +63,23 @@ export default function SuperAdminPage() {
   // Crear pack
   const createPack = async (packData: any) => {
     try {
-      const response = await fetch('/api/packs', {
+      console.log('Enviando datos del pack:', packData)
+      const response = await fetch('/api/admin/packs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(packData)
       })
+      
       if (response.ok) {
         loadData()
         alert('Pack creado exitosamente')
       } else {
-        alert('Error creando pack')
+        const errorData = await response.json()
+        console.error('Error del servidor:', errorData)
+        alert('Error creando pack: ' + (errorData.message || 'Error desconocido'))
       }
     } catch (error) {
+      console.error('Error de red:', error)
       alert('Error: ' + (error instanceof Error ? error.message : 'Unknown error'))
     }
   }
@@ -83,12 +88,15 @@ export default function SuperAdminPage() {
   const deletePack = async (packId: string) => {
     if (confirm('¿Estás seguro de eliminar este pack?')) {
       try {
-        const response = await fetch(`/api/packs/${packId}`, {
+        const response = await fetch(`/api/admin/packs?id=${packId}`, {
           method: 'DELETE'
         })
         if (response.ok) {
           loadData()
           alert('Pack eliminado')
+        } else {
+          const errorData = await response.json()
+          alert('Error eliminando pack: ' + (errorData.message || 'Error desconocido'))
         }
       } catch (error) {
         alert('Error eliminando pack')
