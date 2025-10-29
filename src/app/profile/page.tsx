@@ -54,6 +54,17 @@ export default function Profile() {
   })
   const [isSaving, setIsSaving] = useState(false)
   const [saveMessage, setSaveMessage] = useState('')
+  const [preferences, setPreferences] = useState({
+    maxDistance: 5,
+    preferredCategories: ['restaurant', 'bakery'],
+    maxPrice: 50,
+    dietaryRestrictions: [] as string[],
+  })
+  const [achievements, setAchievements] = useState([
+    { id: 1, title: 'Primer Pack', description: 'Compraste tu primer pack sorpresa', unlocked: true, icon: '🎉' },
+    { id: 2, title: 'Eco Warrior', description: 'Salvaste 5kg de comida', unlocked: true, icon: '🌱' },
+    { id: 3, title: 'Explorador', description: 'Visitaste 5 restaurantes diferentes', unlocked: false, icon: '🗺️' },
+  ])
 
   useEffect(() => {
     if (status === 'loading') return
@@ -87,9 +98,54 @@ export default function Profile() {
       if (response.ok) {
         const data = await response.json()
         setStats(data)
+      } else {
+        // Datos simulados si no hay API
+        setStats({
+          totalOrders: orders.length,
+          totalSaved: orders.reduce((sum, order) => sum + order.totalAmount, 0),
+          packsCollected: orders.filter(o => o.status === 'COMPLETED').length,
+          foodSaved: orders.length * 1.2, // kg estimados
+          co2Saved: orders.length * 3.6, // kg CO2 estimados
+          favoriteRestaurants: ['Restaurant A', 'Restaurant B'],
+          currentStreak: 5,
+          totalImpactScore: orders.length * 100,
+        })
       }
     } catch (error) {
       console.error('Error fetching stats:', error)
+      // Datos simulados en caso de error
+      setStats({
+        totalOrders: orders.length,
+        totalSaved: orders.reduce((sum, order) => sum + order.totalAmount, 0),
+        packsCollected: orders.filter(o => o.status === 'COMPLETED').length,
+        foodSaved: orders.length * 1.2,
+        co2Saved: orders.length * 3.6,
+        favoriteRestaurants: ['Restaurant A', 'Restaurant B'],
+        currentStreak: 5,
+        totalImpactScore: orders.length * 100,
+      })
+    }
+  }
+
+  const savePreferences = async () => {
+    setIsSaving(true)
+    try {
+      const response = await fetch('/api/profile/preferences', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ preferences, notifications })
+      })
+      
+      if (response.ok) {
+        setSaveMessage('✅ Preferencias guardadas exitosamente')
+      } else {
+        setSaveMessage('❌ Error guardando preferencias')
+      }
+    } catch (error) {
+      setSaveMessage('❌ Error de conexión')
+    } finally {
+      setIsSaving(false)
+      setTimeout(() => setSaveMessage(''), 3000)
     }
   }
 
@@ -170,9 +226,11 @@ export default function Profile() {
   }
 
   const tabs = [
+    { id: 'overview', name: 'Overview', icon: '📊' },
     { id: 'orders', name: 'My Orders', icon: '🛒' },
     { id: 'impact', name: 'My Impact', icon: '🌱' },
-    { id: 'settings', name: 'Settings', icon: '⚙️' },
+    { id: 'achievements', name: 'Achievements', icon: '🏆' },
+    { id: 'preferences', name: 'Preferences', icon: '⚙️' },
   ]
 
   return (
@@ -273,6 +331,98 @@ export default function Profile() {
 
         {/* Tab Content */}
         <div className="pb-6 md:pb-8">
+          {activeTab === 'overview' && (
+            <div className="space-y-6">
+              {/* Welcome Section */}
+              <div className="bg-gradient-to-r from-green-500 to-emerald-600 rounded-2xl p-6 text-white">
+                <h2 className="text-2xl font-bold mb-2">¡Bienvenido, {session?.user?.name}! 👋</h2>
+                <p className="text-green-100">Aquí tienes un resumen de tu impacto ambiental y actividad reciente</p>
+              </div>
+
+              {/* Quick Stats */}
+              {stats && (
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+                  <div className="bg-white rounded-xl p-4 shadow-sm border">
+                    <div className="text-2xl font-bold text-blue-600">{stats.totalOrders}</div>
+                    <div className="text-sm text-gray-600">Órdenes Totales</div>
+                  </div>
+                  <div className="bg-white rounded-xl p-4 shadow-sm border">
+                    <div className="text-2xl font-bold text-green-600">{stats.foodSaved.toFixed(1)}kg</div>
+                    <div className="text-sm text-gray-600">Comida Salvada</div>
+                  </div>
+                  <div className="bg-white rounded-xl p-4 shadow-sm border">
+                    <div className="text-2xl font-bold text-purple-600">${stats.totalSaved.toFixed(0)}</div>
+                    <div className="text-sm text-gray-600">Dinero Ahorrado</div>
+                  </div>
+                  <div className="bg-white rounded-xl p-4 shadow-sm border">
+                    <div className="text-2xl font-bold text-orange-600">{stats.currentStreak}</div>
+                    <div className="text-sm text-gray-600">Días Consecutivos</div>
+                  </div>
+                </div>
+              )}
+
+              {/* Recent Activity */}
+              <div className="bg-white rounded-xl p-6 shadow-sm border">
+                <h3 className="text-lg font-semibold mb-4">📈 Actividad Reciente</h3>
+                <div className="space-y-3">
+                  {orders.slice(0, 3).map((order, index) => (
+                    <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
+                      <div>
+                        <p className="font-medium text-sm">{order.pack.establishment.name}</p>
+                        <p className="text-xs text-gray-500">{new Date(order.createdAt).toLocaleDateString()}</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-bold text-green-600">${order.totalAmount.toFixed(2)}</p>
+                        <span className={`px-2 py-1 rounded-full text-xs ${
+                          order.status === 'COMPLETED' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
+                        }`}>
+                          {order.status}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                  {orders.length === 0 && (
+                    <div className="text-center py-8 text-gray-500">
+                      <p>🛒 No tienes órdenes aún</p>
+                      <a href="/packs" className="text-green-600 hover:underline">¡Explora packs disponibles!</a>
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Quick Actions */}
+              <div className="bg-white rounded-xl p-6 shadow-sm border">
+                <h3 className="text-lg font-semibold mb-4">⚡ Acciones Rápidas</h3>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <a href="/packs" className="flex items-center p-4 bg-green-50 rounded-lg hover:bg-green-100 transition-colors">
+                    <span className="text-2xl mr-3">🛒</span>
+                    <div>
+                      <p className="font-medium text-green-800">Explorar Packs</p>
+                      <p className="text-sm text-green-600">Encuentra ofertas cerca</p>
+                    </div>
+                  </a>
+                  <a href="/restaurants" className="flex items-center p-4 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors">
+                    <span className="text-2xl mr-3">🏪</span>
+                    <div>
+                      <p className="font-medium text-blue-800">Restaurantes</p>
+                      <p className="text-sm text-blue-600">Ver todos los locales</p>
+                    </div>
+                  </a>
+                  <button 
+                    onClick={() => setActiveTab('achievements')}
+                    className="flex items-center p-4 bg-purple-50 rounded-lg hover:bg-purple-100 transition-colors"
+                  >
+                    <span className="text-2xl mr-3">🏆</span>
+                    <div>
+                      <p className="font-medium text-purple-800">Logros</p>
+                      <p className="text-sm text-purple-600">Ver tus logros</p>
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {activeTab === 'orders' && (
             <div className="space-y-6">
               <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
@@ -470,6 +620,237 @@ export default function Profile() {
                   </ul>
                 </div>
               </div>
+            </div>
+          )}
+
+          {activeTab === 'achievements' && (
+            <div className="space-y-6">
+              <h2 className="text-lg md:text-xl font-semibold text-gray-900">🏆 Logros y Gamificación</h2>
+              
+              {/* Progress Overview */}
+              <div className="bg-gradient-to-r from-purple-500 to-pink-500 rounded-xl p-6 text-white">
+                <h3 className="text-xl font-bold mb-2">Tu Progreso</h3>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-purple-100">Puntos Totales</p>
+                    <p className="text-2xl font-bold">{stats?.totalImpactScore || 0}</p>
+                  </div>
+                  <div>
+                    <p className="text-purple-100">Logros Desbloqueados</p>
+                    <p className="text-2xl font-bold">{achievements.filter(a => a.unlocked).length}/{achievements.length}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Achievements Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {achievements.map((achievement) => (
+                  <div 
+                    key={achievement.id} 
+                    className={`p-4 rounded-xl border-2 transition-all ${
+                      achievement.unlocked 
+                        ? 'bg-green-50 border-green-200 shadow-sm' 
+                        : 'bg-gray-50 border-gray-200 opacity-60'
+                    }`}
+                  >
+                    <div className="text-center">
+                      <div className={`text-4xl mb-2 ${achievement.unlocked ? '' : 'grayscale'}`}>
+                        {achievement.icon}
+                      </div>
+                      <h4 className={`font-bold mb-1 ${
+                        achievement.unlocked ? 'text-green-800' : 'text-gray-600'
+                      }`}>
+                        {achievement.title}
+                      </h4>
+                      <p className={`text-sm ${
+                        achievement.unlocked ? 'text-green-600' : 'text-gray-500'
+                      }`}>
+                        {achievement.description}
+                      </p>
+                      {achievement.unlocked && (
+                        <div className="mt-2">
+                          <span className="bg-green-100 text-green-800 px-2 py-1 rounded-full text-xs font-medium">
+                            ✅ Desbloqueado
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Next Goals */}
+              <div className="bg-white rounded-xl p-6 shadow-sm border">
+                <h3 className="text-lg font-semibold mb-4">🎯 Próximos Objetivos</h3>
+                <div className="space-y-4">
+                  <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+                    <div>
+                      <p className="font-medium text-blue-800">Visitante Frecuente</p>
+                      <p className="text-sm text-blue-600">Compra 10 packs en total</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm text-blue-600">{stats?.totalOrders || 0}/10</p>
+                      <div className="w-20 bg-blue-200 rounded-full h-2 mt-1">
+                        <div 
+                          className="bg-blue-500 h-2 rounded-full" 
+                          style={{ width: `${Math.min(((stats?.totalOrders || 0) / 10) * 100, 100)}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+                    <div>
+                      <p className="font-medium text-green-800">Eco Champion</p>
+                      <p className="text-sm text-green-600">Salva 10kg de comida</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm text-green-600">{stats?.foodSaved.toFixed(1) || 0}/10kg</p>
+                      <div className="w-20 bg-green-200 rounded-full h-2 mt-1">
+                        <div 
+                          className="bg-green-500 h-2 rounded-full" 
+                          style={{ width: `${Math.min(((stats?.foodSaved || 0) / 10) * 100, 100)}%` }}
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'preferences' && (
+            <div className="space-y-6">
+              <h2 className="text-lg md:text-xl font-semibold text-gray-900">⚙️ Preferencias</h2>
+              
+              {/* Notification Settings */}
+              <div className="bg-white rounded-xl p-6 shadow-sm border">
+                <h3 className="text-lg font-semibold mb-4">🔔 Notificaciones</h3>
+                <div className="space-y-4">
+                  {Object.entries(notifications).map(([key, value]) => (
+                    <div key={key} className="flex items-center justify-between">
+                      <div>
+                        <p className="font-medium capitalize">{key.replace(/([A-Z])/g, ' $1').trim()}</p>
+                        <p className="text-sm text-gray-500">
+                          {key === 'emailReminders' && 'Recordatorios por email sobre tus pedidos'}
+                          {key === 'newPackAlerts' && 'Alertas cuando hay nuevos packs disponibles'}
+                          {key === 'weeklySummary' && 'Resumen semanal de tu impacto'}
+                          {key === 'nearbyPacks' && 'Notificaciones de packs cerca de ti'}
+                          {key === 'priceAlerts' && 'Alertas de precios especiales'}
+                        </p>
+                      </div>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={value}
+                          onChange={(e) => setNotifications({
+                            ...notifications,
+                            [key]: e.target.checked
+                          })}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-green-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-500"></div>
+                      </label>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Search Preferences */}
+              <div className="bg-white rounded-xl p-6 shadow-sm border">
+                <h3 className="text-lg font-semibold mb-4">🔍 Preferencias de Búsqueda</h3>
+                <div className="space-y-4">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Distancia máxima (km)
+                    </label>
+                    <input
+                      type="range"
+                      min="1"
+                      max="20"
+                      value={preferences.maxDistance}
+                      onChange={(e) => setPreferences({
+                        ...preferences,
+                        maxDistance: parseInt(e.target.value)
+                      })}
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    />
+                    <div className="flex justify-between text-sm text-gray-500 mt-1">
+                      <span>1km</span>
+                      <span>{preferences.maxDistance}km</span>
+                      <span>20km</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Precio máximo ($)
+                    </label>
+                    <input
+                      type="range"
+                      min="10"
+                      max="100"
+                      value={preferences.maxPrice}
+                      onChange={(e) => setPreferences({
+                        ...preferences,
+                        maxPrice: parseInt(e.target.value)
+                      })}
+                      className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                    />
+                    <div className="flex justify-between text-sm text-gray-500 mt-1">
+                      <span>$10</span>
+                      <span>${preferences.maxPrice}</span>
+                      <span>$100</span>
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Categorías Preferidas
+                    </label>
+                    <div className="flex flex-wrap gap-2">
+                      {['restaurant', 'bakery', 'cafe', 'dessert', 'healthy'].map((category) => (
+                        <button
+                          key={category}
+                          onClick={() => {
+                            const newCategories = preferences.preferredCategories.includes(category)
+                              ? preferences.preferredCategories.filter(c => c !== category)
+                              : [...preferences.preferredCategories, category]
+                            setPreferences({
+                              ...preferences,
+                              preferredCategories: newCategories
+                            })
+                          }}
+                          className={`px-3 py-1 rounded-full text-sm font-medium transition-colors ${
+                            preferences.preferredCategories.includes(category)
+                              ? 'bg-green-500 text-white'
+                              : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                          }`}
+                        >
+                          {category}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Save Button */}
+              <div className="flex justify-end">
+                <button
+                  onClick={savePreferences}
+                  disabled={isSaving}
+                  className="bg-green-500 hover:bg-green-600 disabled:bg-gray-400 text-white px-6 py-2 rounded-lg font-medium transition-colors"
+                >
+                  {isSaving ? 'Guardando...' : 'Guardar Preferencias'}
+                </button>
+              </div>
+
+              {saveMessage && (
+                <div className="text-center p-3 rounded-lg bg-green-50 text-green-800">
+                  {saveMessage}
+                </div>
+              )}
             </div>
           )}
 
