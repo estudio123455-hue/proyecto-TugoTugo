@@ -44,7 +44,7 @@ export async function GET() {
       data: validPacks,
     })
   } catch (error) {
-    console.error('Error fetching packs:', error)
+    console.error('❌ Error fetching packs:', error)
     return NextResponse.json(
       { success: false, message: 'Error al obtener packs' },
       { status: 500 }
