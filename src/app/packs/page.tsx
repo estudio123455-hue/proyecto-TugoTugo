@@ -450,6 +450,210 @@ export default function PacksExplorer() {
           </div>
         </div>
 
+        {/* Panel de Filtros Avanzados */}
+        <div className="max-w-4xl mx-auto mb-8">
+          <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
+            {/* Header del panel de filtros */}
+            <div className="px-6 py-4 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-gray-200">
+              <button
+                onClick={() => setShowFilters(!showFilters)}
+                className="flex items-center justify-between w-full text-left"
+              >
+                <div className="flex items-center space-x-3">
+                  <div className="p-2 bg-blue-100 rounded-lg">
+                    <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h3 className="text-lg font-semibold text-gray-900">Filtros Avanzados</h3>
+                    <p className="text-sm text-gray-600">Personaliza tu búsqueda</p>
+                  </div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  {userLocation && (
+                    <span className="text-xs bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                      📍 Ubicación detectada
+                    </span>
+                  )}
+                  <svg 
+                    className={`w-5 h-5 text-gray-400 transition-transform ${showFilters ? 'rotate-180' : ''}`} 
+                    fill="none" 
+                    stroke="currentColor" 
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </div>
+              </button>
+            </div>
+
+            {/* Contenido del panel de filtros */}
+            {showFilters && (
+              <div className="p-6 space-y-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  
+                  {/* Filtro de Precio */}
+                  <div className="space-y-3">
+                    <label className="block text-sm font-medium text-gray-700">
+                      💰 Rango de Precio
+                    </label>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm text-gray-600">
+                        <span>${priceRange.min}</span>
+                        <span>${priceRange.max}</span>
+                      </div>
+                      <div className="space-y-2">
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value={priceRange.min}
+                          onChange={(e) => setPriceRange({...priceRange, min: parseInt(e.target.value)})}
+                          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                          style={{
+                            background: `linear-gradient(to right, #3B82F6 0%, #3B82F6 ${priceRange.min}%, #E5E7EB ${priceRange.min}%, #E5E7EB 100%)`
+                          }}
+                        />
+                        <input
+                          type="range"
+                          min="0"
+                          max="100"
+                          value={priceRange.max}
+                          onChange={(e) => setPriceRange({...priceRange, max: parseInt(e.target.value)})}
+                          className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer"
+                          style={{
+                            background: `linear-gradient(to right, #E5E7EB 0%, #E5E7EB ${priceRange.max}%, #3B82F6 ${priceRange.max}%, #3B82F6 100%)`
+                          }}
+                        />
+                      </div>
+                      <div className="flex space-x-2">
+                        <input
+                          type="number"
+                          placeholder="Min"
+                          value={priceRange.min}
+                          onChange={(e) => setPriceRange({...priceRange, min: parseInt(e.target.value) || 0})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                        />
+                        <input
+                          type="number"
+                          placeholder="Max"
+                          value={priceRange.max}
+                          onChange={(e) => setPriceRange({...priceRange, max: parseInt(e.target.value) || 100})}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg text-sm"
+                        />
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Selector de Ordenamiento */}
+                  <div className="space-y-3">
+                    <label className="block text-sm font-medium text-gray-700">
+                      📊 Ordenar por
+                    </label>
+                    <select
+                      value={sortBy}
+                      onChange={(e) => setSortBy(e.target.value)}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    >
+                      <option value="distance">📍 Distancia (más cerca)</option>
+                      <option value="price">💰 Precio (más barato)</option>
+                      <option value="newest">🆕 Más recientes</option>
+                    </select>
+                  </div>
+
+                  {/* Botón de Ubicación */}
+                  <div className="space-y-3">
+                    <label className="block text-sm font-medium text-gray-700">
+                      📍 Mi Ubicación
+                    </label>
+                    <button
+                      onClick={getUserLocation}
+                      className={`w-full px-4 py-3 rounded-lg font-medium transition-all ${
+                        userLocation 
+                          ? 'bg-green-100 text-green-800 border border-green-300' 
+                          : 'bg-blue-500 text-white hover:bg-blue-600'
+                      }`}
+                    >
+                      {userLocation ? (
+                        <span className="flex items-center justify-center space-x-2">
+                          <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                            <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                          </svg>
+                          <span>Ubicación obtenida</span>
+                        </span>
+                      ) : (
+                        <span className="flex items-center justify-center space-x-2">
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                          <span>Obtener mi ubicación</span>
+                        </span>
+                      )}
+                    </button>
+                    {userLocation && (
+                      <p className="text-xs text-gray-500 text-center">
+                        Lat: {userLocation.lat.toFixed(4)}, Lng: {userLocation.lng.toFixed(4)}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Resumen de filtros activos */}
+                <div className="pt-4 border-t border-gray-200">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <span className="text-sm font-medium text-gray-700">Filtros activos:</span>
+                    
+                    {(priceRange.min > 0 || priceRange.max < 100) && (
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
+                        💰 ${priceRange.min} - ${priceRange.max}
+                        <button
+                          onClick={() => setPriceRange({min: 0, max: 100})}
+                          className="ml-2 text-blue-600 hover:text-blue-800"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    )}
+                    
+                    {sortBy !== 'distance' && (
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                        📊 {sortBy === 'price' ? 'Por precio' : 'Más recientes'}
+                        <button
+                          onClick={() => setSortBy('distance')}
+                          className="ml-2 text-purple-600 hover:text-purple-800"
+                        >
+                          ×
+                        </button>
+                      </span>
+                    )}
+                    
+                    {userLocation && (
+                      <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
+                        📍 Con ubicación
+                      </span>
+                    )}
+                    
+                    {/* Botón limpiar todos los filtros */}
+                    {((priceRange.min > 0 || priceRange.max < 100) || sortBy !== 'distance') && (
+                      <button
+                        onClick={() => {
+                          setPriceRange({min: 0, max: 100})
+                          setSortBy('distance')
+                        }}
+                        className="text-xs text-gray-500 hover:text-gray-700 underline"
+                      >
+                        Limpiar todos
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+
         {/* View Toggle & Category Filters */}
         <div className="space-y-4 mb-6 sm:mb-10">
           {/* View Mode Toggle */}
@@ -652,12 +856,19 @@ export default function PacksExplorer() {
                           {restaurant.category.toLowerCase()}
                         </span>
                       </div>
-                      {/* Distance Badge (placeholder) */}
-                      <div className="absolute top-3 right-3 bg-green-500/90 backdrop-blur-sm px-2 py-1 rounded-full">
-                        <span className="text-xs font-semibold text-white">
-                          📍 2.1 km
-                        </span>
-                      </div>
+                      {/* Distance Badge */}
+                      {userLocation && restaurant.latitude && restaurant.longitude && (
+                        <div className="absolute top-3 right-3 bg-green-500/90 backdrop-blur-sm px-2 py-1 rounded-full">
+                          <span className="text-xs font-semibold text-white">
+                            📍 {calculateDistance(
+                              userLocation.lat, 
+                              userLocation.lng, 
+                              restaurant.latitude, 
+                              restaurant.longitude
+                            ).toFixed(1)} km
+                          </span>
+                        </div>
+                      )}
                     </div>
 
                     <div className="p-4 sm:p-6">
@@ -719,7 +930,7 @@ export default function PacksExplorer() {
                               
                               {/* Pack Info */}
                               <div className="flex justify-between items-center mb-3">
-                                <div className="flex items-center gap-4">
+                                <div className="flex items-center gap-4 flex-wrap">
                                   <div className="flex items-center gap-1">
                                     <span className="text-green-600">⏰</span>
                                     <span className="text-sm font-medium text-gray-700">
@@ -732,6 +943,20 @@ export default function PacksExplorer() {
                                       {pack.quantity} disponibles
                                     </span>
                                   </div>
+                                  {/* Indicador de distancia individual */}
+                                  {userLocation && pack.establishment.latitude && pack.establishment.longitude && (
+                                    <div className="flex items-center gap-1">
+                                      <span className="text-blue-500">📍</span>
+                                      <span className="text-sm font-medium text-blue-700">
+                                        {calculateDistance(
+                                          userLocation.lat, 
+                                          userLocation.lng, 
+                                          pack.establishment.latitude, 
+                                          pack.establishment.longitude
+                                        ).toFixed(1)} km
+                                      </span>
+                                    </div>
+                                  )}
                                 </div>
                               </div>
                               
