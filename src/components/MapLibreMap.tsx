@@ -25,7 +25,6 @@ interface MapLibreMapProps {
   showUserLocation?: boolean
   interactive?: boolean
   userLocation?: { lat: number; lng: number } | null
-  showClusters?: boolean
   onMapMove?: (center: { latitude: number; longitude: number }, zoom: number) => void
 }
 
@@ -38,7 +37,6 @@ export default function MapLibreMap({
   showUserLocation = true,
   interactive = true,
   userLocation = null,
-  showClusters = true,
   onMapMove,
 }: MapLibreMapProps) {
   const mapRef = useRef<any>(null)

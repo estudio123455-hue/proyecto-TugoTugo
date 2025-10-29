@@ -9,7 +9,6 @@ import MapLibreMap, { MapLocation } from '@/components/MapLibreMap'
 // import PackCard from '@/components/PackCard' // TODO: Use this component
 import EmptyState from '@/components/EmptyState'
 import PackSkeleton from '@/components/PackSkeleton'
-import LogoutButton from '@/components/LogoutButton'
 import { Map as MapIcon, List } from 'lucide-react'
 
 interface Pack {
@@ -286,7 +285,7 @@ export default function PacksExplorer() {
     if (!pack) return
 
     const confirmed = confirm(
-      `¿Confirmar compra?\n\n` +
+      '¿Confirmar compra?\n\n' +
       `Pack: ${pack.title}\n` +
       `Restaurante: ${pack.establishment.name}\n` +
       `Precio: $${pack.discountedPrice.toFixed(2)}\n` +

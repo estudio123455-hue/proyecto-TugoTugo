@@ -52,16 +52,8 @@ export default function Profile() {
     nearbyPacks: true,
     priceAlerts: false,
   })
-  const [preferences, setPreferences] = useState({
-    maxDistance: 5, // km
-    preferredCategories: [] as string[],
-    maxPrice: 50,
-    dietaryRestrictions: [] as string[],
-  })
   const [isSaving, setIsSaving] = useState(false)
   const [saveMessage, setSaveMessage] = useState('')
-  const [achievements, setAchievements] = useState<any[]>([])
-  const [favoriteRestaurants, setFavoriteRestaurants] = useState<any[]>([])
 
   useEffect(() => {
     if (status === 'loading') return
