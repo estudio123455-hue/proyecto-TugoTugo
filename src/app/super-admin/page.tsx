@@ -28,11 +28,11 @@ export default function SuperAdminPage() {
   const loadData = async () => {
     setLoading(true)
     try {
-      // Cargar packs
-      const packsRes = await fetch('/api/packs')
+      // Cargar packs usando API de admin
+      const packsRes = await fetch('/api/admin/packs')
       if (packsRes.ok) {
         const packsData = await packsRes.json()
-        setPacks(packsData)
+        setPacks(packsData.data || packsData) // La API de admin devuelve {success: true, data: [...]}
       }
 
       // Cargar restaurantes
