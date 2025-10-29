@@ -793,6 +793,12 @@ export default function PacksExplorer() {
                   onLocationClick={handleLocationClick}
                   height="600px"
                   showUserLocation={true}
+                  userLocation={userLocation}
+                  center={userLocation ? { latitude: userLocation.lat, longitude: userLocation.lng } : undefined}
+                  zoom={userLocation ? 14 : 12}
+                  onMapMove={(center, zoom) => {
+                    console.log('Mapa movido:', center, 'Zoom:', zoom)
+                  }}
                 />
               </>
             )}

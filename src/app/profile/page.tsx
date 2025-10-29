@@ -32,6 +32,10 @@ interface UserStats {
   totalSaved: number
   packsCollected: number
   foodSaved: number // in kg, estimated
+  co2Saved: number // in kg CO2
+  favoriteRestaurants: string[]
+  currentStreak: number // días consecutivos
+  totalImpactScore: number
 }
 
 export default function Profile() {
@@ -40,14 +44,24 @@ export default function Profile() {
   const [orders, setOrders] = useState<Order[]>([])
   const [stats, setStats] = useState<UserStats | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const [activeTab, setActiveTab] = useState('orders')
+  const [activeTab, setActiveTab] = useState('overview')
   const [notifications, setNotifications] = useState({
     emailReminders: true,
     newPackAlerts: true,
     weeklySummary: false,
+    nearbyPacks: true,
+    priceAlerts: false,
+  })
+  const [preferences, setPreferences] = useState({
+    maxDistance: 5, // km
+    preferredCategories: [] as string[],
+    maxPrice: 50,
+    dietaryRestrictions: [] as string[],
   })
   const [isSaving, setIsSaving] = useState(false)
   const [saveMessage, setSaveMessage] = useState('')
+  const [achievements, setAchievements] = useState<any[]>([])
+  const [favoriteRestaurants, setFavoriteRestaurants] = useState<any[]>([])
 
   useEffect(() => {
     if (status === 'loading') return
