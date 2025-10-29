@@ -63,23 +63,31 @@ export default function SuperAdminPage() {
   // Crear pack
   const createPack = async (packData: any) => {
     try {
-      console.log('Enviando datos del pack:', packData)
+      console.log('🚀 Enviando datos del pack:', packData)
       const response = await fetch('/api/admin/packs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(packData)
       })
       
+      console.log('📡 Respuesta del servidor:', {
+        status: response.status,
+        statusText: response.statusText,
+        ok: response.ok
+      })
+      
       if (response.ok) {
+        const responseData = await response.json()
+        console.log('✅ Pack creado exitosamente:', responseData)
         loadData()
         alert('Pack creado exitosamente')
       } else {
         const errorData = await response.json()
-        console.error('Error del servidor:', errorData)
+        console.error('❌ Error del servidor:', errorData)
         alert('Error creando pack: ' + (errorData.message || 'Error desconocido'))
       }
     } catch (error) {
-      console.error('Error de red:', error)
+      console.error('💥 Error de red:', error)
       alert('Error: ' + (error instanceof Error ? error.message : 'Unknown error'))
     }
   }
