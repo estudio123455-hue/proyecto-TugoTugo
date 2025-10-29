@@ -20,15 +20,15 @@ export async function POST() {
     // Crear pack sorpresa
     const pack = await prisma.pack.create({
       data: {
-        title: "Pack Sorpresa del Chef",
-        description: "Una deliciosa sorpresa culinaria preparada especialmente por nuestro chef. Incluye entrada, plato principal y postre. ¡Perfecto para descubrir nuevos sabores!",
+        title: 'Pack Sorpresa del Chef',
+        description: 'Una deliciosa sorpresa culinaria preparada especialmente por nuestro chef. Incluye entrada, plato principal y postre. ¡Perfecto para descubrir nuevos sabores!',
         originalPrice: 28.99,
         discountedPrice: 19.99,
         quantity: 10,
         availableFrom: new Date('2024-10-28T18:00:00Z'),
         availableUntil: new Date('2024-10-28T23:59:00Z'),
-        pickupTimeStart: "18:30",
-        pickupTimeEnd: "22:30",
+        pickupTimeStart: '18:30',
+        pickupTimeEnd: '22:30',
         establishmentId: restaurant.id,
         isActive: true,
       },
