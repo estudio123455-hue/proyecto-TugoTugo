@@ -136,12 +136,9 @@ export async function POST(request: NextRequest) {
       originalPrice,
       discountedPrice,
       quantity,
-      availableFrom,
-      availableUntil,
-      pickupTimeStart,
-      pickupTimeEnd,
       establishmentId,
       isActive,
+      hoursAvailable = 24, // Por defecto 24 horas
     } = body
 
     if (
@@ -150,14 +147,10 @@ export async function POST(request: NextRequest) {
       !originalPrice ||
       !discountedPrice ||
       !quantity ||
-      !availableFrom ||
-      !availableUntil ||
-      !pickupTimeStart ||
-      !pickupTimeEnd ||
       !establishmentId
     ) {
       return NextResponse.json(
-        { success: false, message: 'Todos los campos son requeridos' },
+        { success: false, message: 'Campos básicos requeridos: título, descripción, precios, cantidad y restaurante' },
         { status: 400 }
       )
     }
@@ -174,10 +167,9 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Valores por defecto para fechas si no se proporcionan
+    // Sistema ultra simple: disponible desde ahora por X horas
     const now = new Date()
-    const tomorrow = new Date(now)
-    tomorrow.setDate(tomorrow.getDate() + 1)
+    const expiresAt = new Date(now.getTime() + (hoursAvailable * 60 * 60 * 1000))
     
     const pack = await prisma.pack.create({
       data: {
@@ -186,10 +178,10 @@ export async function POST(request: NextRequest) {
         originalPrice: parseFloat(originalPrice),
         discountedPrice: parseFloat(discountedPrice),
         quantity: parseInt(quantity),
-        availableFrom: availableFrom ? new Date(availableFrom) : now,
-        availableUntil: availableUntil ? new Date(availableUntil) : tomorrow,
-        pickupTimeStart: pickupTimeStart || '12:00',
-        pickupTimeEnd: pickupTimeEnd || '22:00',
+        availableFrom: now,
+        availableUntil: expiresAt,
+        pickupTimeStart: '12:00', // Horario fijo simple
+        pickupTimeEnd: '22:00',   // Horario fijo simple
         establishmentId,
         isActive: isActive !== undefined ? isActive : true,
       },

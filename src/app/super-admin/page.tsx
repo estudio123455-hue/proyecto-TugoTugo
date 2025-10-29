@@ -267,17 +267,6 @@ export default function SuperAdminPage() {
 // Componente para gestión de packs
 function PacksManagement({ packs, restaurants, onCreatePack, onDeletePack }: any) {
   const [showForm, setShowForm] = useState(false)
-  // Obtener fechas por defecto
-  const getDefaultDates = () => {
-    const now = new Date()
-    const today = now.toISOString().split('T')[0]
-    const tomorrow = new Date(now)
-    tomorrow.setDate(tomorrow.getDate() + 1)
-    const tomorrowStr = tomorrow.toISOString().split('T')[0]
-    
-    return { today, tomorrow: tomorrowStr }
-  }
-
   const [formData, setFormData] = useState({
     title: '',
     description: '',
@@ -285,10 +274,7 @@ function PacksManagement({ packs, restaurants, onCreatePack, onDeletePack }: any
     discountedPrice: '',
     quantity: '5',
     establishmentId: '',
-    availableFrom: getDefaultDates().today,
-    availableUntil: getDefaultDates().tomorrow,
-    pickupTimeStart: '12:00',
-    pickupTimeEnd: '22:00'
+    hoursAvailable: '24' // Ultra simple: solo horas de duración
   })
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -323,14 +309,14 @@ function PacksManagement({ packs, restaurants, onCreatePack, onDeletePack }: any
       originalPrice: parseFloat(formData.originalPrice),
       discountedPrice: parseFloat(formData.discountedPrice),
       quantity: parseInt(formData.quantity) || 1,
+      hoursAvailable: parseInt(formData.hoursAvailable) || 24,
       isActive: true
     }
     
     console.log('Datos del pack a enviar:', packData)
     onCreatePack(packData)
     
-    // Resetear formulario con valores por defecto
-    const defaultDates = getDefaultDates()
+    // Resetear formulario ultra simple
     setFormData({
       title: '',
       description: '',
@@ -338,10 +324,7 @@ function PacksManagement({ packs, restaurants, onCreatePack, onDeletePack }: any
       discountedPrice: '',
       quantity: '5',
       establishmentId: '',
-      availableFrom: defaultDates.today,
-      availableUntil: defaultDates.tomorrow,
-      pickupTimeStart: '12:00',
-      pickupTimeEnd: '22:00'
+      hoursAvailable: '24'
     })
     setShowForm(false)
   }
@@ -415,39 +398,24 @@ function PacksManagement({ packs, restaurants, onCreatePack, onDeletePack }: any
               className="p-2 border rounded"
               required
             />
-            <div></div>
-            <input
-              type="datetime-local"
-              placeholder="Disponible desde"
-              value={formData.availableFrom}
-              onChange={(e) => setFormData({...formData, availableFrom: e.target.value})}
-              className="p-2 border rounded"
-              required
-            />
-            <input
-              type="datetime-local"
-              placeholder="Disponible hasta"
-              value={formData.availableUntil}
-              onChange={(e) => setFormData({...formData, availableUntil: e.target.value})}
-              className="p-2 border rounded"
-              required
-            />
-            <input
-              type="datetime-local"
-              placeholder="Recogida desde"
-              value={formData.pickupTimeStart}
-              onChange={(e) => setFormData({...formData, pickupTimeStart: e.target.value})}
-              className="p-2 border rounded"
-              required
-            />
-            <input
-              type="datetime-local"
-              placeholder="Recogida hasta"
-              value={formData.pickupTimeEnd}
-              onChange={(e) => setFormData({...formData, pickupTimeEnd: e.target.value})}
-              className="p-2 border rounded"
-              required
-            />
+            <div className="bg-green-50 p-3 rounded border">
+              <label className="block text-sm font-medium text-green-800 mb-2">
+                ⏰ Duración del Pack (Ultra Simple)
+              </label>
+              <select
+                value={formData.hoursAvailable}
+                onChange={(e) => setFormData({...formData, hoursAvailable: e.target.value})}
+                className="w-full p-2 border rounded bg-white"
+              >
+                <option value="12">12 horas (hasta medianoche)</option>
+                <option value="24">24 horas (todo el día siguiente)</option>
+                <option value="48">48 horas (fin de semana)</option>
+                <option value="72">72 horas (3 días)</option>
+              </select>
+              <p className="text-xs text-green-600 mt-1">
+                📅 Disponible desde ahora • 🕐 Recogida: 12:00-22:00
+              </p>
+            </div>
             <button
               type="submit"
               className="col-span-2 bg-blue-500 text-white p-2 rounded hover:bg-blue-600"
