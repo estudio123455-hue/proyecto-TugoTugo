@@ -1,4 +1,4 @@
-'use client'
+ 'use client'
 
 import React, { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
@@ -8,7 +8,7 @@ const ADMIN_PASSWORD = 'TugoTugo2024Admin!' // Contraseña única
 export default function SuperAdminPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
   const [password, setPassword] = useState('')
-  const [activeTab, setActiveTab] = useState('packs')
+  const [activeTab, setActiveTab] = useState('dashboard')
   const [packs, setPacks] = useState([])
   const [restaurants, setRestaurants] = useState([])
   const [loading, setLoading] = useState(false)
@@ -199,8 +199,18 @@ export default function SuperAdminPage() {
 
       {/* Navigation Tabs */}
       <div className="bg-white border-b">
-        <div className="max-w-7xl mx-auto px-4">
-          <nav className="flex space-x-8">
+        <div className="border-b border-gray-200">
+          <nav className="-mb-px flex space-x-8">
+            <button
+              onClick={() => setActiveTab('dashboard')}
+              className={`py-4 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'dashboard'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700'
+              }`}
+            >
+              🏠 Dashboard
+            </button>
             <button
               onClick={() => setActiveTab('packs')}
               className={`py-4 px-1 border-b-2 font-medium text-sm ${
@@ -209,7 +219,7 @@ export default function SuperAdminPage() {
                   : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
             >
-              📦 Gestión de Packs
+              📦 Packs ({packs.length})
             </button>
             <button
               onClick={() => setActiveTab('restaurants')}
@@ -219,7 +229,7 @@ export default function SuperAdminPage() {
                   : 'border-transparent text-gray-500 hover:text-gray-700'
               }`}
             >
-              🏪 Gestión de Restaurantes
+              🏪 Restaurantes ({restaurants.length})
             </button>
             <button
               onClick={() => setActiveTab('stats')}
@@ -242,6 +252,11 @@ export default function SuperAdminPage() {
             <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500"></div>
             <p className="mt-2 text-gray-600">Cargando...</p>
           </div>
+        )}
+
+        {/* Dashboard Tab */}
+        {activeTab === 'dashboard' && (
+          <Dashboard packs={packs} restaurants={restaurants} />
         )}
 
         {/* Packs Tab */}
@@ -711,6 +726,169 @@ function StatsPanel({ packs, restaurants }: any) {
           </a>
           <a href="/restaurants" target="_blank" className="text-blue-600 hover:underline">
             🏪 Ver Restaurantes
+          </a>
+        </div>
+      </div>
+    </div>
+  )
+}
+
+// Componente Dashboard
+function Dashboard({ packs, restaurants }: any) {
+  const activePacks = packs.filter((pack: any) => pack.isActive)
+  const activeRestaurants = restaurants.filter((restaurant: any) => restaurant.isActive)
+  const totalRevenue = packs.reduce((sum: number, pack: any) => sum + (pack.discountedPrice * (pack.quantity || 0)), 0)
+  
+  return (
+    <div className="space-y-6">
+      {/* Header */}
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg p-6 text-white">
+        <h1 className="text-2xl font-bold mb-2">🏠 Dashboard TugoTugo</h1>
+        <p className="text-blue-100">Panel de control administrativo</p>
+      </div>
+
+      {/* Métricas principales */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-blue-500">
+          <div className="flex items-center">
+            <div className="flex-1">
+              <p className="text-sm font-medium text-gray-600">Total Packs</p>
+              <p className="text-2xl font-bold text-gray-900">{packs.length}</p>
+            </div>
+            <div className="text-3xl">📦</div>
+          </div>
+          <p className="text-xs text-gray-500 mt-2">{activePacks.length} activos</p>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-green-500">
+          <div className="flex items-center">
+            <div className="flex-1">
+              <p className="text-sm font-medium text-gray-600">Restaurantes</p>
+              <p className="text-2xl font-bold text-gray-900">{restaurants.length}</p>
+            </div>
+            <div className="text-3xl">🏪</div>
+          </div>
+          <p className="text-xs text-gray-500 mt-2">{activeRestaurants.length} activos</p>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-yellow-500">
+          <div className="flex items-center">
+            <div className="flex-1">
+              <p className="text-sm font-medium text-gray-600">Ingresos Est.</p>
+              <p className="text-2xl font-bold text-gray-900">${totalRevenue.toFixed(2)}</p>
+            </div>
+            <div className="text-3xl">💰</div>
+          </div>
+          <p className="text-xs text-gray-500 mt-2">Potencial total</p>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6 border-l-4 border-purple-500">
+          <div className="flex items-center">
+            <div className="flex-1">
+              <p className="text-sm font-medium text-gray-600">Disponibles</p>
+              <p className="text-2xl font-bold text-gray-900">{activePacks.length}</p>
+            </div>
+            <div className="text-3xl">✅</div>
+          </div>
+          <p className="text-xs text-gray-500 mt-2">Packs activos ahora</p>
+        </div>
+      </div>
+
+      {/* Acciones rápidas */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <h2 className="text-lg font-semibold mb-4">⚡ Acciones Rápidas</h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <button 
+            onClick={() => window.location.hash = 'packs'}
+            className="bg-blue-500 text-white p-4 rounded-lg hover:bg-blue-600 transition-colors"
+          >
+            <div className="text-2xl mb-2">📦</div>
+            <div className="font-medium">Crear Pack</div>
+            <div className="text-sm opacity-90">Nuevo pack sorpresa</div>
+          </button>
+          
+          <button 
+            onClick={() => window.location.hash = 'restaurants'}
+            className="bg-green-500 text-white p-4 rounded-lg hover:bg-green-600 transition-colors"
+          >
+            <div className="text-2xl mb-2">🏪</div>
+            <div className="font-medium">Agregar Restaurante</div>
+            <div className="text-sm opacity-90">Nuevo establecimiento</div>
+          </button>
+          
+          <button 
+            onClick={() => window.location.hash = 'stats'}
+            className="bg-purple-500 text-white p-4 rounded-lg hover:bg-purple-600 transition-colors"
+          >
+            <div className="text-2xl mb-2">📊</div>
+            <div className="font-medium">Ver Estadísticas</div>
+            <div className="text-sm opacity-90">Análisis completo</div>
+          </button>
+        </div>
+      </div>
+
+      {/* Actividad reciente */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-semibold mb-4">📦 Packs Recientes</h3>
+          <div className="space-y-3">
+            {packs.slice(0, 5).map((pack: any, index: number) => (
+              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded">
+                <div>
+                  <p className="font-medium text-sm">{pack.title}</p>
+                  <p className="text-xs text-gray-500">${pack.discountedPrice}</p>
+                </div>
+                <span className={`px-2 py-1 rounded-full text-xs ${
+                  pack.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                }`}>
+                  {pack.isActive ? 'Activo' : 'Inactivo'}
+                </span>
+              </div>
+            ))}
+            {packs.length === 0 && (
+              <p className="text-gray-500 text-center py-4">No hay packs creados</p>
+            )}
+          </div>
+        </div>
+
+        <div className="bg-white rounded-lg shadow p-6">
+          <h3 className="text-lg font-semibold mb-4">🏪 Restaurantes Activos</h3>
+          <div className="space-y-3">
+            {restaurants.slice(0, 5).map((restaurant: any, index: number) => (
+              <div key={index} className="flex items-center justify-between p-3 bg-gray-50 rounded">
+                <div>
+                  <p className="font-medium text-sm">{restaurant.name}</p>
+                  <p className="text-xs text-gray-500">{restaurant.category}</p>
+                </div>
+                <span className={`px-2 py-1 rounded-full text-xs ${
+                  restaurant.isActive ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                }`}>
+                  {restaurant.isActive ? 'Activo' : 'Inactivo'}
+                </span>
+              </div>
+            ))}
+            {restaurants.length === 0 && (
+              <p className="text-gray-500 text-center py-4">No hay restaurantes registrados</p>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Enlaces útiles */}
+      <div className="bg-white rounded-lg shadow p-6">
+        <h3 className="text-lg font-semibold mb-4">🔗 Enlaces Útiles</h3>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <a href="/api/health" target="_blank" className="text-blue-600 hover:underline flex items-center">
+            <span className="mr-2">📊</span> Health Check
+          </a>
+          <a href="/api/packs/public" target="_blank" className="text-blue-600 hover:underline flex items-center">
+            <span className="mr-2">📦</span> API Packs
+          </a>
+          <a href="/packs" target="_blank" className="text-blue-600 hover:underline flex items-center">
+            <span className="mr-2">🛒</span> Ver Packs
+          </a>
+          <a href="/restaurants" target="_blank" className="text-blue-600 hover:underline flex items-center">
+            <span className="mr-2">🏪</span> Ver Restaurantes
           </a>
         </div>
       </div>

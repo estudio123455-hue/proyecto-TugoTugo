@@ -71,7 +71,48 @@ export default function PacksExplorer() {
   const [searchQuery, setSearchQuery] = useState('')
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list')
   const [selectedPackOnMap, setSelectedPackOnMap] = useState<Pack | null>(null)
+  
+  // Nuevos filtros avanzados
+  const [priceRange, setPriceRange] = useState({ min: 0, max: 100 })
+  const [sortBy, setSortBy] = useState('distance') // distance, price, rating, newest
+  const [showFilters, setShowFilters] = useState(false)
+  const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null)
   const { data: session } = useSession()
+
+  // Función para obtener geolocalización
+  const getUserLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setUserLocation({
+            lat: position.coords.latitude,
+            lng: position.coords.longitude
+          })
+          console.log('📍 Ubicación obtenida:', position.coords.latitude, position.coords.longitude)
+        },
+        (error) => {
+          console.log('❌ Error obteniendo ubicación:', error)
+          // Ubicación por defecto (Madrid, España)
+          setUserLocation({ lat: 40.4168, lng: -3.7038 })
+        }
+      )
+    } else {
+      // Ubicación por defecto si no hay geolocalización
+      setUserLocation({ lat: 40.4168, lng: -3.7038 })
+    }
+  }
+
+  // Función para calcular distancia entre dos puntos
+  const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
+    const R = 6371 // Radio de la Tierra en km
+    const dLat = (lat2 - lat1) * Math.PI / 180
+    const dLng = (lng2 - lng1) * Math.PI / 180
+    const a = Math.sin(dLat/2) * Math.sin(dLat/2) +
+              Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+              Math.sin(dLng/2) * Math.sin(dLng/2)
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a))
+    return R * c
+  }
 
   const getUniqueRestaurants = (packs: Pack[]) => {
     const restaurantMap = new Map()
@@ -116,6 +157,7 @@ export default function PacksExplorer() {
 
   useEffect(() => {
     fetchPacks()
+    getUserLocation() // Obtener ubicación del usuario
 
     // Auto-refresh every 30 seconds
     const interval = setInterval(fetchPacks, 30000)
@@ -191,9 +233,46 @@ export default function PacksExplorer() {
       )
     }
 
+    // Filtrar por rango de precio
+    filteredPacksData = filteredPacksData.filter(pack => 
+      pack.discountedPrice >= priceRange.min && pack.discountedPrice <= priceRange.max
+    )
+
+    // Agregar distancia a cada pack si tenemos ubicación del usuario
+    if (userLocation) {
+      filteredPacksData = filteredPacksData.map(pack => ({
+        ...pack,
+        distance: pack.establishment.latitude && pack.establishment.longitude 
+          ? calculateDistance(
+              userLocation.lat, 
+              userLocation.lng, 
+              pack.establishment.latitude, 
+              pack.establishment.longitude
+            )
+          : 999 // Si no tiene coordenadas, poner distancia muy alta
+      }))
+    }
+
+    // Ordenar según el criterio seleccionado
+    switch (sortBy) {
+      case 'distance':
+        if (userLocation) {
+          filteredPacksData.sort((a: any, b: any) => (a.distance || 999) - (b.distance || 999))
+        }
+        break
+      case 'price':
+        filteredPacksData.sort((a, b) => a.discountedPrice - b.discountedPrice)
+        break
+      case 'newest':
+        filteredPacksData.sort((a, b) => new Date(b.availableFrom).getTime() - new Date(a.availableFrom).getTime())
+        break
+      default:
+        break
+    }
+
     setFilteredPacks(filteredPacksData)
     setFilteredPosts(filteredPostsData)
-  }, [packs, posts, selectedCategory, searchQuery])
+  }, [packs, posts, selectedCategory, searchQuery, priceRange, sortBy, userLocation])
 
   const handleReservePack = async (packId: string, quantity: number) => {
     if (!session) {
