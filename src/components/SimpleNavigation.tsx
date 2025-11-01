@@ -1,45 +1,20 @@
 'use client'
 
-import { signIn } from 'next-auth/react'
 import Link from 'next/link'
 import { useCleanSession } from '@/hooks/useCleanSession'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname } from 'next/navigation'
 import { UserMenu } from '@/components/LogoutButton'
-import { useState, useCallback } from 'react'
+import { signIn } from 'next-auth/react'
 
-export default function Navigation() {
+export default function SimpleNavigation() {
   const { data: session, status } = useCleanSession()
   const pathname = usePathname()
-  const router = useRouter()
-  const [isNavigating, setIsNavigating] = useState(false)
-  const [targetPath, setTargetPath] = useState('')
 
   const isActive = (path: string) => {
     if (path === '/' && pathname === '/') return true
     if (path !== '/' && pathname?.startsWith(path)) return true
     return false
   }
-
-  const handleNavigation = useCallback((href: string, e: React.MouseEvent) => {
-    e.preventDefault()
-    
-    if (pathname === href) return // Already on this page
-    if (isNavigating) return // Prevent multiple clicks
-    
-    setIsNavigating(true)
-    setTargetPath(href)
-    
-    // Immediate navigation with quick reset
-    router.push(href)
-    
-    // Quick reset to prevent UI blocking
-    const timer = setTimeout(() => {
-      setIsNavigating(false)
-      setTargetPath('')
-    }, 100)
-    
-    return () => clearTimeout(timer)
-  }, [pathname, router, isNavigating])
 
   return (
     <nav className="fixed top-0 left-0 right-0 w-full z-[100] bg-white border-b border-gray-200 shadow-sm">
@@ -60,46 +35,42 @@ export default function Navigation() {
           <div className="hidden md:flex items-center space-x-8">
             <Link
               href="/"
-              onClick={(e) => handleNavigation('/', e)}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-150 ${
                 isActive('/') 
                   ? 'text-emerald-600 bg-emerald-50' 
                   : 'text-gray-700 hover:text-emerald-600 hover:bg-emerald-50'
-              } ${isNavigating ? 'opacity-70 pointer-events-none' : ''}`}
+              }`}
             >
               Home
             </Link>
             <Link
               href="/packs"
-              onClick={(e) => handleNavigation('/packs', e)}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-150 ${
                 isActive('/packs') 
                   ? 'text-emerald-600 bg-emerald-50' 
                   : 'text-gray-700 hover:text-emerald-600 hover:bg-emerald-50'
-              } ${isNavigating ? 'opacity-70 pointer-events-none' : ''}`}
+              }`}
             >
               Packs
             </Link>
             <Link
               href="/restaurants"
-              onClick={(e) => handleNavigation('/restaurants', e)}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-150 ${
                 isActive('/restaurants') 
                   ? 'text-emerald-600 bg-emerald-50' 
                   : 'text-gray-700 hover:text-emerald-600 hover:bg-emerald-50'
-              } ${isNavigating ? 'opacity-70 pointer-events-none' : ''}`}
+              }`}
             >
               Restaurantes
             </Link>
             {session && (
               <Link
                 href="/profile"
-                onClick={(e) => handleNavigation('/profile', e)}
-                className={`px-3 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors duration-150 ${
                   isActive('/profile') 
                     ? 'text-emerald-600 bg-emerald-50' 
                     : 'text-gray-700 hover:text-emerald-600 hover:bg-emerald-50'
-                } ${isNavigating ? 'opacity-70 pointer-events-none' : ''}`}
+                }`}
               >
                 Mis Órdenes
               </Link>
@@ -109,17 +80,12 @@ export default function Navigation() {
           {/* Right: Secondary Actions */}
           <div className="flex items-center space-x-4">
             
-            {/* Notifications removed */}
-
             {/* User Menu */}
-            {status === 'loading' ? (
-              <div className="w-8 h-8 bg-gray-200 rounded-full animate-pulse"></div>
-            ) : session ? (
-              <div className="hidden md:flex items-center">
+            {status === 'authenticated' && session ? (
+              <div className="flex items-center space-x-3">
                 <UserMenu 
-                  userName={session.user?.name || 'Usuario'}
-                  userEmail={session.user?.email || ''}
-                  userAvatar={session.user?.image || undefined}
+                  user={session.user}
+                  onSignOut={() => {}}
                 />
               </div>
             ) : (
@@ -138,20 +104,9 @@ export default function Navigation() {
                 </Link>
               </div>
             )}
-
-            {/* Mobile menu button - OCULTO porque usamos navegación inferior */}
           </div>
         </div>
-
-        {/* Mobile Menu - REMOVIDO porque usamos navegación inferior */}
       </div>
-      
-      {/* Loading bar */}
-      {isNavigating && (
-        <div className="absolute bottom-0 left-0 right-0 h-1 bg-emerald-500 animate-pulse">
-          <div className="h-full bg-gradient-to-r from-emerald-400 to-emerald-600 animate-pulse"></div>
-        </div>
-      )}
     </nav>
   )
 }
