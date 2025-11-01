@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react'
 // import { useSession } from 'next-auth/react'
-import Navigation from '@/components/Navigation'
+import SimpleNavigation from '@/components/SimpleNavigation'
 import GlobalHeader from '@/components/GlobalHeader'
 import NotificationSystem from '@/components/NotificationSystem'
 import Link from 'next/link'
@@ -119,7 +119,7 @@ export default function RestaurantsPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
+        <SimpleNavigation />
         <div className="flex items-center justify-center h-96">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-green-500"></div>
         </div>
@@ -129,7 +129,7 @@ export default function RestaurantsPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
-      <Navigation />
+      <SimpleNavigation />
       <GlobalHeader title="Restaurantes" />
       <NotificationSystem />
       

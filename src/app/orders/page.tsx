@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
-import Navigation from '@/components/Navigation'
+import SimpleNavigation from '@/components/SimpleNavigation'
 import { Package, Clock, CheckCircle, XCircle, Calendar, MapPin } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { es } from 'date-fns/locale'
@@ -105,7 +105,7 @@ export default function OrdersPage() {
   if (status === 'loading' || loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
-        <Navigation />
+        <SimpleNavigation />
         <div className="container-mobile spacing-mobile-y">
           <div className="animate-pulse space-y-4">
             {[1, 2, 3].map(i => (
@@ -119,7 +119,7 @@ export default function OrdersPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800 pb-20">
-      <Navigation />
+      <SimpleNavigation />
       
       <div className="container-mobile spacing-mobile-y">
         {/* Header */}

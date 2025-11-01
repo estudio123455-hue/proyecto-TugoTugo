@@ -1,12 +1,12 @@
 'use client'
 
 import Link from 'next/link'
-import Navigation from '@/components/Navigation'
+import SimpleNavigation from '@/components/SimpleNavigation'
 
 export default function LandingPage() {
   return (
     <div className="min-h-screen bg-white">
-      <Navigation />
+      <SimpleNavigation />
       
       {/* Hero Section */}
       <section className="relative overflow-hidden bg-gradient-to-br from-purple-600 via-purple-500 to-orange-400 pt-20 pb-32 md:pt-32 md:pb-40">

@@ -1,7 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react'
-import Navigation from '@/components/Navigation'
+import SimpleNavigation from '@/components/SimpleNavigation'
 import PackCard from '@/components/PackCard'
 import MapWithFilters from '@/components/map/MapWithFilters'
 
@@ -89,7 +89,7 @@ export default function MapPage() {
   if (isLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
+        <SimpleNavigation />
         <div className="flex items-center justify-center h-96">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-green-500"></div>
         </div>
@@ -99,7 +99,7 @@ export default function MapPage() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Navigation />
+      <SimpleNavigation />
 
       <div className="relative h-[calc(100vh-4rem)]">
         {/* Map */}

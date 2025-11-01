@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { useSession } from 'next-auth/react'
 import Head from 'next/head'
-import Navigation from '@/components/Navigation'
+import SimpleNavigation from '@/components/SimpleNavigation'
 import GlobalHeader from '@/components/GlobalHeader'
 import MapLibreMap, { MapLocation } from '@/components/MapLibreMap'
 // import PackCard from '@/components/PackCard' // TODO: Use this component
@@ -378,7 +378,7 @@ export default function PacksExplorer() {
       </Head>
       
       <div className="min-h-screen bg-gray-50">
-        <Navigation />
+        <SimpleNavigation />
         <GlobalHeader 
           title="Packs Disponibles"
           actions={
