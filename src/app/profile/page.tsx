@@ -45,6 +45,7 @@ export default function Profile() {
   const [stats, setStats] = useState<UserStats | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [activeTab, setActiveTab] = useState('overview')
+  const [tabLoading, setTabLoading] = useState(false)
   const [notifications, setNotifications] = useState({
     emailReminders: true,
     newPackAlerts: true,
@@ -74,8 +75,13 @@ export default function Profile() {
       return
     }
 
-    fetchOrders()
-    fetchStats()
+    // Lazy load data only when needed
+    const timer = setTimeout(() => {
+      fetchOrders()
+      fetchStats()
+    }, 100)
+
+    return () => clearTimeout(timer)
   }, [session, status, router])
 
   const fetchOrders = async () => {
@@ -147,6 +153,14 @@ export default function Profile() {
       setIsSaving(false)
       setTimeout(() => setSaveMessage(''), 3000)
     }
+  }
+
+  const handleTabChange = (tabId: string) => {
+    setTabLoading(true)
+    setTimeout(() => {
+      setActiveTab(tabId)
+      setTabLoading(false)
+    }, 150) // Small delay for smooth transition
   }
 
   const getStatusColor = (status: string) => {
@@ -234,10 +248,10 @@ export default function Profile() {
   ]
 
   return (
-    <div className="min-h-screen bg-gray-25 pb-20 md:pb-8" style={{backgroundColor: '#fafafa'}}>
+    <div className="min-h-screen bg-gray-50 pb-20 md:pb-8">
       <Navigation />
 
-      <div className="max-w-6xl mx-auto pt-4 md:pt-8 px-4">
+      <div className="max-w-4xl mx-auto pt-4 md:pt-8 px-4 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-6 md:mb-8">
           <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
@@ -315,22 +329,36 @@ export default function Profile() {
             {tabs.map(tab => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id)}
-                className={`whitespace-nowrap py-3 px-2 border-b-2 font-medium text-xs md:text-sm flex items-center space-x-1 md:space-x-2 ${
+                onClick={() => handleTabChange(tab.id)}
+                disabled={tabLoading}
+                className={`whitespace-nowrap py-3 px-2 border-b-2 font-medium text-xs md:text-sm flex items-center space-x-1 md:space-x-2 transition-all duration-200 ${
                   activeTab === tab.id
                     ? 'border-green-500 text-green-600'
                     : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
-                }`}
+                } ${tabLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
               >
                 <span>{tab.icon}</span>
                 <span>{tab.name}</span>
+                {tabLoading && activeTab === tab.id && (
+                  <div className="w-3 h-3 border border-green-500 border-t-transparent rounded-full animate-spin ml-1"></div>
+                )}
               </button>
             ))}
           </nav>
         </div>
 
         {/* Tab Content */}
-        <div className="pb-6 md:pb-8">
+        <div className="pb-6 md:pb-8 relative">
+          {tabLoading && (
+            <div className="absolute inset-0 bg-white bg-opacity-75 flex items-center justify-center z-10">
+              <div className="flex items-center space-x-2">
+                <div className="w-5 h-5 border-2 border-green-500 border-t-transparent rounded-full animate-spin"></div>
+                <span className="text-gray-600">Cargando...</span>
+              </div>
+            </div>
+          )}
+          
+          <div className={`transition-opacity duration-200 ${tabLoading ? 'opacity-50' : 'opacity-100'}`}>
           {activeTab === 'overview' && (
             <div className="space-y-6">
               {/* Welcome Section */}
@@ -1023,6 +1051,7 @@ export default function Profile() {
               </div>
             </div>
           )}
+          </div>
         </div>
       </div>
     </div>
