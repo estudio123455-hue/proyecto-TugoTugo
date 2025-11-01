@@ -84,8 +84,8 @@ export const useRestaurantsFeed = (category?: string, limit?: number) => {
   )
 
   useEffect(() => {
-    // Connect to WebSocket
-    connect()
+    // WebSocket disabled to prevent connection errors
+    // connect()
 
     // Subscribe to real-time updates
     const handleNewPack = (packData: any) => {
@@ -163,7 +163,8 @@ export const usePacksFeed = (establishmentId?: string) => {
   )
 
   useEffect(() => {
-    connect()
+    // WebSocket disabled to prevent connection errors
+    // connect()
 
     const handlePackUpdate = () => {
       mutate()
