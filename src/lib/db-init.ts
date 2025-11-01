@@ -24,7 +24,7 @@ export async function initializeDatabase() {
       })
       console.log('✅ Database migrations applied successfully')
     } catch (migrationError) {
-      console.warn('⚠️  Could not apply migrations automatically:', migrationError.message)
+      console.warn('⚠️  Could not apply migrations automatically:', migrationError instanceof Error ? migrationError.message : String(migrationError))
       console.log('📝 Please run "npx prisma migrate deploy" manually if needed')
     }
 
@@ -33,7 +33,7 @@ export async function initializeDatabase() {
       await prisma.user.findFirst()
       console.log('✅ Database schema verified')
     } catch (schemaError) {
-      console.warn('⚠️  Database schema verification failed:', schemaError.message)
+      console.warn('⚠️  Database schema verification failed:', schemaError instanceof Error ? schemaError.message : String(schemaError))
       console.log('📝 Database may need migrations')
     }
 
