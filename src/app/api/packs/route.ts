@@ -3,9 +3,12 @@ import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
 import { prisma } from '@/lib/prisma'
 import { validatePackData, sanitizeHtml, createRateLimit } from '@/lib/validation'
+import { ensureApiInit } from '@/lib/api-init'
 
 export async function GET() {
   try {
+    // Initialize database if needed
+    await ensureApiInit()
     const session = await getServerSession(authOptions)
 
     if (!session?.user?.id) {
@@ -54,6 +57,9 @@ const rateLimit = createRateLimit(10, 60 * 1000)
 
 export async function POST(request: NextRequest) {
   try {
+    // Initialize database if needed
+    await ensureApiInit()
+    
     const session = await getServerSession(authOptions)
 
     if (!session?.user?.id) {

@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { initializeDatabase } from './lib/db-init'
 
 // Lista de orígenes permitidos
 const ALLOWED_ORIGINS = [
@@ -12,19 +11,7 @@ const ALLOWED_ORIGINS = [
 // Rutas que requieren CORS
 const CORS_PATHS = ['/api/']
 
-// Variable para rastrear si la DB ya fue inicializada
-let dbInitialized = false
-
-export async function middleware(request: NextRequest) {
-  // Inicializar base de datos en la primera request a la API
-  if (!dbInitialized && request.nextUrl.pathname.startsWith('/api/')) {
-    try {
-      await initializeDatabase()
-      dbInitialized = true
-    } catch (error) {
-      console.warn('Database initialization failed in middleware:', error)
-    }
-  }
+export function middleware(request: NextRequest) {
   const origin = request.headers.get('origin')
   const pathname = request.nextUrl.pathname
 
