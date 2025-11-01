@@ -1,4 +1,7 @@
 {
   "framework": "nextjs",
-  "buildCommand": "npx prisma generate && npx prisma migrate deploy && npm run build"
+  "buildCommand": "node scripts/build.js",
+  "env": {
+    "SKIP_ENV_VALIDATION": "true"
+  }
 }
