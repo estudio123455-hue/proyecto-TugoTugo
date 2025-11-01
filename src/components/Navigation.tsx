@@ -5,14 +5,13 @@ import Link from 'next/link'
 import { useCleanSession } from '@/hooks/useCleanSession'
 import { usePathname, useRouter } from 'next/navigation'
 import { UserMenu } from '@/components/LogoutButton'
-import { useState, useCallback } from 'react'
+import React, { useState, useCallback } from 'react'
 
 export default function Navigation() {
   const { data: session, status } = useCleanSession()
   const pathname = usePathname()
   const router = useRouter()
   const [isNavigating, setIsNavigating] = useState(false)
-  const [targetPath, setTargetPath] = useState('')
 
   const isActive = (path: string) => {
     if (path === '/' && pathname === '/') return true
@@ -27,7 +26,6 @@ export default function Navigation() {
     if (isNavigating) return // Prevent multiple clicks
     
     setIsNavigating(true)
-    setTargetPath(href)
     
     // Immediate navigation with quick reset
     router.push(href)
@@ -35,7 +33,6 @@ export default function Navigation() {
     // Quick reset to prevent UI blocking
     const timer = setTimeout(() => {
       setIsNavigating(false)
-      setTargetPath('')
     }, 100)
     
     return () => clearTimeout(timer)

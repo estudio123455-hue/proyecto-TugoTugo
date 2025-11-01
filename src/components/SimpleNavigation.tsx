@@ -84,8 +84,9 @@ export default function SimpleNavigation() {
             {status === 'authenticated' && session ? (
               <div className="flex items-center space-x-3">
                 <UserMenu 
-                  user={session.user}
-                  onSignOut={() => {}}
+                  userName={session.user?.name || ''}
+                  userEmail={session.user?.email || ''}
+                  userAvatar={session.user?.image || ''}
                 />
               </div>
             ) : (
