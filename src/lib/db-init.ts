@@ -10,22 +10,28 @@ export async function initializeDatabase() {
   try {
     console.log('🔄 Initializing database connection...')
     
-    // Test database connection
-    await prisma.$connect()
+    // Test database connection with timeout
+    const connectionPromise = prisma.$connect()
+    const timeoutPromise = new Promise((_, reject) => 
+      setTimeout(() => reject(new Error('Database connection timeout')), 10000)
+    )
+    
+    await Promise.race([connectionPromise, timeoutPromise])
     console.log('✅ Database connected successfully')
 
-    // Try to run pending migrations
-    try {
-      // This will only work if we have the Prisma CLI available
-      const { execSync } = require('child_process')
-      execSync('npx prisma migrate deploy', { 
-        stdio: 'pipe',
-        timeout: 30000 // 30 seconds timeout
-      })
-      console.log('✅ Database migrations applied successfully')
-    } catch (migrationError) {
-      console.warn('⚠️  Could not apply migrations automatically:', migrationError instanceof Error ? migrationError.message : String(migrationError))
-      console.log('📝 Please run "npx prisma migrate deploy" manually if needed')
+    // Try to run pending migrations (skip in production if not available)
+    if (process.env.NODE_ENV !== 'production') {
+      try {
+        const { execSync } = require('child_process')
+        execSync('npx prisma migrate deploy', { 
+          stdio: 'pipe',
+          timeout: 30000 // 30 seconds timeout
+        })
+        console.log('✅ Database migrations applied successfully')
+      } catch (migrationError) {
+        console.warn('⚠️  Could not apply migrations automatically:', migrationError instanceof Error ? migrationError.message : String(migrationError))
+        console.log('📝 Please run "npx prisma migrate deploy" manually if needed')
+      }
     }
 
     // Verify database schema by running a simple query
@@ -41,11 +47,11 @@ export async function initializeDatabase() {
     return true
 
   } catch (error) {
-    console.error('❌ Database initialization failed:', error)
+    console.error('❌ Database initialization failed:', error instanceof Error ? error.message : String(error))
+    console.log('📝 The application will continue without database functionality')
     
-    // Don't throw error - let the app start anyway
-    // Some features may not work, but the app should be accessible
-    console.log('🚀 App will start without database (some features may be limited)')
+    // Mark as initialized even if failed to prevent repeated attempts
+    isInitialized = true
     return false
   }
 }
