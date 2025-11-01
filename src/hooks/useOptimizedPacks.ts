@@ -1,7 +1,25 @@
 'use client'
 
 import { useState, useEffect, useMemo, useCallback } from 'react'
-import { debounce } from 'lodash'
+
+// Simple debounce implementation
+function debounce<T extends (...args: any[]) => any>(func: T, wait: number): T & { cancel: () => void } {
+  let timeout: NodeJS.Timeout | null = null
+  
+  const debounced = ((...args: Parameters<T>) => {
+    if (timeout) clearTimeout(timeout)
+    timeout = setTimeout(() => func(...args), wait)
+  }) as T & { cancel: () => void }
+  
+  debounced.cancel = () => {
+    if (timeout) {
+      clearTimeout(timeout)
+      timeout = null
+    }
+  }
+  
+  return debounced
+}
 
 interface Pack {
   id: string
@@ -171,9 +189,10 @@ export function useOptimizedPacks({
     // Sort packs
     filtered.sort((a, b) => {
       switch (sortBy) {
-        case 'price':
+        case 'price': {
           return a.discountedPrice - b.discountedPrice
-        case 'distance':
+        }
+        case 'distance': {
           if (!userLocation) return 0
           const distA = calculateDistance(
             userLocation.lat,
@@ -188,13 +207,17 @@ export function useOptimizedPacks({
             b.establishment.longitude
           )
           return distA - distB
-        case 'newest':
+        }
+        case 'newest': {
           return new Date(b.availableFrom).getTime() - new Date(a.availableFrom).getTime()
-        case 'rating':
+        }
+        case 'rating': {
           // Placeholder for rating sorting
           return Math.random() - 0.5
-        default:
+        }
+        default: {
           return 0
+        }
       }
     })
 

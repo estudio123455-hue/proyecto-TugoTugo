@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getServerSession } from 'next-auth'
 import { authOptions } from '@/lib/auth'
-import { prisma } from '@/lib/prisma'
 
 export async function POST(request: NextRequest) {
   try {
@@ -85,15 +84,6 @@ export async function GET(request: NextRequest) {
     const now = new Date()
     const daysBack = timeframe === '1d' ? 1 : timeframe === '7d' ? 7 : timeframe === '30d' ? 30 : 7
     const startDate = new Date(now.getTime() - (daysBack * 24 * 60 * 60 * 1000))
-
-    const where = {
-      timestamp: {
-        gte: startDate,
-        lte: now
-      },
-      ...(userId && { userId }),
-      ...(event && { event })
-    }
 
     // For now, return mock analytics data
     const mockEvents = [

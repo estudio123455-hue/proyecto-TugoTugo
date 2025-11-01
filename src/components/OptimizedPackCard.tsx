@@ -97,6 +97,7 @@ const OptimizedPackCard = memo(function OptimizedPackCard({
       <div className="relative h-48 overflow-hidden">
         <img
           {...imageProps}
+          alt={imageProps.alt}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
         />
         

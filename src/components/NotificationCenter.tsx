@@ -45,7 +45,7 @@ const NotificationCenter = () => {
       await fetch('/api/user/notification-preferences', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ [key]: value }),
+        body: JSON.stringify({ [key]: read }),
       })
     } catch (error) {
       console.error('Error saving notification preferences:', error)
