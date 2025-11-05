@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import SimpleNavigation from '@/components/SimpleNavigation'
+import UltraFastNavigation from '@/components/UltraFastNavigation'
 import { useCleanSession } from '@/hooks/useCleanSession'
 import LogoutButton from '@/components/LogoutButton'
 
@@ -88,7 +88,7 @@ export default function SimpleProfile() {
   if (status === 'loading' || isLoading) {
     return (
       <div className="min-h-screen bg-gray-50">
-        <SimpleNavigation />
+        <UltraFastNavigation />
         <div className="flex items-center justify-center h-96">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-green-500"></div>
         </div>
@@ -104,7 +104,7 @@ export default function SimpleProfile() {
 
   return (
     <div className="min-h-screen bg-gray-50 pb-20 md:pb-8">
-      <SimpleNavigation />
+      <UltraFastNavigation />
 
       <div className="max-w-4xl mx-auto pt-4 md:pt-8 px-4 sm:px-6 lg:px-8">
         {/* Header */}

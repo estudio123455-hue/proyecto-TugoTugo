@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import SimpleNavigation from '@/components/SimpleNavigation'
+import UltraFastNavigation from '@/components/UltraFastNavigation'
 import GlobalHeader from '@/components/GlobalHeader'
 import { useSession } from 'next-auth/react'
 
@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <div className="min-h-screen bg-white">
-      <SimpleNavigation />
+      <UltraFastNavigation />
       <GlobalHeader />
       
       {/* Hero Section */}
