@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Icons</title>
+</head>
+<body>
+    <canvas id="canvas512" width="512" height="512" style="display: none;"></canvas>
+    <canvas id="canvas32" width="32" height="32" style="display: none;"></canvas>
+    
+    <script>
+        const svg = `<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect width="512" height="512" rx="64" fill="#10B981"/>
+          <path d="M256 128C300.183 128 336 163.817 336 208C336 252.183 300.183 288 256 288C211.817 288 176 252.183 176 208C176 163.817 211.817 128 256 128Z" fill="white"/>
+          <path d="M256 320C326.692 320 384 362.981 384 416H128C128 362.981 185.308 320 256 320Z" fill="white"/>
+          <circle cx="256" cy="208" r="32" fill="#10B981"/>
+        </svg>`;
+
+        function generateIcon(size) {
+            const canvas = document.getElementById(`canvas${size}`);
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            
+            img.onload = function() {
+                ctx.drawImage(img, 0, 0, size, size);
+                
+                // Download the image
+                const link = document.createElement('a');
+                link.download = `icon-${size}x${size}.png`;
+                link.href = canvas.toDataURL();
+                link.click();
+            };
+            
+            const blob = new Blob([svg], {type: 'image/svg+xml'});
+            const url = URL.createObjectURL(blob);
+            img.src = url;
+        }
+
+        // Generate both icons
+        setTimeout(() => generateIcon(512), 100);
+        setTimeout(() => generateIcon(32), 200);
+    </script>
+</body>
+</html>

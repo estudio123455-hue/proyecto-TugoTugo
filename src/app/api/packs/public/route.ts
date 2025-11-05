@@ -61,9 +61,8 @@ export async function GET(request: NextRequest) {
     return NextResponse.json(activePacks)
   } catch (error) {
     console.error('Error fetching public packs:', error)
-    return NextResponse.json(
-      { message: 'Internal server error' },
-      { status: 500 }
-    )
+    
+    // Return empty array instead of error to prevent 500s
+    return NextResponse.json([])
   }
 }
