@@ -19,19 +19,17 @@ export async function initializeDatabase() {
     await Promise.race([connectionPromise, timeoutPromise])
     console.log('✅ Database connected successfully')
 
-    // Try to run pending migrations (skip in production if not available)
-    if (process.env.NODE_ENV !== 'production') {
-      try {
-        const { execSync } = require('child_process')
-        execSync('npx prisma migrate deploy', { 
-          stdio: 'pipe',
-          timeout: 30000 // 30 seconds timeout
-        })
-        console.log('✅ Database migrations applied successfully')
-      } catch (migrationError) {
-        console.warn('⚠️  Could not apply migrations automatically:', migrationError instanceof Error ? migrationError.message : String(migrationError))
-        console.log('📝 Please run "npx prisma migrate deploy" manually if needed')
-      }
+    // Try to run pending migrations in all environments
+    try {
+      const { execSync } = require('child_process')
+      execSync('npx prisma migrate deploy', { 
+        stdio: 'pipe',
+        timeout: 60000 // 60 seconds timeout for first migration
+      })
+      console.log('✅ Database migrations applied successfully')
+    } catch (migrationError) {
+      console.warn('⚠️  Could not apply migrations automatically:', migrationError instanceof Error ? migrationError.message : String(migrationError))
+      console.log('📝 Migrations will be retried on next deployment')
     }
 
     // Verify database schema by running a simple query
