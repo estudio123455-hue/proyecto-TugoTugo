@@ -1,10 +1,10 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import UltraFastNavigation from '@/components/UltraFastNavigation'
 import { useCleanSession } from '@/hooks/useCleanSession'
 
-export default function ProfilePage() {
+export default function CleanProfilePage() {
   const { data: session, status } = useCleanSession()
   const [activeTab, setActiveTab] = useState('overview')
 
