@@ -58,8 +58,17 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('Registration error:', error)
+    
+    // Handle database connection errors gracefully
+    if (error instanceof Error && error.message.includes('database')) {
+      return NextResponse.json(
+        { message: 'Servicio temporalmente no disponible. Intenta más tarde.' },
+        { status: 503 }
+      )
+    }
+    
     return NextResponse.json(
-      { message: 'Error interno del servidor' },
+      { message: 'Error interno del servidor. Verifica los datos e intenta nuevamente.' },
       { status: 500 }
     )
   }
